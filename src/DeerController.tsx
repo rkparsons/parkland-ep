@@ -24,6 +24,7 @@ import useAnimation from './useAnimation'
 const DeerController: FC = () => {
     const scene = useScene()
     const distVecRef = useRef<number>(0)
+    const angleRef = useRef<number>(0)
     const targetVecNormRef = useRef<Vector3>(Vector3.Zero())
     const groundRef = useRef<GroundMesh>()
     const waypointRef = useRef<Mesh>()
@@ -57,11 +58,12 @@ const DeerController: FC = () => {
             return
         }
 
-        const deerWalkAngle = getAngleBetweenMeshes(deerRef.current, waypointRef.current)
-        console.log(deerWalkAngle < 0 ? 'left' : 'right')
+        angleRef.current = getAngleBetweenMeshes(deerRef.current, waypointRef.current)
+
+        console.log(angleRef.current < 0 ? 'left' : 'right')
         const isWalking = distVecRef.current >= translationSpeed
-        const isRotating = isWalking && Math.abs(deerWalkAngle) >= rotationSpeed
-        const isSlowWalk = deerWalkAngle >= 1
+        const isRotating = isWalking && Math.abs(angleRef.current) >= rotationSpeed
+        const isSlowWalk = angleRef.current >= 1
 
         walk.render()
         idle.render()
