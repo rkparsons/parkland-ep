@@ -22,6 +22,8 @@ import useAnimation from './useAnimation'
 // import useAnimationOneShot from './useAnimationOneShot'
 
 const DeerController: FC = () => {
+    const translationSpeed = 0.05
+    const rotationSpeed = 0.02
     const scene = useScene()
     const distVecRef = useRef<number>(0)
     const angleRef = useRef<number>(0)
@@ -33,14 +35,15 @@ const DeerController: FC = () => {
     const walk = useAnimation('Walk_forward_IP', () => distVecRef.current >= 10 * translationSpeed)
     // todo: add other idle anims on loop
     const idle = useAnimation('Idle_1', () => distVecRef.current < 10 * translationSpeed)
-    // const idle = useAnimationLinked('Idle_1', () =>
-    //     distVecRef.current >= translationSpeed ? 0 : 1
-    // )
-    // const left = useAnimationBlended('a', 'Rotate_left_IP')
-    // const right = useAnimationBlended('d', 'Rotate_Right_IP')
+    const left = useAnimation(
+        'Rotate_left_IP',
+        () => distVecRef.current >= translationSpeed && angleRef.current < 0
+    )
+    const right = useAnimation(
+        'Rotate_Right_IP',
+        () => distVecRef.current >= translationSpeed && angleRef.current > 0
+    )
     // const jump = useAnimationOneShot(' ', 'Jump')
-    const translationSpeed = 0.05
-    const rotationSpeed = 0.02
 
     useEffect(() => {
         if (scene) {
@@ -67,9 +70,8 @@ const DeerController: FC = () => {
 
         walk.render()
         idle.render()
-        // idle.render()
-        // left.render()
-        // right.render()
+        left.render()
+        right.render()
         // jump.render()
 
         if (isRotating) {
@@ -147,8 +149,8 @@ const DeerController: FC = () => {
         // todo: move init logic to hooks
         walk.init()
         idle.init()
-        // left.init()
-        // right.init()
+        left.init()
+        right.init()
         // jump.init()
     }
 
