@@ -58,8 +58,9 @@ const DeerController: FC = () => {
         }
 
         const deerWalkAngle = getAngleBetweenMeshes(deerRef.current, waypointRef.current)
+        console.log(deerWalkAngle < 0 ? 'left' : 'right')
         const isWalking = distVecRef.current >= translationSpeed
-        const isRotating = isWalking && deerWalkAngle >= rotationSpeed
+        const isRotating = isWalking && Math.abs(deerWalkAngle) >= rotationSpeed
         const isSlowWalk = deerWalkAngle >= 1
 
         walk.render()
@@ -71,8 +72,6 @@ const DeerController: FC = () => {
 
         if (isRotating) {
             quaternationRef.current.copyFrom(deerRef.current.rotationQuaternion)
-
-            console.log(deerRef.current.rotationQuaternion.toEulerAngles().y)
 
             deerRef.current.lookAt(waypointRef.current.position)
 
@@ -114,8 +113,9 @@ const DeerController: FC = () => {
     const getAngleBetweenMeshes = (mesh1: AbstractMesh, mesh2: AbstractMesh) => {
         const v0 = mesh1.getDirection(new Vector3(0, 0, 1)).normalize()
         const v1 = mesh2.position.subtract(mesh1.position).normalize()
+        const direction = Vector3.Cross(v0, v1).y < 0 ? -1 : 1
 
-        return Math.acos(Vector3.Dot(v0, v1))
+        return direction * Math.acos(Vector3.Dot(v0, v1))
     }
 
     const onPointerDown = (e: PointerEvent, pickResult: PickingInfo) => {
