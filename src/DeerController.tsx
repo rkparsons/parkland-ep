@@ -1,5 +1,6 @@
 import {
     AbstractMesh,
+    Angle,
     GroundMesh,
     Matrix,
     Mesh,
@@ -70,6 +71,8 @@ const DeerController: FC = () => {
 
         if (isRotating) {
             quaternationRef.current.copyFrom(deerRef.current.rotationQuaternion)
+
+            console.log(deerRef.current.rotationQuaternion.toEulerAngles().y)
 
             deerRef.current.lookAt(waypointRef.current.position)
 
