@@ -1,6 +1,5 @@
 import {
     AbstractMesh,
-    Angle,
     GroundMesh,
     Matrix,
     Mesh,
@@ -16,8 +15,8 @@ import React, { FC, Suspense, useEffect, useRef } from 'react'
 
 import Ground from './Ground'
 import useAnimation from './useAnimation'
+import useAnimationBlended from './useAnimationBlended'
 
-// import useAnimationBlended from './useAnimationBlended'
 // import useAnimationLinked from './useAnimationLinked'
 // import useAnimationOneShot from './useAnimationOneShot'
 
@@ -35,13 +34,13 @@ const DeerController: FC = () => {
     const walk = useAnimation('Walk_forward_IP', () => distVecRef.current >= 10 * translationSpeed)
     // todo: add other idle anims on loop
     const idle = useAnimation('Idle_1', () => distVecRef.current < 10 * translationSpeed)
-    const left = useAnimation(
+    const left = useAnimationBlended(
         'Rotate_left_IP',
-        () => distVecRef.current >= translationSpeed && angleRef.current < 0
+        () => distVecRef.current >= translationSpeed && angleRef.current < -50 * rotationSpeed
     )
-    const right = useAnimation(
+    const right = useAnimationBlended(
         'Rotate_Right_IP',
-        () => distVecRef.current >= translationSpeed && angleRef.current > 0
+        () => distVecRef.current >= translationSpeed && angleRef.current > 50 * rotationSpeed
     )
     // const jump = useAnimationOneShot(' ', 'Jump')
 

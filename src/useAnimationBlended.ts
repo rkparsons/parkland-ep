@@ -1,9 +1,7 @@
-import useInputMapContext from './useInputMapContext'
 import { useRef } from 'react'
 import { useScene } from 'react-babylonjs'
 
-function useBlendedAnimation(key: string, animationName: string) {
-    const { inputMap } = useInputMapContext()
+function useBlendedAnimation(animationName: string, getIsActive: () => boolean) {
     const scene = useScene()
     const speed = useRef(0)
     const acceleration = 0.05
@@ -18,9 +16,9 @@ function useBlendedAnimation(key: string, animationName: string) {
     const render = () => {
         const animationGroup = scene?.getAnimationGroupByName(animationName)
 
-        if (inputMap.current[key] && speed.current < 1) {
+        if (getIsActive() && speed.current < 1) {
             speed.current += acceleration
-        } else if (!inputMap.current[key] && speed.current > 0) {
+        } else if (!getIsActive() && speed.current > 0) {
             speed.current -= acceleration
         }
 
