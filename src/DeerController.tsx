@@ -31,15 +31,15 @@ const DeerController: FC = () => {
     const waypointRef = useRef<Mesh>()
     const deerRef = useRef<AbstractMesh>()
     const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
-    const walk = useAnimation('Walk_forward_IP', () => distVecRef.current >= 10 * translationSpeed)
+    const walk = useAnimation('WalkForward', () => distVecRef.current >= 10 * translationSpeed)
     // todo: add other idle anims on loop
     const idle = useAnimation('Idle_1', () => distVecRef.current < 10 * translationSpeed)
     const left = useAnimationBlended(
-        'Rotate_left_IP',
+        'TurnLeft',
         () => distVecRef.current >= translationSpeed && angleRef.current < -50 * rotationSpeed
     )
     const right = useAnimationBlended(
-        'Rotate_Right_IP',
+        'TurnRight',
         () => distVecRef.current >= translationSpeed && angleRef.current > 50 * rotationSpeed
     )
     // const jump = useAnimationOneShot(' ', 'Jump')
