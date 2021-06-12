@@ -24,8 +24,12 @@ function useAnimation(animationName: string, modelRef: MutableRefObject<Abstract
 
         animationGroup.onAnimationGroupEndObservable.add(() => {
             isPendingRestart.current = true
+            const newKeys = animationGroup.targetedAnimations[0].animation
+                .getKeys()
+                .map((x) => ({ ...x, value: (x.value as Vector3).add(rootVector.current) }))
+            animationGroup.targetedAnimations[0].animation.setKeys(newKeys)
             animationGroup?.play(false)
-            modelRef.current?.translate(rootVector.current, 1, Space.LOCAL)
+            // modelRef.current?.translate(rootVector.current, 1, Space.LOCAL)
         })
     }
 
