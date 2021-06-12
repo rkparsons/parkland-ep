@@ -29,7 +29,6 @@ function useAnimation(animationName: string, modelRef: MutableRefObject<Abstract
                 .map((x) => ({ ...x, value: (x.value as Vector3).add(rootVector.current) }))
             animationGroup.targetedAnimations[0].animation.setKeys(newKeys)
             animationGroup?.play(false)
-            // modelRef.current?.translate(rootVector.current, 1, Space.LOCAL)
         })
     }
 
