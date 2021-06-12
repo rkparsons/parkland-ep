@@ -1,27 +1,36 @@
-import { AbstractMesh, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, Space, Vector3 } from '@babylonjs/core'
+import { MutableRefObject, useRef } from 'react'
 
-import { MutableRefObject } from 'react'
 import { useScene } from 'react-babylonjs'
 
 function useAnimation(animationName: string, modelRef: MutableRefObject<AbstractMesh | undefined>) {
     const scene = useScene()
+    const rootVector = useRef<Vector3>(Vector3.Zero())
+    const isPendingRestart = useRef(false)
 
     const init = () => {
         const animationGroup = scene?.getAnimationGroupByName(animationName)
 
-        animationGroup?.play(true)
-        animationGroup?.setWeightForAllAnimatables(1)
+        if (!animationGroup) {
+            return
+        }
 
-        animationGroup?.onAnimationGroupEndObservable.add(() => {
-            console.log(modelRef.current)
-            modelRef.current!.subMeshes[0].getMesh().position.z += 10
-            // animationGroup?.play(false)
+        rootVector.current =
+            animationGroup.targetedAnimations[0].animation.getKeys().slice(-1)[0].value ||
+            Vector3.Zero()
+
+        animationGroup.play(false)
+        animationGroup.setWeightForAllAnimatables(1)
+
+        animationGroup.onAnimationGroupEndObservable.add(() => {
+            isPendingRestart.current = true
+            animationGroup?.play(false)
+            modelRef.current?.translate(rootVector.current, 1, Space.LOCAL)
         })
     }
 
     const render = () => {
         const animationGroup = scene?.getAnimationGroupByName(animationName)
-        // console.log(modelRef.current?.skeleton)
     }
 
     return {
