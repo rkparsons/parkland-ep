@@ -1,27 +1,35 @@
-import { AnimationGroup, Vector3 } from '@babylonjs/core'
-
+import { Vector3 } from '@babylonjs/core'
+import { useRef } from 'react'
 import { useScene } from 'react-babylonjs'
 
 function useRMAnimation(animationName: string) {
     const scene = useScene()
+    const valueOffset = useRef(Vector3.Zero())
 
-    const reset = (animationGroup: AnimationGroup, valueOffset: Vector3) => {
-        const newKeys = animationGroup.targetedAnimations[0].animation
-            .getKeys()
-            .map((x) => ({ ...x, value: (x.value as Vector3).add(valueOffset) }))
-        animationGroup.targetedAnimations[0].animation.setKeys(newKeys)
-        animationGroup?.play(false)
+    const getAnimationGroup = () => scene?.getAnimationGroupByName(animationName)
+
+    const reset = () => {
+        const animationGroup = getAnimationGroup()
+
+        if (animationGroup) {
+            const newKeys = animationGroup.targetedAnimations[0].animation
+                .getKeys()
+                .map((x) => ({ ...x, value: (x.value as Vector3).add(valueOffset.current) }))
+            animationGroup.targetedAnimations[0].animation.setKeys(newKeys)
+            animationGroup.play(false)
+        }
     }
 
     const init = () => {
-        const animationGroup = scene?.getAnimationGroupByName(animationName)
+        const animationGroup = getAnimationGroup()
 
-        const valueOffset = animationGroup?.targetedAnimations[0].animation.getKeys().slice(-1)[0]
-            .value as Vector3
+        if (animationGroup) {
+            const keys = animationGroup.targetedAnimations[0].animation.getKeys()
+            valueOffset.current = keys[keys.length - 1].value
 
-        animationGroup?.play(false)
-
-        animationGroup?.onAnimationGroupEndObservable.add(() => reset(animationGroup, valueOffset))
+            animationGroup.play(false)
+            animationGroup.onAnimationGroupEndObservable.add(reset)
+        }
     }
 
     const render = () => {
