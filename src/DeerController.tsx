@@ -1,43 +1,21 @@
-import {
-    AbstractMesh,
-    GroundMesh,
-    Matrix,
-    Mesh,
-    PickingInfo,
-    Quaternion,
-    Ray,
-    Space,
-    Tools,
-    Vector3
-} from '@babylonjs/core'
-import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
-import React, { FC, Suspense, useEffect, useRef } from 'react'
+import { AbstractMesh, GroundMesh, Quaternion, Tools, Vector3 } from '@babylonjs/core'
+import { ILoadedModel, Model, useBeforeRender } from 'react-babylonjs'
+import React, { FC, Suspense, useRef } from 'react'
 
 import Ground from './Ground'
-import useAnimation from './useAnimation'
-import useAnimationBlended from './useAnimationBlended'
-
-// import useAnimationLinked from './useAnimationLinked'
-// import useAnimationOneShot from './useAnimationOneShot'
+import useRMAnimation from './useRMAnimation'
 
 const DeerController: FC = () => {
     const groundRef = useRef<GroundMesh>()
     const deerRef = useRef<AbstractMesh>()
-    const walk = useAnimation('WalkForward', deerRef)
+    const walk = useRMAnimation('WalkForward')
 
     useBeforeRender(() => {
-        if (!groundRef.current || !deerRef.current) {
-            return
-        }
-
         walk.render()
     })
 
     const onModelLoaded = (model: ILoadedModel) => {
         deerRef.current = model.rootMesh
-        model.animationGroups?.forEach((animationGroup) => {
-            animationGroup.stop()
-        })
 
         walk.init()
     }
