@@ -27,13 +27,18 @@ function useRMAnimation(animationName: string) {
             const keys = animationGroup.targetedAnimations[0].animation.getKeys()
             valueOffset.current = keys[keys.length - 1].value
 
+            animationGroup.speedRatio = 0
             animationGroup.play(false)
             animationGroup.onAnimationGroupEndObservable.add(reset)
         }
     }
 
     const render = () => {
-        console.log('render')
+        const animationGroup = getAnimationGroup()
+
+        if (animationGroup) {
+            animationGroup.speedRatio = 0.5
+        }
     }
 
     return {
