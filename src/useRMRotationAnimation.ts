@@ -1,31 +1,32 @@
-import { AnimationGroup, Quaternion, Vector3 } from '@babylonjs/core'
+import { AnimationGroup, Quaternion } from '@babylonjs/core'
 
 import { useRef } from 'react'
 import { useScene } from 'react-babylonjs'
 
 function useRMRotationAnimation(animationName: string) {
+    const initialQuaternion = useRef<Quaternion>(Quaternion.Zero())
     const scene = useScene()
-    const quaternionOffset = useRef(Quaternion.Zero())
 
     const getAnimationGroup = () => scene?.getAnimationGroupByName(animationName)
 
-    const getQuaternionAnimation = (animationGroup: AnimationGroup) =>
+    const getQuaternionTargettedAnimation = (animationGroup: AnimationGroup) =>
         animationGroup.targetedAnimations.filter(
             (x) => x.target.name === 'Root' && x.animation.targetProperty === 'rotationQuaternion'
-        )[0].animation
+        )[0]
 
     const reset = () => {
         const animationGroup = getAnimationGroup()
 
         if (animationGroup) {
-            const newKeys = getQuaternionAnimation(animationGroup)
-                .getKeys()
-                .map((x) => ({
-                    ...x,
-                    value: (x.value as Quaternion).add(quaternionOffset.current)
-                }))
-            getQuaternionAnimation(animationGroup).setKeys(newKeys)
-            animationGroup.play(false)
+            // const quaternationOffset: Quaternion =
+            //     getQuaternionTargettedAnimation(animationGroup).target._rotationQuaternion
+            // const keys = getQuaternionTargettedAnimation(animationGroup).animation.getKeys()
+            // const newKeys = keys.map((x) => ({
+            //     ...x,
+            //     value: quaternationOffset.multiply(x.value as Quaternion)
+            // }))
+            // getQuaternionTargettedAnimation(animationGroup).animation.setKeys(newKeys)
+            // animationGroup.play(false)
         }
     }
 
@@ -33,10 +34,9 @@ function useRMRotationAnimation(animationName: string) {
         const animationGroup = getAnimationGroup()
 
         if (animationGroup) {
-            const keys = getQuaternionAnimation(animationGroup).getKeys()
-
-            quaternionOffset.current = keys[keys.length - 1].value
-
+            animationGroup.setWeightForAllAnimatables(1)
+            initialQuaternion.current =
+                getQuaternionTargettedAnimation(animationGroup).target._rotationQuaternion
             animationGroup.speedRatio = 0
             animationGroup.play(false)
             animationGroup.onAnimationGroupEndObservable.add(reset)

@@ -24,6 +24,7 @@ function useRMAnimation(animationName: string) {
         const animationGroup = getAnimationGroup()
 
         if (animationGroup) {
+            animationGroup.setWeightForAllAnimatables(1)
             const keys = animationGroup.targetedAnimations[0].animation.getKeys()
             valueOffset.current = keys[keys.length - 1].value
 

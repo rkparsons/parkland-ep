@@ -1,6 +1,6 @@
 import { AbstractMesh, GroundMesh, Quaternion, Tools, Vector3 } from '@babylonjs/core'
 import { FC, Suspense, useRef } from 'react'
-import { ILoadedModel, Model, Scene, useBeforeRender } from 'react-babylonjs'
+import { ILoadedModel, Model, useBeforeRender } from 'react-babylonjs'
 
 import Ground from './Ground'
 import useRMAnimation from './useRMAnimation'
@@ -14,6 +14,7 @@ const DeerController: FC = () => {
     const right = useRMRotationAnimation('TurnRight')
 
     useBeforeRender(() => {
+        walk.render()
         right.render()
     })
 
@@ -22,7 +23,7 @@ const DeerController: FC = () => {
 
         model.animationGroups?.forEach((x) => x.stop())
 
-        // walk.init()
+        walk.init()
         // left.init()
         right.init()
     }
