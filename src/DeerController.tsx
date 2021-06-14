@@ -1,6 +1,6 @@
 import { AbstractMesh, GroundMesh, Quaternion, Tools, Vector3 } from '@babylonjs/core'
-import { ILoadedModel, Model, useBeforeRender } from 'react-babylonjs'
-import React, { FC, Suspense, useRef } from 'react'
+import { FC, Suspense, useRef } from 'react'
+import { ILoadedModel, Model, Scene, useBeforeRender } from 'react-babylonjs'
 
 import Ground from './Ground'
 import useRMAnimation from './useRMAnimation'
@@ -9,15 +9,21 @@ const DeerController: FC = () => {
     const groundRef = useRef<GroundMesh>()
     const deerRef = useRef<AbstractMesh>()
     const walk = useRMAnimation('WalkForward')
+    const left = useRMAnimation('TurnLeft')
+    const right = useRMAnimation('TurnRight')
 
     useBeforeRender(() => {
-        walk.render()
+        right.render()
     })
 
     const onModelLoaded = (model: ILoadedModel) => {
         deerRef.current = model.rootMesh
 
-        walk.init()
+        model.animationGroups?.forEach((x) => x.stop())
+
+        // walk.init()
+        // left.init()
+        right.init()
     }
 
     return (
@@ -27,7 +33,7 @@ const DeerController: FC = () => {
                     name="deer"
                     position={Vector3.Zero()}
                     rootUrl={`${process.env.PUBLIC_URL}/`}
-                    sceneFilename="deer.glb"
+                    sceneFilename="Deer.glb"
                     scaleToDimension={3}
                     rotation={new Vector3(0, Tools.ToRadians(240), 0)}
                     onModelLoaded={onModelLoaded}
