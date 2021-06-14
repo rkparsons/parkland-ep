@@ -159,7 +159,7 @@ const DeerController: FC = () => {
                     name="deer"
                     position={Vector3.Zero()}
                     rootUrl={`${process.env.PUBLIC_URL}/`}
-                    sceneFilename="deer.glb"
+                    sceneFilename="Deer.glb"
                     scaleToDimension={3}
                     rotation={new Vector3(0, Tools.ToRadians(240), 0)}
                     onModelLoaded={onModelLoaded}
