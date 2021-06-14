@@ -4,13 +4,14 @@ import { ILoadedModel, Model, Scene, useBeforeRender } from 'react-babylonjs'
 
 import Ground from './Ground'
 import useRMAnimation from './useRMAnimation'
+import useRMRotationAnimation from './useRMRotationAnimation'
 
 const DeerController: FC = () => {
     const groundRef = useRef<GroundMesh>()
     const deerRef = useRef<AbstractMesh>()
     const walk = useRMAnimation('WalkForward')
-    const left = useRMAnimation('TurnLeft')
-    const right = useRMAnimation('TurnRight')
+    const left = useRMRotationAnimation('TurnLeft')
+    const right = useRMRotationAnimation('TurnRight')
 
     useBeforeRender(() => {
         right.render()
