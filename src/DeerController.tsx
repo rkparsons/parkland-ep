@@ -1,5 +1,6 @@
 import {
     AbstractMesh,
+    Angle,
     GroundMesh,
     Matrix,
     Mesh,
@@ -21,6 +22,7 @@ import useAnimationBlended from './useAnimationBlended'
 // import useAnimationOneShot from './useAnimationOneShot'
 
 const DeerController: FC = () => {
+    const walkSpeedFactor = useRef(0)
     const translationSpeed = 0.05
     const rotationSpeed = 0.02
     const scene = useScene()
@@ -31,17 +33,17 @@ const DeerController: FC = () => {
     const waypointRef = useRef<Mesh>()
     const deerRef = useRef<AbstractMesh>()
     const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
-    const walk = useAnimation('WalkForward', () => distVecRef.current >= 10 * translationSpeed)
+    const walk = useAnimation('WalkForward', walkSpeedFactor)
     // todo: add other idle anims on loop
-    const idle = useAnimation('Idle_1', () => distVecRef.current < 10 * translationSpeed)
-    const left = useAnimationBlended(
-        'TurnLeft',
-        () => distVecRef.current >= translationSpeed && angleRef.current < -50 * rotationSpeed
-    )
-    const right = useAnimationBlended(
-        'TurnRight',
-        () => distVecRef.current >= translationSpeed && angleRef.current > 50 * rotationSpeed
-    )
+    // const idle = useAnimation('Idle_1', () => distVecRef.current < 10 * translationSpeed)
+    // const left = useAnimationBlended(
+    //     'TurnLeft',
+    //     () => distVecRef.current >= translationSpeed && angleRef.current < -50 * rotationSpeed
+    // )
+    // const right = useAnimationBlended(
+    //     'TurnRight',
+    //     () => distVecRef.current >= translationSpeed && angleRef.current > 50 * rotationSpeed
+    // )
     // const jump = useAnimationOneShot(' ', 'Jump')
 
     useEffect(() => {
@@ -49,6 +51,18 @@ const DeerController: FC = () => {
             scene.onPointerDown = onPointerDown
         }
     }, [scene])
+
+    const getWalkSpeedFactor = () => {
+        const degrees = Angle.FromRadians(angleRef.current).degrees()
+
+        if (degrees < 90) {
+            return 1 - degrees / 90
+        } else if (degrees > 270) {
+            return (degrees - 270) / 90
+        } else {
+            return 0
+        }
+    }
 
     useBeforeRender(() => {
         if (
@@ -59,17 +73,20 @@ const DeerController: FC = () => {
         ) {
             return
         }
+        walkSpeedFactor.current = getWalkSpeedFactor()
+
+        console.log(walkSpeedFactor.current)
 
         angleRef.current = getAngleBetweenMeshes(deerRef.current, waypointRef.current)
 
         const isWalking = distVecRef.current >= translationSpeed
         const isRotating = isWalking && Math.abs(angleRef.current) >= rotationSpeed
-        const isSlowWalk = angleRef.current >= 1
+        const isSlowWalk = angleRef.current >= Angle.FromDegrees(5).radians()
 
         walk.render()
-        idle.render()
-        left.render()
-        right.render()
+        // idle.render()
+        // left.render()
+        // right.render()
         // jump.render()
 
         if (isRotating) {
@@ -85,8 +102,8 @@ const DeerController: FC = () => {
             )
         }
 
-        if (isWalking) {
-            const walkSpeed = isSlowWalk ? translationSpeed / 4 : translationSpeed
+        if (walkSpeedFactor.current > 0) {
+            const walkSpeed = walkSpeedFactor.current * translationSpeed
             distVecRef.current -= walkSpeed
             deerRef.current.translate(targetVecNormRef.current, walkSpeed, Space.WORLD)
 
@@ -146,9 +163,9 @@ const DeerController: FC = () => {
 
         // todo: move init logic to hooks
         walk.init()
-        idle.init()
-        left.init()
-        right.init()
+        // idle.init()
+        // left.init()
+        // right.init()
         // jump.init()
     }
 
