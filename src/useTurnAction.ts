@@ -1,6 +1,7 @@
 import { AbstractMesh, Mesh, Quaternion, Vector3 } from '@babylonjs/core'
 import { MutableRefObject, useRef } from 'react'
 
+import { ILoadedModel } from 'react-babylonjs'
 import useAnimationBlended from './useAnimationBlended'
 
 // todo: remove translation speed dependency
@@ -10,7 +11,7 @@ function useTurnAction(
     translationSpeed: number,
     angleRef: MutableRefObject<number>,
     distVecRef: MutableRefObject<number>,
-    characterRef: MutableRefObject<AbstractMesh | undefined>,
+    model: MutableRefObject<ILoadedModel | undefined>,
     waypointRef: MutableRefObject<Mesh | undefined>
 ) {
     const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
@@ -32,28 +33,24 @@ function useTurnAction(
     }
 
     const rotateRoot = () => {
-        if (
-            !characterRef.current ||
-            !waypointRef.current ||
-            !characterRef.current.rotationQuaternion
-        ) {
+        if (!model.current || !waypointRef.current || !model.current.rootMesh?.rotationQuaternion) {
             return
         }
 
-        angleRef.current = getAngleBetweenMeshes(characterRef.current, waypointRef.current)
+        angleRef.current = getAngleBetweenMeshes(model.current.rootMesh, waypointRef.current)
 
         const isRotating = distVecRef.current > 0 && Math.abs(angleRef.current) >= rotationSpeed
 
         if (isRotating) {
-            quaternationRef.current.copyFrom(characterRef.current.rotationQuaternion)
+            quaternationRef.current.copyFrom(model.current.rootMesh.rotationQuaternion)
 
-            characterRef.current.lookAt(waypointRef.current.position)
+            model.current.rootMesh.lookAt(waypointRef.current.position)
 
             Quaternion.SlerpToRef(
                 quaternationRef.current,
-                characterRef.current.rotationQuaternion,
+                model.current.rootMesh.rotationQuaternion,
                 rotationSpeed,
-                characterRef.current.rotationQuaternion
+                model.current.rootMesh.rotationQuaternion
             )
         }
     }

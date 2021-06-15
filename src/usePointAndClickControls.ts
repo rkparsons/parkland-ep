@@ -1,28 +1,19 @@
-import { AbstractMesh, GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
+import { GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
+import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-import { useScene } from 'react-babylonjs'
 import useTurnAction from './useTurnAction'
 import useWalkAction from './useWalkAction'
 
-function useWaypoint(
-    groundRef: MutableRefObject<GroundMesh | undefined>,
-    characterRef: MutableRefObject<AbstractMesh | undefined>
-) {
+function usePointAndClickControls(groundRef: MutableRefObject<GroundMesh | undefined>) {
+    const model = useRef<ILoadedModel>()
     const angleRef = useRef<number>(0)
     const waypointRef = useRef<Mesh>()
     const distVecRef = useRef<number>(0)
     const targetVecNormRef = useRef<Vector3>(Vector3.Zero())
     const scene = useScene()
-    const walk = useWalkAction(
-        0.05,
-        angleRef,
-        distVecRef,
-        characterRef,
-        groundRef,
-        targetVecNormRef
-    )
-    const turn = useTurnAction(0.02, 0.05, angleRef, distVecRef, characterRef, waypointRef)
+    const walk = useWalkAction(0.05, angleRef, distVecRef, model, groundRef, targetVecNormRef)
+    const turn = useTurnAction(0.02, 0.05, angleRef, distVecRef, model, waypointRef)
 
     const onPointerDown = (e: PointerEvent, pickResult: PickingInfo) => {
         if (
@@ -31,15 +22,27 @@ function useWaypoint(
             pickResult.pickedPoint &&
             pickResult.pickedMesh === groundRef.current &&
             waypointRef.current &&
-            characterRef.current
+            model.current &&
+            model.current.rootMesh
         ) {
             let targetVec = pickResult.pickedPoint
             waypointRef.current.position = targetVec?.clone()
-            const initVec = characterRef.current.position?.clone()
+            const initVec = model.current.rootMesh.position?.clone()
             distVecRef.current = Vector3.Distance(targetVec, initVec)
             targetVec = targetVec.subtract(initVec)
             targetVecNormRef.current = Vector3.Normalize(targetVec)
         }
+    }
+
+    const initControls = (loadedModel: ILoadedModel) => {
+        model.current = loadedModel
+
+        model.current.animationGroups?.forEach((animationGroup) => {
+            animationGroup.stop()
+        })
+
+        walk.init()
+        turn.init()
     }
 
     useEffect(() => {
@@ -48,11 +51,15 @@ function useWaypoint(
         }
     }, [scene])
 
+    useBeforeRender(() => {
+        walk.render()
+        turn.render()
+    })
+
     return {
         waypointRef,
-        walk,
-        turn
+        initControls
     }
 }
 
-export default useWaypoint
+export default usePointAndClickControls

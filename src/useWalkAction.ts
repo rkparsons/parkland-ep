@@ -1,13 +1,14 @@
-import { AbstractMesh, Angle, GroundMesh, Matrix, Ray, Space, Vector3 } from '@babylonjs/core'
+import { Angle, GroundMesh, Matrix, Ray, Space, Vector3 } from '@babylonjs/core'
 import { MutableRefObject, useRef } from 'react'
 
+import { ILoadedModel } from 'react-babylonjs'
 import useAnimation from './useAnimation'
 
 function useWalkAction(
     maxSpeed: number,
     angleRef: MutableRefObject<number>,
     distVecRef: MutableRefObject<number>,
-    characterRef: MutableRefObject<AbstractMesh | undefined>,
+    modelRef: MutableRefObject<ILoadedModel | undefined>,
     groundRef: MutableRefObject<GroundMesh | undefined>,
     targetVecNormRef: MutableRefObject<Vector3>
 ) {
@@ -25,11 +26,7 @@ function useWalkAction(
     }
 
     const translateRoot = () => {
-        if (
-            !groundRef.current ||
-            !characterRef.current ||
-            !characterRef.current.rotationQuaternion
-        ) {
+        if (!groundRef.current || !modelRef.current || !modelRef.current.rootMesh) {
             return
         }
 
@@ -38,16 +35,16 @@ function useWalkAction(
         if (speedRef.current > 0) {
             const walkSpeed = speedRef.current * maxSpeed
             distVecRef.current -= walkSpeed
-            characterRef.current.translate(targetVecNormRef.current, walkSpeed, Space.WORLD)
+            modelRef.current.rootMesh.translate(targetVecNormRef.current, walkSpeed, Space.WORLD)
 
-            characterRef.current.moveWithCollisions(Vector3.Zero())
+            modelRef.current.rootMesh.moveWithCollisions(Vector3.Zero())
 
             // Casting a ray to get height
             let ray = new Ray(
                 new Vector3(
-                    characterRef.current.position.x,
+                    modelRef.current.rootMesh.position.x,
                     groundRef.current.getBoundingInfo().boundingBox.maximumWorld.y + 1,
-                    characterRef.current.position.z
+                    modelRef.current.rootMesh.position.z
                 ),
                 new Vector3(0, 0, 0)
             )
@@ -56,7 +53,7 @@ function useWalkAction(
             ray = Ray.Transform(ray, worldInverse)
             const pickInfo = groundRef.current.intersects(ray)
             if (pickInfo.hit && pickInfo.pickedPoint) {
-                characterRef.current.position.y = pickInfo.pickedPoint.y + 1
+                modelRef.current.rootMesh.position.y = pickInfo.pickedPoint.y + 1
             }
         }
     }
