@@ -1,13 +1,9 @@
 import {
     AbstractMesh,
-    Angle,
     GroundMesh,
-    Matrix,
     Mesh,
     PickingInfo,
     Quaternion,
-    Ray,
-    Space,
     Tools,
     Vector3
 } from '@babylonjs/core'
@@ -15,15 +11,9 @@ import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
 import React, { FC, Suspense, useEffect, useRef } from 'react'
 
 import Ground from './Ground'
-import useAnimation from './useAnimation'
-import useAnimationBlended from './useAnimationBlended'
-
-// import useAnimationLinked from './useAnimationLinked'
-// import useAnimationOneShot from './useAnimationOneShot'
+import useWalkAction from './useWalkAction'
 
 const DeerController: FC = () => {
-    const walkSpeedFactor = useRef(0)
-    const translationSpeed = 0.05
     const rotationSpeed = 0.02
     const scene = useScene()
     const distVecRef = useRef<number>(0)
@@ -33,7 +23,15 @@ const DeerController: FC = () => {
     const waypointRef = useRef<Mesh>()
     const deerRef = useRef<AbstractMesh>()
     const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
-    const walk = useAnimation('WalkForward', walkSpeedFactor)
+    const walk = useWalkAction(
+        'WalkForward',
+        0.05,
+        angleRef,
+        distVecRef,
+        deerRef,
+        groundRef,
+        targetVecNormRef
+    )
     // todo: add other idle anims on loop
     // const idle = useAnimation('Idle_1', () => distVecRef.current < 10 * translationSpeed)
     // const left = useAnimationBlended(
@@ -52,16 +50,6 @@ const DeerController: FC = () => {
         }
     }, [scene])
 
-    const getWalkSpeedFactor = () => {
-        const degrees = Angle.FromRadians(angleRef.current).degrees()
-        const angleFactor =
-            degrees < 90 ? 1 - degrees / 90 : degrees > 270 ? (degrees - 270) / 90 : 0
-        const distanceFactor =
-            distVecRef.current < 2 ? 0.5 : distVecRef.current < 4 ? distVecRef.current / 4 : 1
-
-        return angleFactor * distanceFactor
-    }
-
     useBeforeRender(() => {
         if (
             !groundRef.current ||
@@ -71,9 +59,6 @@ const DeerController: FC = () => {
         ) {
             return
         }
-        walkSpeedFactor.current = getWalkSpeedFactor()
-        console.log(walkSpeedFactor.current)
-
         angleRef.current = getAngleBetweenMeshes(deerRef.current, waypointRef.current)
 
         const isRotating = distVecRef.current > 0 && Math.abs(angleRef.current) >= rotationSpeed
@@ -91,30 +76,6 @@ const DeerController: FC = () => {
             )
         }
 
-        if (walkSpeedFactor.current > 0) {
-            const walkSpeed = walkSpeedFactor.current * translationSpeed
-            distVecRef.current -= walkSpeed
-            deerRef.current.translate(targetVecNormRef.current, walkSpeed, Space.WORLD)
-
-            deerRef.current.moveWithCollisions(Vector3.Zero())
-
-            // Casting a ray to get height
-            let ray = new Ray(
-                new Vector3(
-                    deerRef.current.position.x,
-                    groundRef.current.getBoundingInfo().boundingBox.maximumWorld.y + 1,
-                    deerRef.current.position.z
-                ),
-                new Vector3(0, 0, 0)
-            )
-            const worldInverse = new Matrix()
-            groundRef.current.getWorldMatrix().invertToRef(worldInverse)
-            ray = Ray.Transform(ray, worldInverse)
-            const pickInfo = groundRef.current.intersects(ray)
-            if (pickInfo.hit && pickInfo.pickedPoint) {
-                deerRef.current.position.y = pickInfo.pickedPoint.y + 1
-            }
-        }
         walk.render()
         // idle.render()
         // left.render()
