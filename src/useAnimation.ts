@@ -1,7 +1,7 @@
 import { MutableRefObject } from 'react'
 import { useScene } from 'react-babylonjs'
 
-function useAnimation(animationName: string, walkSpeedFactor: MutableRefObject<number>) {
+function useAnimation(animationName: string, speedFactor: MutableRefObject<number>) {
     const scene = useScene()
 
     const init = () => {
@@ -15,7 +15,7 @@ function useAnimation(animationName: string, walkSpeedFactor: MutableRefObject<n
         const animationGroup = scene?.getAnimationGroupByName(animationName)
 
         if (animationGroup) {
-            animationGroup.speedRatio = walkSpeedFactor.current
+            animationGroup.speedRatio = speedFactor.current
         }
     }
 
