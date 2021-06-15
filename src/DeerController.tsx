@@ -78,12 +78,6 @@ const DeerController: FC = () => {
 
         const isRotating = distVecRef.current > 0 && Math.abs(angleRef.current) >= rotationSpeed
 
-        walk.render()
-        // idle.render()
-        // left.render()
-        // right.render()
-        // jump.render()
-
         if (isRotating) {
             quaternationRef.current.copyFrom(deerRef.current.rotationQuaternion)
 
@@ -121,6 +115,11 @@ const DeerController: FC = () => {
                 deerRef.current.position.y = pickInfo.pickedPoint.y + 1
             }
         }
+        walk.render()
+        // idle.render()
+        // left.render()
+        // right.render()
+        // jump.render()
     })
 
     // todo: move to utils
