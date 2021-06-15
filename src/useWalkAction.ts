@@ -4,7 +4,6 @@ import { MutableRefObject, useRef } from 'react'
 import useAnimation from './useAnimation'
 
 function useWalkAction(
-    animationName: string,
     maxSpeed: number,
     angleRef: MutableRefObject<number>,
     distVecRef: MutableRefObject<number>,
@@ -13,7 +12,7 @@ function useWalkAction(
     targetVecNormRef: MutableRefObject<Vector3>
 ) {
     const speedRef = useRef(0)
-    const walkAnimation = useAnimation(animationName, speedRef)
+    const walkAnimation = useAnimation('WalkForward', speedRef)
 
     const getSpeedFactor = () => {
         const degrees = Angle.FromRadians(angleRef.current).degrees()

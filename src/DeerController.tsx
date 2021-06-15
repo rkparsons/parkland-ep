@@ -7,14 +7,14 @@ import {
     Tools,
     Vector3
 } from '@babylonjs/core'
+import { FC, Suspense, useEffect, useRef } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
-import React, { FC, Suspense, useEffect, useRef } from 'react'
 
 import Ground from './Ground'
+import useTurnAction from './useTurnAction'
 import useWalkAction from './useWalkAction'
 
 const DeerController: FC = () => {
-    const rotationSpeed = 0.02
     const scene = useScene()
     const distVecRef = useRef<number>(0)
     const angleRef = useRef<number>(0)
@@ -22,26 +22,11 @@ const DeerController: FC = () => {
     const groundRef = useRef<GroundMesh>()
     const waypointRef = useRef<Mesh>()
     const deerRef = useRef<AbstractMesh>()
-    const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
-    const walk = useWalkAction(
-        'WalkForward',
-        0.05,
-        angleRef,
-        distVecRef,
-        deerRef,
-        groundRef,
-        targetVecNormRef
-    )
+    const walk = useWalkAction(0.05, angleRef, distVecRef, deerRef, groundRef, targetVecNormRef)
+    const turn = useTurnAction(0.02, 0.05, angleRef, distVecRef, deerRef, waypointRef)
     // todo: add other idle anims on loop
     // const idle = useAnimationLinked('Idle_1', () => 1 - walk.speedRef.current)
-    // const left = useAnimationBlended(
-    //     'TurnLeft',
-    //     () => distVecRef.current >= translationSpeed && angleRef.current < -50 * rotationSpeed
-    // )
-    // const right = useAnimationBlended(
-    //     'TurnRight',
-    //     () => distVecRef.current >= translationSpeed && angleRef.current > 50 * rotationSpeed
-    // )
+
     // const jump = useAnimationOneShot(' ', 'Jump')
 
     useEffect(() => {
@@ -51,46 +36,11 @@ const DeerController: FC = () => {
     }, [scene])
 
     useBeforeRender(() => {
-        if (
-            !groundRef.current ||
-            !deerRef.current ||
-            !waypointRef.current ||
-            !deerRef.current.rotationQuaternion
-        ) {
-            return
-        }
-        angleRef.current = getAngleBetweenMeshes(deerRef.current, waypointRef.current)
-
-        const isRotating = distVecRef.current > 0 && Math.abs(angleRef.current) >= rotationSpeed
-
-        if (isRotating) {
-            quaternationRef.current.copyFrom(deerRef.current.rotationQuaternion)
-
-            deerRef.current.lookAt(waypointRef.current.position)
-
-            Quaternion.SlerpToRef(
-                quaternationRef.current,
-                deerRef.current.rotationQuaternion,
-                rotationSpeed,
-                deerRef.current.rotationQuaternion
-            )
-        }
-
         walk.render()
         // idle.render()
-        // left.render()
-        // right.render()
+        turn.render()
         // jump.render()
     })
-
-    // todo: move to utils
-    const getAngleBetweenMeshes = (mesh1: AbstractMesh, mesh2: AbstractMesh) => {
-        const v0 = mesh1.getDirection(new Vector3(0, 0, 1)).normalize()
-        const v1 = mesh2.position.subtract(mesh1.position).normalize()
-        const direction = Vector3.Cross(v0, v1).y < 0 ? -1 : 1
-
-        return direction * Math.acos(Vector3.Dot(v0, v1))
-    }
 
     const onPointerDown = (e: PointerEvent, pickResult: PickingInfo) => {
         if (
@@ -116,11 +66,9 @@ const DeerController: FC = () => {
             animationGroup.stop()
         })
 
-        // todo: move init logic to hooks
         walk.init()
+        turn.init()
         // idle.init()
-        // left.init()
-        // right.init()
         // jump.init()
     }
 
