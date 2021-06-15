@@ -54,14 +54,12 @@ const DeerController: FC = () => {
 
     const getWalkSpeedFactor = () => {
         const degrees = Angle.FromRadians(angleRef.current).degrees()
+        const angleFactor =
+            degrees < 90 ? 1 - degrees / 90 : degrees > 270 ? (degrees - 270) / 90 : 0
+        const distanceFactor =
+            distVecRef.current < 2 ? 0.5 : distVecRef.current < 4 ? distVecRef.current / 4 : 1
 
-        if (degrees < 90) {
-            return 1 - degrees / 90
-        } else if (degrees > 270) {
-            return (degrees - 270) / 90
-        } else {
-            return 0
-        }
+        return angleFactor * distanceFactor
     }
 
     useBeforeRender(() => {
@@ -74,8 +72,6 @@ const DeerController: FC = () => {
             return
         }
         walkSpeedFactor.current = getWalkSpeedFactor()
-
-        console.log(walkSpeedFactor.current)
 
         angleRef.current = getAngleBetweenMeshes(deerRef.current, waypointRef.current)
 
