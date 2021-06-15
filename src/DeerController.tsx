@@ -72,12 +72,11 @@ const DeerController: FC = () => {
             return
         }
         walkSpeedFactor.current = getWalkSpeedFactor()
+        console.log(walkSpeedFactor.current)
 
         angleRef.current = getAngleBetweenMeshes(deerRef.current, waypointRef.current)
 
-        const isWalking = distVecRef.current >= translationSpeed
-        const isRotating = isWalking && Math.abs(angleRef.current) >= rotationSpeed
-        const isSlowWalk = angleRef.current >= Angle.FromDegrees(5).radians()
+        const isRotating = distVecRef.current > 0 && Math.abs(angleRef.current) >= rotationSpeed
 
         walk.render()
         // idle.render()
