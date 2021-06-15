@@ -39,6 +39,7 @@ function useTurnAction(
         ) {
             return
         }
+
         angleRef.current = getAngleBetweenMeshes(characterRef.current, waypointRef.current)
 
         const isRotating = distVecRef.current > 0 && Math.abs(angleRef.current) >= rotationSpeed
