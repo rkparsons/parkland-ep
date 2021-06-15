@@ -33,7 +33,7 @@ const DeerController: FC = () => {
         targetVecNormRef
     )
     // todo: add other idle anims on loop
-    // const idle = useAnimation('Idle_1', () => distVecRef.current < 10 * translationSpeed)
+    // const idle = useAnimationLinked('Idle_1', () => 1 - walk.speedRef.current)
     // const left = useAnimationBlended(
     //     'TurnLeft',
     //     () => distVecRef.current >= translationSpeed && angleRef.current < -50 * rotationSpeed
