@@ -4,6 +4,9 @@ import React, { FC } from 'react'
 import DeerController from './DeerController'
 import InputMapProvider from './InputMapProvider'
 import { Vector3 } from '@babylonjs/core'
+import withPointAndClickControls from './withPointAndClickControls'
+
+const DeerControllerWithPointAndClickControls = withPointAndClickControls(DeerController)
 
 const DeerEngine: FC = () => (
     <Engine antialias adaptToDeviceRatio canvasId="canvas">
@@ -19,7 +22,7 @@ const DeerEngine: FC = () => (
                 />
                 <hemisphericLight name="hemi-light" intensity={0.7} direction={Vector3.Up()} />
                 <Skybox rootUrl={`${process.env.PUBLIC_URL}/textures/TropicalSunnyDay`} />
-                <DeerController />
+                <DeerControllerWithPointAndClickControls />
             </InputMapProvider>
         </Scene>
     </Engine>
