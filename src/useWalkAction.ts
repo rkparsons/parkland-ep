@@ -15,7 +15,7 @@ function useWalkAction(
 ) {
     const speedRef = useRef(0)
     const walkAnimation = useAnimation('WalkForward', speedRef)
-    const idleAnimation = useAnimationLinked('Idle', () => (speedRef.current ? 0 : 1))
+    const idleAnimation = useAnimationLinked('Idle', () => 1 - speedRef.current)
 
     const getSpeedFactor = () => {
         const degrees = Angle.FromRadians(angleRef.current).degrees()
