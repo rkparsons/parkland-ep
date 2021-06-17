@@ -2,13 +2,13 @@ import { Color3, GroundMesh } from '@babylonjs/core'
 import React, { FC, MutableRefObject } from 'react'
 
 type ViewProps = {
-    groundRef: MutableRefObject<GroundMesh | undefined>
+    ground: MutableRefObject<GroundMesh | undefined>
 }
-const Ground: FC<ViewProps> = ({ groundRef }) => {
+const Ground: FC<ViewProps> = ({ ground }) => {
     return (
         <>
             <groundFromHeightMap
-                ref={groundRef}
+                ref={ground}
                 name="ground1"
                 width={100}
                 height={100}

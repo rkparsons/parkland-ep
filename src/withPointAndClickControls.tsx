@@ -1,30 +1,31 @@
-import React, { FC, useRef } from 'react'
+import { FC, MutableRefObject } from 'react'
 
-import Ground from './Ground'
 import { GroundMesh } from '@babylonjs/core'
 import { ILoadedModel } from 'react-babylonjs'
 import usePointAndClickControls from './usePointAndClickControls'
 
-type ChildProps = {
+type ModelProps = {
     onModelLoaded: (model: ILoadedModel) => void
 }
 
-const withPointAndClickControls = (Component: FC<ChildProps>) => {
-    // todo: pass configurable ground
-    const componentWithPointAndClickControls = () => {
-        const groundRef = useRef<GroundMesh>()
-        const { waypointRef, initControls } = usePointAndClickControls(groundRef)
+type GroundProps = {
+    ground: MutableRefObject<GroundMesh | undefined>
+}
+
+const withPointAndClickControls = (Model: FC<ModelProps>, Ground: FC<GroundProps>) => {
+    const modelWithPointAndClickControls = () => {
+        const { waypoint, ground, initControls } = usePointAndClickControls()
 
         return (
             <>
-                <Component onModelLoaded={initControls} />
-                <sphere name="waypoint" ref={waypointRef} isVisible={false} />
-                <Ground groundRef={groundRef} />
+                <Model onModelLoaded={initControls} />
+                <sphere name="waypoint" ref={waypoint} isVisible={false} />
+                <Ground ground={ground} />
             </>
         )
     }
 
-    return componentWithPointAndClickControls
+    return modelWithPointAndClickControls
 }
 
 export default withPointAndClickControls

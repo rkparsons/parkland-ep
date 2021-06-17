@@ -6,7 +6,7 @@ type ViewProps = {
     onModelLoaded: (model: ILoadedModel) => void
 }
 
-const DeerController: FC<ViewProps> = ({ onModelLoaded }) => {
+const DeerModel: FC<ViewProps> = ({ onModelLoaded }) => {
     return (
         <Suspense fallback={null}>
             <Model
@@ -24,4 +24,4 @@ const DeerController: FC<ViewProps> = ({ onModelLoaded }) => {
     )
 }
 
-export default DeerController
+export default DeerModel
