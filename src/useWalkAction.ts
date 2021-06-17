@@ -3,6 +3,7 @@ import { MutableRefObject, useRef } from 'react'
 
 import { ILoadedModel } from 'react-babylonjs'
 import useAnimation from './useAnimation'
+import useAnimationLinked from './useAnimationLinked'
 
 function useWalkAction(
     maxSpeed: number,
@@ -14,6 +15,7 @@ function useWalkAction(
 ) {
     const speedRef = useRef(0)
     const walkAnimation = useAnimation('WalkForward', speedRef)
+    const idleAnimation = useAnimationLinked('Idle', () => (speedRef.current ? 0 : 1))
 
     const getSpeedFactor = () => {
         const degrees = Angle.FromRadians(angleRef.current).degrees()
@@ -60,11 +62,13 @@ function useWalkAction(
 
     const init = () => {
         walkAnimation.init()
+        idleAnimation.init()
     }
 
     const render = () => {
         translateRoot()
         walkAnimation.render()
+        idleAnimation.render()
     }
 
     return {
