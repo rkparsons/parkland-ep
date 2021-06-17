@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react'
 import useTurnAction from './useTurnAction'
 import useWalkAction from './useWalkAction'
 
+// todo: pass generic array of actions which take all possible waypoint props
 function usePointAndClickControls() {
     const model = useRef<ILoadedModel>()
     const angle = useRef<number>(0)
