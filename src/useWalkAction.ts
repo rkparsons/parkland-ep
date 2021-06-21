@@ -3,59 +3,65 @@ import { MutableRefObject, useRef } from 'react'
 
 import { ILoadedModel } from 'react-babylonjs'
 import useAnimation from './useAnimation'
-import useAnimationLinked from './useAnimationLinked'
+import useAnimationBlended from './useAnimationBlended'
 
 function useWalkAction(
     maxSpeed: number,
     angle: MutableRefObject<Angle>,
-    distVecRef: MutableRefObject<number>,
-    modelRef: MutableRefObject<ILoadedModel | undefined>,
-    groundRef: MutableRefObject<GroundMesh | undefined>,
-    targetVecNormRef: MutableRefObject<Vector3>
+    distance: MutableRefObject<number>,
+    model: MutableRefObject<ILoadedModel | undefined>,
+    ground: MutableRefObject<GroundMesh | undefined>,
+    normal: MutableRefObject<Vector3>
 ) {
     const speedRef = useRef(0)
     const walkAnimation = useAnimation('WalkForward', speedRef)
-    const idleAnimation = useAnimationLinked('Idle', () => 1 - speedRef.current)
+    const idleAnimation = useAnimationBlended('Idle', () => distance.current < 1)
 
-    const getSpeedFactor = () => {
+    const getAngleFactor = () => {
         const degrees = angle.current.degrees()
 
-        const angleFactor = degrees < 15 || degrees > 345 ? 1 : 0
-        const distanceFactor =
-            distVecRef.current < 2 ? 0.5 : distVecRef.current < 4 ? distVecRef.current / 4 : 1
+        if (degrees < 15 || degrees > 345) {
+            return 1
+        } else if (degrees < 90 || degrees > 270) {
+            return 0.5
+        } else {
+            return 0
+        }
+    }
 
-        return angleFactor * distanceFactor
+    const getDistanceFactor = () => {
+        return distance.current < 2 ? 0.5 : distance.current < 4 ? distance.current / 4 : 1
     }
 
     const translateRoot = () => {
-        if (!groundRef.current || !modelRef.current || !modelRef.current.rootMesh) {
+        if (!ground.current || !model.current || !model.current.rootMesh) {
             return
         }
 
-        speedRef.current = getSpeedFactor()
+        speedRef.current = getDistanceFactor() * getAngleFactor()
 
         if (speedRef.current > 0) {
             const walkSpeed = speedRef.current * maxSpeed
-            distVecRef.current -= walkSpeed
-            modelRef.current.rootMesh.translate(targetVecNormRef.current, walkSpeed, Space.WORLD)
+            distance.current -= walkSpeed
+            model.current.rootMesh.translate(normal.current, walkSpeed, Space.WORLD)
 
-            modelRef.current.rootMesh.moveWithCollisions(Vector3.Zero())
+            model.current.rootMesh.moveWithCollisions(Vector3.Zero())
 
             // Casting a ray to get height
             let ray = new Ray(
                 new Vector3(
-                    modelRef.current.rootMesh.position.x,
-                    groundRef.current.getBoundingInfo().boundingBox.maximumWorld.y + 1,
-                    modelRef.current.rootMesh.position.z
+                    model.current.rootMesh.position.x,
+                    ground.current.getBoundingInfo().boundingBox.maximumWorld.y + 1,
+                    model.current.rootMesh.position.z
                 ),
                 new Vector3(0, 0, 0)
             )
             const worldInverse = new Matrix()
-            groundRef.current.getWorldMatrix().invertToRef(worldInverse)
+            ground.current.getWorldMatrix().invertToRef(worldInverse)
             ray = Ray.Transform(ray, worldInverse)
-            const pickInfo = groundRef.current.intersects(ray)
+            const pickInfo = ground.current.intersects(ray)
             if (pickInfo.hit && pickInfo.pickedPoint) {
-                modelRef.current.rootMesh.position.y = pickInfo.pickedPoint.y + 1
+                model.current.rootMesh.position.y = pickInfo.pickedPoint.y + 1
             }
         }
     }
@@ -66,8 +72,9 @@ function useWalkAction(
     }
 
     const render = () => {
+        const isActive = angle.current.degrees() < 15 || angle.current.degrees() > 345
         translateRoot()
-        walkAnimation.render(angle.current.degrees() < 15 || angle.current.degrees() > 345)
+        walkAnimation.render(isActive)
         idleAnimation.render()
     }
 
