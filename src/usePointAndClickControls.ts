@@ -1,6 +1,6 @@
-import { Angle, GroundMesh, Matrix, Mesh, PickingInfo, Ray, Space, Vector3 } from '@babylonjs/core'
+import { Angle, GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
-import { getAngleBetweenMeshes, rotateCharacter } from './utils'
+import { getAngleBetweenMeshes, rotateCharacter, translateCharacter } from './utils'
 import { useEffect, useRef } from 'react'
 
 import useAnimation from './useAnimation'
@@ -8,8 +8,6 @@ import useAnimationBlended from './useAnimationBlended'
 
 // todo: pass generic array of actions which take all possible waypoint props
 function usePointAndClickControls() {
-    const maxWalkSpeed = 0.05
-
     const model = useRef<ILoadedModel>()
     const ground = useRef<GroundMesh>()
     const waypoint = useRef<Mesh>()
@@ -56,39 +54,6 @@ function usePointAndClickControls() {
         return distanceFactor * angleFactor
     }
 
-    // todo: put translate/rotate into utils
-    const translateRoot = (speedFactor: number) => {
-        if (!ground.current || !model.current || !model.current.rootMesh || !waypoint.current) {
-            return
-        }
-
-        const normal = Vector3.Normalize(
-            waypoint.current.position.subtract(model.current.rootMesh.position)
-        )
-
-        const walkSpeed = speedFactor * maxWalkSpeed
-        model.current.rootMesh.translate(normal, walkSpeed, Space.WORLD)
-
-        model.current.rootMesh.moveWithCollisions(Vector3.Zero())
-
-        // Casting a ray to get height
-        let ray = new Ray(
-            new Vector3(
-                model.current.rootMesh.position.x,
-                ground.current.getBoundingInfo().boundingBox.maximumWorld.y + 1,
-                model.current.rootMesh.position.z
-            ),
-            new Vector3(0, 0, 0)
-        )
-        const worldInverse = new Matrix()
-        ground.current.getWorldMatrix().invertToRef(worldInverse)
-        ray = Ray.Transform(ray, worldInverse)
-        const pickInfo = ground.current.intersects(ray)
-        if (pickInfo.hit && pickInfo.pickedPoint) {
-            model.current.rootMesh.position.y = pickInfo.pickedPoint.y + 1
-        }
-    }
-
     useEffect(() => {
         if (scene) {
             scene.onPointerDown = onPointerDown
@@ -96,7 +61,7 @@ function usePointAndClickControls() {
     }, [scene])
 
     useBeforeRender(() => {
-        if (!model.current?.rootMesh || !waypoint.current) {
+        if (!model.current?.rootMesh || !waypoint.current || !ground.current) {
             return
         }
 
@@ -125,7 +90,13 @@ function usePointAndClickControls() {
         }
 
         if (isWalking) {
-            translateRoot(walkSpeedFactor)
+            translateCharacter(
+                model.current,
+                waypoint.current,
+                ground.current,
+                walkSpeedFactor,
+                0.05
+            )
         }
 
         walkAnimation.render(walkSpeedFactor)

@@ -1,4 +1,4 @@
-import { AbstractMesh, Angle, Quaternion, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, Angle, Matrix, Quaternion, Ray, Space, Vector3 } from '@babylonjs/core'
 
 import { ILoadedModel } from 'react-babylonjs'
 
@@ -29,4 +29,39 @@ export const rotateCharacter = (
         factor,
         character.rootMesh.rotationQuaternion
     )
+}
+
+export const translateCharacter = (
+    character: ILoadedModel,
+    waypoint: AbstractMesh,
+    ground: AbstractMesh,
+    speedFactor: number,
+    maxSpeed: number
+) => {
+    if (!character.rootMesh) {
+        return
+    }
+
+    const normal = Vector3.Normalize(waypoint.position.subtract(character.rootMesh.position))
+    const walkSpeed = speedFactor * maxSpeed
+
+    character.rootMesh.translate(normal, walkSpeed, Space.WORLD)
+    character.rootMesh.moveWithCollisions(Vector3.Zero())
+
+    // todo: refactor into separate method: Casting a ray to get height
+    let ray = new Ray(
+        new Vector3(
+            character.rootMesh.position.x,
+            ground.getBoundingInfo().boundingBox.maximumWorld.y + 1,
+            character.rootMesh.position.z
+        ),
+        new Vector3(0, 0, 0)
+    )
+    const worldInverse = new Matrix()
+    ground.getWorldMatrix().invertToRef(worldInverse)
+    ray = Ray.Transform(ray, worldInverse)
+    const pickInfo = ground.intersects(ray)
+    if (pickInfo.hit && pickInfo.pickedPoint) {
+        character.rootMesh.position.y = pickInfo.pickedPoint.y + 1
+    }
 }
