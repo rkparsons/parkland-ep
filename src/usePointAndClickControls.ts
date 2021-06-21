@@ -14,8 +14,8 @@ function usePointAndClickControls() {
     const distVec = useRef<number>(0)
     const targetVecNorm = useRef<Vector3>(Vector3.Zero())
     const scene = useScene()
-    const walk = useWalkAction(0.05, angle, distVec, model, ground, targetVecNorm)
-    const turn = useTurnAction(0.02, angle, distVec, model, waypoint)
+    const walk = useWalkAction(angle, distVec, model, ground, targetVecNorm)
+    const turn = useTurnAction(angle, distVec, model, waypoint)
 
     const onPointerDown = (e: PointerEvent, pickResult: PickingInfo) => {
         if (

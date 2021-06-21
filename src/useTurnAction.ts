@@ -7,12 +7,12 @@ import useAnimationBlended from './useAnimationBlended'
 // todo: remove translation speed dependency
 
 function useTurnAction(
-    rotationSpeed: number,
     angle: MutableRefObject<Angle>,
     distance: MutableRefObject<number>,
     model: MutableRefObject<ILoadedModel | undefined>,
     waypoint: MutableRefObject<Mesh | undefined>
 ) {
+    const rotationSpeed = 0.02
     const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
 
     const getLeftSpeed = () => {
@@ -22,7 +22,7 @@ function useTurnAction(
             return 0
         }
 
-        return Math.pow(2 - degrees / 180, 0.5)
+        return Math.pow(2 - degrees / 180, 1 / 3)
     }
 
     const getRightSpeed = () => {
@@ -32,7 +32,7 @@ function useTurnAction(
             return 0
         }
 
-        return Math.pow(degrees / 180, 0.5)
+        return Math.pow(degrees / 180, 1 / 3)
     }
 
     const leftAnimation = useAnimationBlended('TurnLeft', getLeftSpeed)

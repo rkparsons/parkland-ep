@@ -6,13 +6,13 @@ import useAnimation from './useAnimation'
 import useAnimationBlended from './useAnimationBlended'
 
 function useWalkAction(
-    maxSpeed: number,
     angle: MutableRefObject<Angle>,
     distance: MutableRefObject<number>,
     model: MutableRefObject<ILoadedModel | undefined>,
     ground: MutableRefObject<GroundMesh | undefined>,
     normal: MutableRefObject<Vector3>
 ) {
+    const maxSpeed = 0.05
     const speedRef = useRef(0)
     const walkAnimation = useAnimation('WalkForward', speedRef)
     //const idleAnimation = useAnimationBlended('Idle', () => distance.current < 1)
