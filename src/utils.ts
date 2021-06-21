@@ -1,6 +1,6 @@
 import { AbstractMesh, Angle, Matrix, Quaternion, Ray, Space, Vector3 } from '@babylonjs/core'
 
-export const getAngleBetweenMeshes = (mesh1: AbstractMesh, mesh2: AbstractMesh) => {
+export function getAngleBetweenMeshes(mesh1: AbstractMesh, mesh2: AbstractMesh) {
     const v0 = mesh1.getDirection(new Vector3(0, 0, 1)).normalize()
     const v1 = mesh2.position.subtract(mesh1.position).normalize()
     const direction = Vector3.Cross(v0, v1).y < 0 ? -1 : 1
@@ -9,11 +9,7 @@ export const getAngleBetweenMeshes = (mesh1: AbstractMesh, mesh2: AbstractMesh) 
 }
 
 // todo: put these methods in model class
-export const rotateCharacter = (
-    character: AbstractMesh,
-    waypoint: AbstractMesh,
-    factor: number
-) => {
+export function rotateCharacter(character: AbstractMesh, waypoint: AbstractMesh, factor: number) {
     if (!character.rotationQuaternion) {
         return
     }
@@ -30,13 +26,17 @@ export const rotateCharacter = (
     )
 }
 
-export const translateCharacter = (
+export function translateCharacter(
     character: AbstractMesh,
     waypoint: AbstractMesh,
     ground: AbstractMesh,
     speedFactor: number,
     maxSpeed: number
-) => {
+) {
+    if (speedFactor === 0) {
+        return
+    }
+
     const normal = Vector3.Normalize(waypoint.position.subtract(character.position))
     const walkSpeed = speedFactor * maxSpeed
 
@@ -46,7 +46,7 @@ export const translateCharacter = (
     adjustForGroundCollisions(character, ground)
 }
 
-export const adjustForGroundCollisions = (character: AbstractMesh, ground: AbstractMesh) => {
+export function adjustForGroundCollisions(character: AbstractMesh, ground: AbstractMesh) {
     const intersection = getCharacterGroundIntersection(character, ground)
 
     if (intersection.hit && intersection.pickedPoint) {
@@ -54,7 +54,7 @@ export const adjustForGroundCollisions = (character: AbstractMesh, ground: Abstr
     }
 }
 
-export const getCharacterGroundIntersection = (character: AbstractMesh, ground: AbstractMesh) => {
+export function getCharacterGroundIntersection(character: AbstractMesh, ground: AbstractMesh) {
     let ray = new Ray(
         new Vector3(
             character.position.x,
@@ -68,4 +68,17 @@ export const getCharacterGroundIntersection = (character: AbstractMesh, ground: 
     ground.getWorldMatrix().invertToRef(worldInverse)
     ray = Ray.Transform(ray, worldInverse)
     return ground.intersects(ray)
+}
+
+export function getCharacterSpeed(distanceToWaypoint: number, degreesToWaypoint: number) {
+    const distanceFactor =
+        distanceToWaypoint < 2 ? 0.5 : distanceToWaypoint < 4 ? distanceToWaypoint / 4 : 1
+    const angleFactor =
+        degreesToWaypoint < 15 || degreesToWaypoint > 345
+            ? 1
+            : degreesToWaypoint < 90 || degreesToWaypoint > 270
+            ? 0.2
+            : 0
+
+    return distanceFactor * angleFactor
 }

@@ -1,12 +1,23 @@
-import { FC, Suspense } from 'react'
+import { FC, MutableRefObject, Suspense } from 'react'
 import { ILoadedModel, Model } from 'react-babylonjs'
 import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
 
 type ViewProps = {
-    onModelLoaded: (model: ILoadedModel) => void
+    model: MutableRefObject<ILoadedModel | undefined>
+    onLoaded(): void
 }
 
-const DeerModel: FC<ViewProps> = ({ onModelLoaded }) => {
+const DeerModel: FC<ViewProps> = ({ model, onLoaded }) => {
+    const onModelLoaded = (loadedModel: ILoadedModel) => {
+        model.current = loadedModel
+
+        loadedModel.animationGroups?.forEach((animationGroup) => {
+            animationGroup.stop()
+        })
+
+        onLoaded()
+    }
+
     return (
         <Suspense fallback={null}>
             <Model

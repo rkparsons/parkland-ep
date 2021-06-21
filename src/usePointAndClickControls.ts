@@ -1,10 +1,12 @@
-import { AbstractMesh, GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
+import { GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
-import { getAngleBetweenMeshes, rotateCharacter, translateCharacter } from './utils'
+import {
+    getAngleBetweenMeshes,
+    getCharacterSpeed,
+    rotateCharacter,
+    translateCharacter
+} from './utils'
 import { useEffect, useRef } from 'react'
-
-import useAnimation from './useAnimation'
-import useAnimationBlended from './useAnimationBlended'
 
 // todo: separate translation/rotation from animation
 // todo: pass generic array of actions which take all possible waypoint props
@@ -12,13 +14,9 @@ function usePointAndClickControls() {
     const model = useRef<ILoadedModel>()
     const ground = useRef<GroundMesh>()
     const waypoint = useRef<Mesh>()
-
     const scene = useScene()
-
-    // todo: use identical animation functions
-    const leftAnimation = useAnimationBlended('TurnLeft')
-    const rightAnimation = useAnimationBlended('TurnRight')
-    const walkAnimation = useAnimation('WalkForward')
+    const distanceToWaypoint = useRef(0)
+    const degreesToWaypoint = useRef(0)
 
     function onPointerDown(e: PointerEvent, intersection: PickingInfo) {
         if (
@@ -32,70 +30,6 @@ function usePointAndClickControls() {
         }
     }
 
-    function initControls(loadedModel: ILoadedModel) {
-        model.current = loadedModel
-
-        model.current.animationGroups?.forEach((animationGroup) => {
-            animationGroup.stop()
-        })
-
-        walkAnimation.init()
-        leftAnimation.init()
-        rightAnimation.init()
-    }
-
-    function getWalkspeedFactor(distanceToWaypoint: number, degreesToWaypoint: number) {
-        const distanceFactor =
-            distanceToWaypoint < 2 ? 0.5 : distanceToWaypoint < 4 ? distanceToWaypoint / 4 : 1
-        const angleFactor =
-            degreesToWaypoint < 15 || degreesToWaypoint > 345
-                ? 1
-                : degreesToWaypoint < 90 || degreesToWaypoint > 270
-                ? 0.2
-                : 0
-
-        return distanceFactor * angleFactor
-    }
-
-    function rotateTowardsWaypoint(
-        character: AbstractMesh,
-        waypoint: AbstractMesh,
-        distanceToWaypoint: number,
-        degreesToWaypoint: number
-    ) {
-        const isRotatingLeft =
-            distanceToWaypoint > 1 && degreesToWaypoint > 180 && degreesToWaypoint < 330
-
-        const isRotatingRight =
-            distanceToWaypoint > 1 && degreesToWaypoint < 180 && degreesToWaypoint > 30
-
-        const isRotating = distanceToWaypoint >= 1
-
-        if (isRotating) {
-            rotateCharacter(character, waypoint, 0.02)
-        }
-
-        leftAnimation.render(isRotatingLeft)
-        rightAnimation.render(isRotatingRight)
-    }
-
-    function walkTowardsWaypoint(
-        character: AbstractMesh,
-        ground: AbstractMesh,
-        waypoint: AbstractMesh,
-        distanceToWaypoint: number,
-        degreesToWaypoint: number
-    ) {
-        const walkSpeedFactor = getWalkspeedFactor(distanceToWaypoint, degreesToWaypoint)
-        const isWalking = walkSpeedFactor > 0
-
-        if (isWalking) {
-            translateCharacter(character, waypoint, ground, walkSpeedFactor, 0.05)
-        }
-
-        walkAnimation.render(walkSpeedFactor)
-    }
-
     useEffect(() => {
         if (scene) {
             scene.onPointerDown = onPointerDown
@@ -107,36 +41,40 @@ function usePointAndClickControls() {
             return
         }
 
-        const degreesToWaypoint = getAngleBetweenMeshes(
+        degreesToWaypoint.current = getAngleBetweenMeshes(
             model.current.rootMesh,
             waypoint.current
         ).degrees()
 
-        const distanceToWaypoint = Vector3.Distance(
+        distanceToWaypoint.current = Vector3.Distance(
             waypoint.current.position,
             model.current.rootMesh.position
         )
 
-        rotateTowardsWaypoint(
-            model.current.rootMesh,
-            waypoint.current,
-            distanceToWaypoint,
-            degreesToWaypoint
+        if (distanceToWaypoint.current >= 1) {
+            rotateCharacter(model.current.rootMesh, waypoint.current, 0.02)
+        }
+
+        const characterSpeed = getCharacterSpeed(
+            distanceToWaypoint.current,
+            degreesToWaypoint.current
         )
 
-        walkTowardsWaypoint(
+        translateCharacter(
             model.current.rootMesh,
-            ground.current,
             waypoint.current,
-            distanceToWaypoint,
-            degreesToWaypoint
+            ground.current,
+            characterSpeed,
+            0.05
         )
     })
 
     return {
+        model,
         waypoint,
         ground,
-        initControls
+        distanceToWaypoint,
+        degreesToWaypoint
     }
 }
 

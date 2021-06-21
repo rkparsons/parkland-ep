@@ -9,6 +9,7 @@ import withPointAndClickControls from './withPointAndClickControls'
 
 const DeerModelWithPointAndClickControls = withPointAndClickControls(DeerModel, Ground)
 
+// todo: move tweakable params to .env
 const DeerEngine: FC = () => (
     <Engine antialias adaptToDeviceRatio canvasId="canvas">
         <Scene>
