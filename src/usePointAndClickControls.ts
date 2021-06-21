@@ -57,6 +57,28 @@ function usePointAndClickControls() {
         return distanceFactor * angleFactor
     }
 
+    function rotateTowardsWaypoint(
+        character: AbstractMesh,
+        waypoint: AbstractMesh,
+        distanceToWaypoint: number,
+        degreesToWaypoint: number
+    ) {
+        const isRotatingLeft =
+            distanceToWaypoint > 1 && degreesToWaypoint > 180 && degreesToWaypoint < 330
+
+        const isRotatingRight =
+            distanceToWaypoint > 1 && degreesToWaypoint < 180 && degreesToWaypoint > 30
+
+        const isRotating = distanceToWaypoint >= 1
+
+        if (isRotating) {
+            rotateCharacter(character, waypoint, 0.02)
+        }
+
+        leftAnimation.render(isRotatingLeft)
+        rightAnimation.render(isRotatingRight)
+    }
+
     function walkTowardsWaypoint(
         character: AbstractMesh,
         ground: AbstractMesh,
@@ -66,11 +88,12 @@ function usePointAndClickControls() {
     ) {
         const walkSpeedFactor = getWalkspeedFactor(distanceToWaypoint, degreesToWaypoint)
         const isWalking = walkSpeedFactor > 0
-        walkAnimation.render(walkSpeedFactor)
 
         if (isWalking) {
             translateCharacter(character, waypoint, ground, walkSpeedFactor, 0.05)
         }
+
+        walkAnimation.render(walkSpeedFactor)
     }
 
     useEffect(() => {
@@ -88,22 +111,18 @@ function usePointAndClickControls() {
             model.current.rootMesh,
             waypoint.current
         ).degrees()
+
         const distanceToWaypoint = Vector3.Distance(
             waypoint.current.position,
             model.current.rootMesh.position
         )
 
-        const isRotatingLeft =
-            distanceToWaypoint > 1 && degreesToWaypoint > 180 && degreesToWaypoint < 330
-
-        const isRotatingRight =
-            distanceToWaypoint > 1 && degreesToWaypoint < 180 && degreesToWaypoint > 30
-
-        const isRotating = distanceToWaypoint >= 1
-
-        if (isRotating) {
-            rotateCharacter(model.current.rootMesh, waypoint.current, 0.02)
-        }
+        rotateTowardsWaypoint(
+            model.current.rootMesh,
+            waypoint.current,
+            distanceToWaypoint,
+            degreesToWaypoint
+        )
 
         walkTowardsWaypoint(
             model.current.rootMesh,
@@ -112,9 +131,6 @@ function usePointAndClickControls() {
             distanceToWaypoint,
             degreesToWaypoint
         )
-
-        leftAnimation.render(isRotatingLeft)
-        rightAnimation.render(isRotatingRight)
     })
 
     return {
