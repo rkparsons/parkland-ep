@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react'
 import useAnimation from './useAnimation'
 import useAnimationBlended from './useAnimationBlended'
 
+// todo: separate translation/rotation from animation
 // todo: pass generic array of actions which take all possible waypoint props
 function usePointAndClickControls() {
     const model = useRef<ILoadedModel>()
