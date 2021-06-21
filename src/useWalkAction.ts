@@ -67,7 +67,7 @@ function useWalkAction(
 
     const render = () => {
         translateRoot()
-        walkAnimation.render(angle.current.degrees() < 15)
+        walkAnimation.render(angle.current.degrees() < 15 || angle.current.degrees() > 345)
         idleAnimation.render()
     }
 
