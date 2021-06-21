@@ -43,13 +43,15 @@ function usePointAndClickControls() {
         rightAnimation.init()
     }
 
-    // todo: always use degrees to reduce function calls
-    const getWalkspeedFactor = (distanceToWaypoint: number, angleToWaypoint: Angle) => {
-        const degrees = angleToWaypoint.degrees()
+    const getWalkspeedFactor = (distanceToWaypoint: number, degreesToWaypoint: number) => {
         const distanceFactor =
             distanceToWaypoint < 2 ? 0.5 : distanceToWaypoint < 4 ? distanceToWaypoint / 4 : 1
         const angleFactor =
-            degrees < 15 || degrees > 345 ? 1 : degrees < 90 || degrees > 270 ? 0.2 : 0
+            degreesToWaypoint < 15 || degreesToWaypoint > 345
+                ? 1
+                : degreesToWaypoint < 90 || degreesToWaypoint > 270
+                ? 0.2
+                : 0
 
         return distanceFactor * angleFactor
     }
@@ -65,25 +67,25 @@ function usePointAndClickControls() {
             return
         }
 
-        const angleToWaypoint = getAngleBetweenMeshes(model.current.rootMesh, waypoint.current)
+        const degreesToWaypoint = getAngleBetweenMeshes(
+            model.current.rootMesh,
+            waypoint.current
+        ).degrees()
         const distanceToWaypoint = Vector3.Distance(
             waypoint.current.position,
             model.current.rootMesh.position
         )
 
         const isRotatingLeft =
-            distanceToWaypoint > 1 &&
-            angleToWaypoint.degrees() > 180 &&
-            angleToWaypoint.degrees() < 330
+            distanceToWaypoint > 1 && degreesToWaypoint > 180 && degreesToWaypoint < 330
 
         const isRotatingRight =
-            distanceToWaypoint > 1 &&
-            angleToWaypoint.degrees() < 180 &&
-            angleToWaypoint.degrees() > 30
+            distanceToWaypoint > 1 && degreesToWaypoint < 180 && degreesToWaypoint > 30
 
-        const walkSpeedFactor = getWalkspeedFactor(distanceToWaypoint, angleToWaypoint)
+        const walkSpeedFactor = getWalkspeedFactor(distanceToWaypoint, degreesToWaypoint)
         const isWalking = walkSpeedFactor > 0
-        const isRotating = distanceToWaypoint >= 1 && Math.abs(angleToWaypoint.degrees()) >= 5
+        // todo: check if angle always positive or not
+        const isRotating = distanceToWaypoint >= 1 && Math.abs(degreesToWaypoint) >= 5
 
         if (isRotating) {
             rotateCharacter(model.current.rootMesh, waypoint.current, 0.02)
