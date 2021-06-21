@@ -8,6 +8,7 @@ export const getAngleBetweenMeshes = (mesh1: AbstractMesh, mesh2: AbstractMesh) 
     return Angle.FromRadians(direction * Math.acos(Vector3.Dot(v0, v1)))
 }
 
+// todo: put these methods in model class
 export const rotateCharacter = (
     character: AbstractMesh,
     waypoint: AbstractMesh,
@@ -42,10 +43,18 @@ export const translateCharacter = (
     character.translate(normal, walkSpeed, Space.WORLD)
     character.moveWithCollisions(Vector3.Zero())
 
-    translateCharacterHeight(character, ground)
+    adjustForGroundCollisions(character, ground)
 }
 
-export const translateCharacterHeight = (character: AbstractMesh, ground: AbstractMesh) => {
+export const adjustForGroundCollisions = (character: AbstractMesh, ground: AbstractMesh) => {
+    const intersection = getCharacterGroundIntersection(character, ground)
+
+    if (intersection.hit && intersection.pickedPoint) {
+        character.position.y = intersection.pickedPoint.y + 1
+    }
+}
+
+export const getCharacterGroundIntersection = (character: AbstractMesh, ground: AbstractMesh) => {
     let ray = new Ray(
         new Vector3(
             character.position.x,
@@ -54,11 +63,9 @@ export const translateCharacterHeight = (character: AbstractMesh, ground: Abstra
         ),
         new Vector3(0, 0, 0)
     )
+
     const worldInverse = new Matrix()
     ground.getWorldMatrix().invertToRef(worldInverse)
     ray = Ray.Transform(ray, worldInverse)
-    const pickInfo = ground.intersects(ray)
-    if (pickInfo.hit && pickInfo.pickedPoint) {
-        character.position.y = pickInfo.pickedPoint.y + 1
-    }
+    return ground.intersects(ray)
 }
