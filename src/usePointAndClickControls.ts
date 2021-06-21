@@ -25,9 +25,9 @@ function usePointAndClickControls() {
     const ground = useRef<GroundMesh>()
     const waypoint = useRef<Mesh>()
 
-    const normal = useRef<Vector3>(Vector3.Zero())
-
     const scene = useScene()
+
+    // todo: use identical animation functions
     const leftAnimation = useAnimationBlended('TurnLeft')
     const rightAnimation = useAnimationBlended('TurnRight')
     const walkAnimation = useAnimation('WalkForward')
@@ -38,15 +38,9 @@ function usePointAndClickControls() {
             pickResult.hit &&
             pickResult.pickedPoint &&
             pickResult.pickedMesh === ground.current &&
-            waypoint.current &&
-            model.current &&
-            model.current.rootMesh
+            waypoint.current
         ) {
-            let waypointPosition = pickResult.pickedPoint
-            waypoint.current.position = waypointPosition?.clone()
-            const modelPosition = model.current.rootMesh.position?.clone()
-            waypointPosition = waypointPosition.subtract(modelPosition)
-            normal.current = Vector3.Normalize(waypointPosition)
+            waypoint.current.position = pickResult.pickedPoint.clone()
         }
     }
 
@@ -75,12 +69,16 @@ function usePointAndClickControls() {
 
     // todo: put translate/rotate into utils
     const translateRoot = (speedFactor: number) => {
-        if (!ground.current || !model.current || !model.current.rootMesh) {
+        if (!ground.current || !model.current || !model.current.rootMesh || !waypoint.current) {
             return
         }
 
+        const normal = Vector3.Normalize(
+            waypoint.current.position.subtract(model.current.rootMesh.position)
+        )
+
         const walkSpeed = speedFactor * maxWalkSpeed
-        model.current.rootMesh.translate(normal.current, walkSpeed, Space.WORLD)
+        model.current.rootMesh.translate(normal, walkSpeed, Space.WORLD)
 
         model.current.rootMesh.moveWithCollisions(Vector3.Zero())
 
