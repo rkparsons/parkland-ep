@@ -30,7 +30,7 @@ function usePointAndClickControls() {
     const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
     const leftAnimation = useAnimationBlended('TurnLeft')
     const rightAnimation = useAnimationBlended('TurnRight')
-    const walkAnimation = useAnimation('WalkForward', speedRef)
+    const walkAnimation = useAnimation('WalkForward')
 
     const updateAngle = () => {
         if (!model.current?.rootMesh || !waypoint.current) {
@@ -158,10 +158,13 @@ function usePointAndClickControls() {
 
         const isTurningLeft =
             distance.current > 1 && angle.current.degrees() > 180 && angle.current.degrees() < 330
+
         const isTurningRight =
             distance.current > 1 && angle.current.degrees() < 180 && angle.current.degrees() > 30
 
-        walkAnimation.render()
+        const walkSpeed = getDistanceFactor() * getAngleFactor()
+
+        walkAnimation.render(walkSpeed)
         leftAnimation.render(isTurningLeft)
         rightAnimation.render(isTurningRight)
     })
