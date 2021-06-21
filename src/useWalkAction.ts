@@ -5,6 +5,7 @@ import { ILoadedModel } from 'react-babylonjs'
 import useAnimation from './useAnimation'
 import useAnimationBlended from './useAnimationBlended'
 
+// todo: finish walk cycle when stopping
 function useWalkAction(
     angle: MutableRefObject<Angle>,
     distance: MutableRefObject<number>,
