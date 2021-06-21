@@ -18,15 +18,18 @@ import useAnimationBlended from './useAnimationBlended'
 
 // todo: pass generic array of actions which take all possible waypoint props
 function usePointAndClickControls() {
+    const rotationFactor = 0.02
+    const maxWalkSpeed = 0.05
+
     const model = useRef<ILoadedModel>()
     const ground = useRef<GroundMesh>()
     const waypoint = useRef<Mesh>()
+
     const distance = useRef<number>(0)
     const normal = useRef<Vector3>(Vector3.Zero())
+    const quaternation = useRef<Quaternion>(Quaternion.Identity())
+
     const scene = useScene()
-    const rotationSpeed = 0.02
-    const maxSpeed = 0.05
-    const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
     const leftAnimation = useAnimationBlended('TurnLeft')
     const rightAnimation = useAnimationBlended('TurnRight')
     const walkAnimation = useAnimation('WalkForward')
@@ -79,7 +82,7 @@ function usePointAndClickControls() {
             return
         }
 
-        const walkSpeed = speedFactor * maxSpeed
+        const walkSpeed = speedFactor * maxWalkSpeed
         distance.current -= walkSpeed
         model.current.rootMesh.translate(normal.current, walkSpeed, Space.WORLD)
 
@@ -108,14 +111,14 @@ function usePointAndClickControls() {
             return
         }
 
-        quaternationRef.current.copyFrom(model.current.rootMesh.rotationQuaternion)
+        quaternation.current.copyFrom(model.current.rootMesh.rotationQuaternion)
 
         model.current.rootMesh.lookAt(waypoint.current.position)
 
         Quaternion.SlerpToRef(
-            quaternationRef.current,
+            quaternation.current,
             model.current.rootMesh.rotationQuaternion,
-            rotationSpeed,
+            rotationFactor,
             model.current.rootMesh.rotationQuaternion
         )
     }
