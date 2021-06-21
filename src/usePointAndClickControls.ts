@@ -26,12 +26,12 @@ function usePointAndClickControls() {
     const scene = useScene()
     const rotationSpeed = 0.02
     const maxSpeed = 0.05
-    const speedRef = useRef(0)
     const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
     const leftAnimation = useAnimationBlended('TurnLeft')
     const rightAnimation = useAnimationBlended('TurnRight')
     const walkAnimation = useAnimation('WalkForward')
 
+    // todo: get rid of angleref
     const updateAngle = () => {
         if (!model.current?.rootMesh || !waypoint.current) {
             return
@@ -42,27 +42,6 @@ function usePointAndClickControls() {
         const direction = Vector3.Cross(v0, v1).y < 0 ? -1 : 1
 
         angle.current = Angle.FromRadians(direction * Math.acos(Vector3.Dot(v0, v1)))
-    }
-
-    const rotateRoot = () => {
-        if (!model.current || !waypoint.current || !model.current.rootMesh?.rotationQuaternion) {
-            return
-        }
-
-        const isRotating = distance.current >= 1 && Math.abs(angle.current.degrees()) >= 5
-
-        if (isRotating) {
-            quaternationRef.current.copyFrom(model.current.rootMesh.rotationQuaternion)
-
-            model.current.rootMesh.lookAt(waypoint.current.position)
-
-            Quaternion.SlerpToRef(
-                quaternationRef.current,
-                model.current.rootMesh.rotationQuaternion,
-                rotationSpeed,
-                model.current.rootMesh.rotationQuaternion
-            )
-        }
     }
 
     const onPointerDown = (e: PointerEvent, pickResult: PickingInfo) => {
@@ -112,37 +91,51 @@ function usePointAndClickControls() {
         return distance.current < 2 ? 0.5 : distance.current < 4 ? distance.current / 4 : 1
     }
 
-    const translateRoot = () => {
+    // todo: put translate/rotate into utils
+    const translateRoot = (speedFactor: number) => {
         if (!ground.current || !model.current || !model.current.rootMesh) {
             return
         }
 
-        speedRef.current = getDistanceFactor() * getAngleFactor()
+        const walkSpeed = speedFactor * maxSpeed
+        distance.current -= walkSpeed
+        model.current.rootMesh.translate(normal.current, walkSpeed, Space.WORLD)
 
-        if (speedRef.current > 0) {
-            const walkSpeed = speedRef.current * maxSpeed
-            distance.current -= walkSpeed
-            model.current.rootMesh.translate(normal.current, walkSpeed, Space.WORLD)
+        model.current.rootMesh.moveWithCollisions(Vector3.Zero())
 
-            model.current.rootMesh.moveWithCollisions(Vector3.Zero())
-
-            // Casting a ray to get height
-            let ray = new Ray(
-                new Vector3(
-                    model.current.rootMesh.position.x,
-                    ground.current.getBoundingInfo().boundingBox.maximumWorld.y + 1,
-                    model.current.rootMesh.position.z
-                ),
-                new Vector3(0, 0, 0)
-            )
-            const worldInverse = new Matrix()
-            ground.current.getWorldMatrix().invertToRef(worldInverse)
-            ray = Ray.Transform(ray, worldInverse)
-            const pickInfo = ground.current.intersects(ray)
-            if (pickInfo.hit && pickInfo.pickedPoint) {
-                model.current.rootMesh.position.y = pickInfo.pickedPoint.y + 1
-            }
+        // Casting a ray to get height
+        let ray = new Ray(
+            new Vector3(
+                model.current.rootMesh.position.x,
+                ground.current.getBoundingInfo().boundingBox.maximumWorld.y + 1,
+                model.current.rootMesh.position.z
+            ),
+            new Vector3(0, 0, 0)
+        )
+        const worldInverse = new Matrix()
+        ground.current.getWorldMatrix().invertToRef(worldInverse)
+        ray = Ray.Transform(ray, worldInverse)
+        const pickInfo = ground.current.intersects(ray)
+        if (pickInfo.hit && pickInfo.pickedPoint) {
+            model.current.rootMesh.position.y = pickInfo.pickedPoint.y + 1
         }
+    }
+
+    const rotateRoot = () => {
+        if (!model.current || !waypoint.current || !model.current.rootMesh?.rotationQuaternion) {
+            return
+        }
+
+        quaternationRef.current.copyFrom(model.current.rootMesh.rotationQuaternion)
+
+        model.current.rootMesh.lookAt(waypoint.current.position)
+
+        Quaternion.SlerpToRef(
+            quaternationRef.current,
+            model.current.rootMesh.rotationQuaternion,
+            rotationSpeed,
+            model.current.rootMesh.rotationQuaternion
+        )
     }
 
     useEffect(() => {
@@ -153,20 +146,28 @@ function usePointAndClickControls() {
 
     useBeforeRender(() => {
         updateAngle()
-        rotateRoot()
-        translateRoot()
 
-        const isTurningLeft =
+        const isRotatingLeft =
             distance.current > 1 && angle.current.degrees() > 180 && angle.current.degrees() < 330
 
-        const isTurningRight =
+        const isRotatingRight =
             distance.current > 1 && angle.current.degrees() < 180 && angle.current.degrees() > 30
 
-        const walkSpeed = getDistanceFactor() * getAngleFactor()
+        const walkSpeedFactor = getDistanceFactor() * getAngleFactor()
+        const isWalking = walkSpeedFactor > 0
+        const isRotating = distance.current >= 1 && Math.abs(angle.current.degrees()) >= 5
 
-        walkAnimation.render(walkSpeed)
-        leftAnimation.render(isTurningLeft)
-        rightAnimation.render(isTurningRight)
+        if (isRotating) {
+            rotateRoot()
+        }
+
+        if (isWalking) {
+            translateRoot(walkSpeedFactor)
+        }
+
+        walkAnimation.render(walkSpeedFactor)
+        leftAnimation.render(isRotatingLeft)
+        rightAnimation.render(isRotatingRight)
     })
 
     return {
