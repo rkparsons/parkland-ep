@@ -13,12 +13,11 @@ function useAnimation(animationName: string, speedFactor: MutableRefObject<numbe
         }
     }
 
-    const render = (isActive: boolean) => {
+    const render = () => {
         const animationGroup = scene?.getAnimationGroupByName(animationName)
 
         if (animationGroup) {
             animationGroup.speedRatio = speedFactor.current
-            animationGroup.setWeightForAllAnimatables(isActive ? 1 : 0)
         }
     }
 

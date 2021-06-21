@@ -72,9 +72,8 @@ function useWalkAction(
     }
 
     const render = () => {
-        const isActive = angle.current.degrees() < 15 || angle.current.degrees() > 345
         translateRoot()
-        walkAnimation.render(isActive)
+        walkAnimation.render()
         //idleAnimation.render()
     }
 
