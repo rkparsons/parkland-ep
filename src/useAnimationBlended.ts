@@ -1,10 +1,10 @@
 import { useRef } from 'react'
 import { useScene } from 'react-babylonjs'
 
-function useBlendedAnimation(animationName: string, getIsActive: () => boolean) {
+function useBlendedAnimation(animationName: string, getTargetSpeed: () => number) {
     const scene = useScene()
     const speed = useRef(0)
-    const acceleration = 0.05
+    const acceleration = 0.02
 
     const init = () => {
         const animationGroup = scene?.getAnimationGroupByName(animationName)
@@ -15,11 +15,12 @@ function useBlendedAnimation(animationName: string, getIsActive: () => boolean) 
 
     const render = () => {
         const animationGroup = scene?.getAnimationGroupByName(animationName)
+        const targetSpeed = getTargetSpeed()
 
-        if (getIsActive() && speed.current < 1) {
+        if (targetSpeed > speed.current) {
             speed.current += acceleration
-        } else if (!getIsActive() && speed.current > 0) {
-            speed.current -= acceleration
+        } else if (targetSpeed < speed.current) {
+            speed.current = targetSpeed
         }
 
         animationGroup?.setWeightForAllAnimatables(speed.current)

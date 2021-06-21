@@ -15,7 +15,7 @@ function useWalkAction(
 ) {
     const speedRef = useRef(0)
     const walkAnimation = useAnimation('WalkForward', speedRef)
-    const idleAnimation = useAnimationBlended('Idle', () => distance.current < 1)
+    //const idleAnimation = useAnimationBlended('Idle', () => distance.current < 1)
 
     const getAngleFactor = () => {
         const degrees = angle.current.degrees()
@@ -68,14 +68,14 @@ function useWalkAction(
 
     const init = () => {
         walkAnimation.init()
-        idleAnimation.init()
+        //idleAnimation.init()
     }
 
     const render = () => {
         const isActive = angle.current.degrees() < 15 || angle.current.degrees() > 345
         translateRoot()
         walkAnimation.render(isActive)
-        idleAnimation.render()
+        //idleAnimation.render()
     }
 
     return {

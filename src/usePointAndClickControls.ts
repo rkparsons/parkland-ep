@@ -43,7 +43,7 @@ function usePointAndClickControls() {
             animationGroup.stop()
         })
 
-        walk.init()
+        //walk.init()
         turn.init()
     }
 
@@ -54,7 +54,7 @@ function usePointAndClickControls() {
     }, [scene])
 
     useBeforeRender(() => {
-        walk.render()
+        //walk.render()
         turn.render()
     })
 
