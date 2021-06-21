@@ -1,24 +1,13 @@
-import {
-    Angle,
-    GroundMesh,
-    Matrix,
-    Mesh,
-    PickingInfo,
-    Quaternion,
-    Ray,
-    Space,
-    Vector3
-} from '@babylonjs/core'
+import { Angle, GroundMesh, Matrix, Mesh, PickingInfo, Ray, Space, Vector3 } from '@babylonjs/core'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
+import { getAngleBetweenMeshes, rotateCharacter } from './utils'
 import { useEffect, useRef } from 'react'
 
-import { getAngleBetweenMeshes } from './utils'
 import useAnimation from './useAnimation'
 import useAnimationBlended from './useAnimationBlended'
 
 // todo: pass generic array of actions which take all possible waypoint props
 function usePointAndClickControls() {
-    const rotationFactor = 0.02
     const maxWalkSpeed = 0.05
 
     const model = useRef<ILoadedModel>()
@@ -100,23 +89,6 @@ function usePointAndClickControls() {
         }
     }
 
-    const rotateRoot = () => {
-        if (!model.current || !waypoint.current || !model.current.rootMesh?.rotationQuaternion) {
-            return
-        }
-
-        const quaternation = model.current.rootMesh.rotationQuaternion.clone()
-
-        model.current.rootMesh.lookAt(waypoint.current.position)
-
-        Quaternion.SlerpToRef(
-            quaternation,
-            model.current.rootMesh.rotationQuaternion,
-            rotationFactor,
-            model.current.rootMesh.rotationQuaternion
-        )
-    }
-
     useEffect(() => {
         if (scene) {
             scene.onPointerDown = onPointerDown
@@ -149,7 +121,7 @@ function usePointAndClickControls() {
         const isRotating = distanceToWaypoint >= 1 && Math.abs(angleToWaypoint.degrees()) >= 5
 
         if (isRotating) {
-            rotateRoot()
+            rotateCharacter(model.current, waypoint.current, 0.02)
         }
 
         if (isWalking) {
