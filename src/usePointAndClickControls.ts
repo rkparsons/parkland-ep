@@ -1,4 +1,4 @@
-import { GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
+import { Angle, GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { useEffect, useRef } from 'react'
 
@@ -8,14 +8,14 @@ import useWalkAction from './useWalkAction'
 // todo: pass generic array of actions which take all possible waypoint props
 function usePointAndClickControls() {
     const model = useRef<ILoadedModel>()
-    const angle = useRef<number>(0)
+    const angle = useRef<Angle>(Angle.FromRadians(0))
     const ground = useRef<GroundMesh>()
     const waypoint = useRef<Mesh>()
     const distVec = useRef<number>(0)
     const targetVecNorm = useRef<Vector3>(Vector3.Zero())
     const scene = useScene()
     const walk = useWalkAction(0.05, angle, distVec, model, ground, targetVecNorm)
-    const turn = useTurnAction(0.02, 0.05, angle, distVec, model, waypoint)
+    const turn = useTurnAction(0.02, angle, distVec, model, waypoint)
 
     const onPointerDown = (e: PointerEvent, pickResult: PickingInfo) => {
         if (

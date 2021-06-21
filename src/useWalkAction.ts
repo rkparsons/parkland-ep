@@ -7,7 +7,7 @@ import useAnimationLinked from './useAnimationLinked'
 
 function useWalkAction(
     maxSpeed: number,
-    angleRef: MutableRefObject<number>,
+    angle: MutableRefObject<Angle>,
     distVecRef: MutableRefObject<number>,
     modelRef: MutableRefObject<ILoadedModel | undefined>,
     groundRef: MutableRefObject<GroundMesh | undefined>,
@@ -18,9 +18,9 @@ function useWalkAction(
     const idleAnimation = useAnimationLinked('Idle', () => 1 - speedRef.current)
 
     const getSpeedFactor = () => {
-        const degrees = Angle.FromRadians(angleRef.current).degrees()
-        const angleFactor =
-            degrees < 90 ? 1 - degrees / 90 : degrees > 270 ? (degrees - 270) / 90 : 0
+        const degrees = angle.current.degrees()
+
+        const angleFactor = degrees < 15 || degrees > 345 ? 1 : 0
         const distanceFactor =
             distVecRef.current < 2 ? 0.5 : distVecRef.current < 4 ? distVecRef.current / 4 : 1
 
@@ -67,7 +67,7 @@ function useWalkAction(
 
     const render = () => {
         translateRoot()
-        walkAnimation.render()
+        walkAnimation.render(angle.current.degrees() < 15)
         idleAnimation.render()
     }
 
