@@ -18,7 +18,7 @@ function useTurnAction(
     const getLeftSpeed = () => {
         const degrees = angle.current.degrees()
 
-        if (degrees < 180) {
+        if (distance.current < 1 || degrees < 180 || degrees > 345) {
             return 0
         }
 
@@ -28,7 +28,7 @@ function useTurnAction(
     const getRightSpeed = () => {
         const degrees = angle.current.degrees()
 
-        if (degrees >= 180) {
+        if (distance.current < 1 || degrees >= 180 || degrees < 15) {
             return 0
         }
 
@@ -53,7 +53,7 @@ function useTurnAction(
 
         angle.current = getAngleBetweenMeshes(model.current.rootMesh, waypoint.current)
 
-        const isRotating = distance.current > 0 && Math.abs(angle.current.degrees()) >= 5
+        const isRotating = distance.current >= 1 && Math.abs(angle.current.degrees()) >= 5
 
         if (isRotating) {
             quaternationRef.current.copyFrom(model.current.rootMesh.rotationQuaternion)
