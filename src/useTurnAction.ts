@@ -15,28 +15,14 @@ function useTurnAction(
     const rotationSpeed = 0.02
     const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
 
-    const getLeftSpeed = () => {
-        const degrees = angle.current.degrees()
-
-        if (distance.current < 1 || degrees < 180 || degrees > 345) {
-            return 0
-        }
-
-        return Math.pow(2 - degrees / 180, 1 / 3)
-    }
-
-    const getRightSpeed = () => {
-        const degrees = angle.current.degrees()
-
-        if (distance.current < 1 || degrees >= 180 || degrees < 15) {
-            return 0
-        }
-
-        return Math.pow(degrees / 180, 1 / 3)
-    }
-
-    const leftAnimation = useAnimationBlended('TurnLeft', getLeftSpeed)
-    const rightAnimation = useAnimationBlended('TurnRight', getRightSpeed)
+    const leftAnimation = useAnimationBlended(
+        'TurnLeft',
+        () => distance.current > 1 && angle.current.degrees() > 180 && angle.current.degrees() < 330
+    )
+    const rightAnimation = useAnimationBlended(
+        'TurnRight',
+        () => distance.current > 1 && angle.current.degrees() < 180 && angle.current.degrees() > 30
+    )
 
     const getAngleBetweenMeshes = (mesh1: AbstractMesh, mesh2: AbstractMesh) => {
         const v0 = mesh1.getDirection(new Vector3(0, 0, 1)).normalize()
