@@ -25,7 +25,6 @@ function usePointAndClickControls() {
     const ground = useRef<GroundMesh>()
     const waypoint = useRef<Mesh>()
 
-    const distance = useRef<number>(0)
     const normal = useRef<Vector3>(Vector3.Zero())
 
     const scene = useScene()
@@ -46,7 +45,6 @@ function usePointAndClickControls() {
             let waypointPosition = pickResult.pickedPoint
             waypoint.current.position = waypointPosition?.clone()
             const modelPosition = model.current.rootMesh.position?.clone()
-            distance.current = Vector3.Distance(waypointPosition, modelPosition)
             waypointPosition = waypointPosition.subtract(modelPosition)
             normal.current = Vector3.Normalize(waypointPosition)
         }
@@ -65,10 +63,10 @@ function usePointAndClickControls() {
     }
 
     // todo: always use degrees to reduce function calls
-    const getWalkspeedFactor = (angleToWaypoint: Angle) => {
+    const getWalkspeedFactor = (distanceToWaypoint: number, angleToWaypoint: Angle) => {
         const degrees = angleToWaypoint.degrees()
         const distanceFactor =
-            distance.current < 2 ? 0.5 : distance.current < 4 ? distance.current / 4 : 1
+            distanceToWaypoint < 2 ? 0.5 : distanceToWaypoint < 4 ? distanceToWaypoint / 4 : 1
         const angleFactor =
             degrees < 15 || degrees > 345 ? 1 : degrees < 90 || degrees > 270 ? 0.2 : 0
 
@@ -82,7 +80,6 @@ function usePointAndClickControls() {
         }
 
         const walkSpeed = speedFactor * maxWalkSpeed
-        distance.current -= walkSpeed
         model.current.rootMesh.translate(normal.current, walkSpeed, Space.WORLD)
 
         model.current.rootMesh.moveWithCollisions(Vector3.Zero())
@@ -134,20 +131,24 @@ function usePointAndClickControls() {
         }
 
         const angleToWaypoint = getAngleBetweenMeshes(model.current.rootMesh, waypoint.current)
+        const distanceToWaypoint = Vector3.Distance(
+            waypoint.current.position,
+            model.current.rootMesh.position
+        )
 
         const isRotatingLeft =
-            distance.current > 1 &&
+            distanceToWaypoint > 1 &&
             angleToWaypoint.degrees() > 180 &&
             angleToWaypoint.degrees() < 330
 
         const isRotatingRight =
-            distance.current > 1 &&
+            distanceToWaypoint > 1 &&
             angleToWaypoint.degrees() < 180 &&
             angleToWaypoint.degrees() > 30
 
-        const walkSpeedFactor = getWalkspeedFactor(angleToWaypoint)
+        const walkSpeedFactor = getWalkspeedFactor(distanceToWaypoint, angleToWaypoint)
         const isWalking = walkSpeedFactor > 0
-        const isRotating = distance.current >= 1 && Math.abs(angleToWaypoint.degrees()) >= 5
+        const isRotating = distanceToWaypoint >= 1 && Math.abs(angleToWaypoint.degrees()) >= 5
 
         if (isRotating) {
             rotateRoot()
