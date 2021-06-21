@@ -12,13 +12,13 @@ import {
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { useEffect, useRef } from 'react'
 
+import { getAngleBetweenMeshes } from './utils'
 import useAnimation from './useAnimation'
 import useAnimationBlended from './useAnimationBlended'
 
 // todo: pass generic array of actions which take all possible waypoint props
 function usePointAndClickControls() {
     const model = useRef<ILoadedModel>()
-    const angle = useRef<Angle>(Angle.FromRadians(0))
     const ground = useRef<GroundMesh>()
     const waypoint = useRef<Mesh>()
     const distance = useRef<number>(0)
@@ -30,19 +30,6 @@ function usePointAndClickControls() {
     const leftAnimation = useAnimationBlended('TurnLeft')
     const rightAnimation = useAnimationBlended('TurnRight')
     const walkAnimation = useAnimation('WalkForward')
-
-    // todo: get rid of angleref
-    const updateAngle = () => {
-        if (!model.current?.rootMesh || !waypoint.current) {
-            return
-        }
-
-        const v0 = model.current.rootMesh.getDirection(new Vector3(0, 0, 1)).normalize()
-        const v1 = waypoint.current.position.subtract(model.current.rootMesh.position).normalize()
-        const direction = Vector3.Cross(v0, v1).y < 0 ? -1 : 1
-
-        angle.current = Angle.FromRadians(direction * Math.acos(Vector3.Dot(v0, v1)))
-    }
 
     const onPointerDown = (e: PointerEvent, pickResult: PickingInfo) => {
         if (
@@ -75,20 +62,15 @@ function usePointAndClickControls() {
         rightAnimation.init()
     }
 
-    const getAngleFactor = () => {
-        const degrees = angle.current.degrees()
+    // todo: always use degrees to reduce function calls
+    const getWalkspeedFactor = (angleToWaypoint: Angle) => {
+        const degrees = angleToWaypoint.degrees()
+        const distanceFactor =
+            distance.current < 2 ? 0.5 : distance.current < 4 ? distance.current / 4 : 1
+        const angleFactor =
+            degrees < 15 || degrees > 345 ? 1 : degrees < 90 || degrees > 270 ? 0.2 : 0
 
-        if (degrees < 15 || degrees > 345) {
-            return 1
-        } else if (degrees < 90 || degrees > 270) {
-            return 0.2
-        } else {
-            return 0
-        }
-    }
-
-    const getDistanceFactor = () => {
-        return distance.current < 2 ? 0.5 : distance.current < 4 ? distance.current / 4 : 1
+        return distanceFactor * angleFactor
     }
 
     // todo: put translate/rotate into utils
@@ -145,17 +127,25 @@ function usePointAndClickControls() {
     }, [scene])
 
     useBeforeRender(() => {
-        updateAngle()
+        if (!model.current?.rootMesh || !waypoint.current) {
+            return
+        }
+
+        const angleToWaypoint = getAngleBetweenMeshes(model.current.rootMesh, waypoint.current)
 
         const isRotatingLeft =
-            distance.current > 1 && angle.current.degrees() > 180 && angle.current.degrees() < 330
+            distance.current > 1 &&
+            angleToWaypoint.degrees() > 180 &&
+            angleToWaypoint.degrees() < 330
 
         const isRotatingRight =
-            distance.current > 1 && angle.current.degrees() < 180 && angle.current.degrees() > 30
+            distance.current > 1 &&
+            angleToWaypoint.degrees() < 180 &&
+            angleToWaypoint.degrees() > 30
 
-        const walkSpeedFactor = getDistanceFactor() * getAngleFactor()
+        const walkSpeedFactor = getWalkspeedFactor(angleToWaypoint)
         const isWalking = walkSpeedFactor > 0
-        const isRotating = distance.current >= 1 && Math.abs(angle.current.degrees()) >= 5
+        const isRotating = distance.current >= 1 && Math.abs(angleToWaypoint.degrees()) >= 5
 
         if (isRotating) {
             rotateRoot()
