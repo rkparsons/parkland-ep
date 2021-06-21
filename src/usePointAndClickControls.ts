@@ -44,12 +44,12 @@ function usePointAndClickControls() {
             model.current &&
             model.current.rootMesh
         ) {
-            let targetVec = pickResult.pickedPoint
-            waypoint.current.position = targetVec?.clone()
+            let target = pickResult.pickedPoint
+            waypoint.current.position = target?.clone()
             const initVec = model.current.rootMesh.position?.clone()
-            distance.current = Vector3.Distance(targetVec, initVec)
-            targetVec = targetVec.subtract(initVec)
-            normal.current = Vector3.Normalize(targetVec)
+            distance.current = Vector3.Distance(target, initVec)
+            target = target.subtract(initVec)
+            normal.current = Vector3.Normalize(target)
         }
     }
 
