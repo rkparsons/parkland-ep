@@ -1,4 +1,4 @@
-import { Angle, GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
+import { GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { getAngleBetweenMeshes, rotateCharacter, translateCharacter } from './utils'
 import { useEffect, useRef } from 'react'
@@ -84,8 +84,7 @@ function usePointAndClickControls() {
 
         const walkSpeedFactor = getWalkspeedFactor(distanceToWaypoint, degreesToWaypoint)
         const isWalking = walkSpeedFactor > 0
-        // todo: check if angle always positive or not
-        const isRotating = distanceToWaypoint >= 1 && Math.abs(degreesToWaypoint) >= 5
+        const isRotating = distanceToWaypoint >= 1
 
         if (isRotating) {
             rotateCharacter(model.current.rootMesh, waypoint.current, 0.02)
