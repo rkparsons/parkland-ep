@@ -4,8 +4,6 @@ import { MutableRefObject, useRef } from 'react'
 import { ILoadedModel } from 'react-babylonjs'
 import useAnimationBlended from './useAnimationBlended'
 
-// todo: remove translation speed dependency
-
 function useTurnAction(
     angle: MutableRefObject<Angle>,
     distance: MutableRefObject<number>,
