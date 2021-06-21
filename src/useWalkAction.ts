@@ -24,7 +24,7 @@ function useWalkAction(
         if (degrees < 15 || degrees > 345) {
             return 1
         } else if (degrees < 90 || degrees > 270) {
-            return 0.5
+            return 0.2
         } else {
             return 0
         }
