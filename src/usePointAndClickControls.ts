@@ -27,7 +27,6 @@ function usePointAndClickControls() {
 
     const distance = useRef<number>(0)
     const normal = useRef<Vector3>(Vector3.Zero())
-    const quaternation = useRef<Quaternion>(Quaternion.Identity())
 
     const scene = useScene()
     const leftAnimation = useAnimationBlended('TurnLeft')
@@ -44,12 +43,12 @@ function usePointAndClickControls() {
             model.current &&
             model.current.rootMesh
         ) {
-            let target = pickResult.pickedPoint
-            waypoint.current.position = target?.clone()
-            const initVec = model.current.rootMesh.position?.clone()
-            distance.current = Vector3.Distance(target, initVec)
-            target = target.subtract(initVec)
-            normal.current = Vector3.Normalize(target)
+            let waypointPosition = pickResult.pickedPoint
+            waypoint.current.position = waypointPosition?.clone()
+            const modelPosition = model.current.rootMesh.position?.clone()
+            distance.current = Vector3.Distance(waypointPosition, modelPosition)
+            waypointPosition = waypointPosition.subtract(modelPosition)
+            normal.current = Vector3.Normalize(waypointPosition)
         }
     }
 
@@ -111,12 +110,12 @@ function usePointAndClickControls() {
             return
         }
 
-        quaternation.current.copyFrom(model.current.rootMesh.rotationQuaternion)
+        const quaternation = model.current.rootMesh.rotationQuaternion.clone()
 
         model.current.rootMesh.lookAt(waypoint.current.position)
 
         Quaternion.SlerpToRef(
-            quaternation.current,
+            quaternation,
             model.current.rootMesh.rotationQuaternion,
             rotationFactor,
             model.current.rootMesh.rotationQuaternion
