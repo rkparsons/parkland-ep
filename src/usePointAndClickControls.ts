@@ -11,11 +11,37 @@ function usePointAndClickControls() {
     const angle = useRef<Angle>(Angle.FromRadians(0))
     const ground = useRef<GroundMesh>()
     const waypoint = useRef<Mesh>()
-    const distVec = useRef<number>(0)
-    const targetVecNorm = useRef<Vector3>(Vector3.Zero())
+    const distance = useRef<number>(0)
+    const normal = useRef<Vector3>(Vector3.Zero())
     const scene = useScene()
-    const walk = useWalkAction(angle, distVec, model, ground, targetVecNorm)
-    const turn = useTurnAction(angle, distVec, model, waypoint)
+
+    const getIsTurningLeft = () =>
+        distance.current > 1 && angle.current.degrees() > 180 && angle.current.degrees() < 330
+
+    const getIsTurningRight = () =>
+        distance.current > 1 && angle.current.degrees() < 180 && angle.current.degrees() > 30
+
+    const walk = useWalkAction(angle, distance, model, ground, normal)
+    const turn = useTurnAction(
+        angle,
+        distance,
+        model,
+        waypoint,
+        getIsTurningLeft,
+        getIsTurningRight
+    )
+
+    const updateAngle = () => {
+        if (!model.current?.rootMesh || !waypoint.current) {
+            return
+        }
+
+        const v0 = model.current.rootMesh.getDirection(new Vector3(0, 0, 1)).normalize()
+        const v1 = waypoint.current.position.subtract(model.current.rootMesh.position).normalize()
+        const direction = Vector3.Cross(v0, v1).y < 0 ? -1 : 1
+
+        angle.current = Angle.FromRadians(direction * Math.acos(Vector3.Dot(v0, v1)))
+    }
 
     const onPointerDown = (e: PointerEvent, pickResult: PickingInfo) => {
         if (
@@ -30,9 +56,9 @@ function usePointAndClickControls() {
             let targetVec = pickResult.pickedPoint
             waypoint.current.position = targetVec?.clone()
             const initVec = model.current.rootMesh.position?.clone()
-            distVec.current = Vector3.Distance(targetVec, initVec)
+            distance.current = Vector3.Distance(targetVec, initVec)
             targetVec = targetVec.subtract(initVec)
-            targetVecNorm.current = Vector3.Normalize(targetVec)
+            normal.current = Vector3.Normalize(targetVec)
         }
     }
 
@@ -54,6 +80,8 @@ function usePointAndClickControls() {
     }, [scene])
 
     useBeforeRender(() => {
+        updateAngle()
+
         walk.render()
         turn.render()
     })

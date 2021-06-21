@@ -1,4 +1,4 @@
-import { AbstractMesh, Angle, Mesh, Quaternion, Vector3 } from '@babylonjs/core'
+import { Angle, Mesh, Quaternion } from '@babylonjs/core'
 import { MutableRefObject, useRef } from 'react'
 
 import { ILoadedModel } from 'react-babylonjs'
@@ -8,34 +8,20 @@ function useTurnAction(
     angle: MutableRefObject<Angle>,
     distance: MutableRefObject<number>,
     model: MutableRefObject<ILoadedModel | undefined>,
-    waypoint: MutableRefObject<Mesh | undefined>
+    waypoint: MutableRefObject<Mesh | undefined>,
+    getIsTurningLeft: () => boolean,
+    getIsTurningRight: () => boolean
 ) {
     const rotationSpeed = 0.02
     const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
 
-    const leftAnimation = useAnimationBlended(
-        'TurnLeft',
-        () => distance.current > 1 && angle.current.degrees() > 180 && angle.current.degrees() < 330
-    )
-    const rightAnimation = useAnimationBlended(
-        'TurnRight',
-        () => distance.current > 1 && angle.current.degrees() < 180 && angle.current.degrees() > 30
-    )
-
-    const getAngleBetweenMeshes = (mesh1: AbstractMesh, mesh2: AbstractMesh) => {
-        const v0 = mesh1.getDirection(new Vector3(0, 0, 1)).normalize()
-        const v1 = mesh2.position.subtract(mesh1.position).normalize()
-        const direction = Vector3.Cross(v0, v1).y < 0 ? -1 : 1
-
-        return Angle.FromRadians(direction * Math.acos(Vector3.Dot(v0, v1)))
-    }
+    const leftAnimation = useAnimationBlended('TurnLeft', getIsTurningLeft)
+    const rightAnimation = useAnimationBlended('TurnRight', getIsTurningRight)
 
     const rotateRoot = () => {
         if (!model.current || !waypoint.current || !model.current.rootMesh?.rotationQuaternion) {
             return
         }
-
-        angle.current = getAngleBetweenMeshes(model.current.rootMesh, waypoint.current)
 
         const isRotating = distance.current >= 1 && Math.abs(angle.current.degrees()) >= 5
 
