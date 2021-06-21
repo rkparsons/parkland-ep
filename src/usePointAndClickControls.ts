@@ -1,4 +1,4 @@
-import { GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { getAngleBetweenMeshes, rotateCharacter, translateCharacter } from './utils'
 import { useEffect, useRef } from 'react'
@@ -20,7 +20,7 @@ function usePointAndClickControls() {
     const rightAnimation = useAnimationBlended('TurnRight')
     const walkAnimation = useAnimation('WalkForward')
 
-    const onPointerDown = (e: PointerEvent, intersection: PickingInfo) => {
+    function onPointerDown(e: PointerEvent, intersection: PickingInfo) {
         if (
             e.button === 0 &&
             intersection.hit &&
@@ -32,7 +32,7 @@ function usePointAndClickControls() {
         }
     }
 
-    const initControls = (loadedModel: ILoadedModel) => {
+    function initControls(loadedModel: ILoadedModel) {
         model.current = loadedModel
 
         model.current.animationGroups?.forEach((animationGroup) => {
@@ -44,7 +44,7 @@ function usePointAndClickControls() {
         rightAnimation.init()
     }
 
-    const getWalkspeedFactor = (distanceToWaypoint: number, degreesToWaypoint: number) => {
+    function getWalkspeedFactor(distanceToWaypoint: number, degreesToWaypoint: number) {
         const distanceFactor =
             distanceToWaypoint < 2 ? 0.5 : distanceToWaypoint < 4 ? distanceToWaypoint / 4 : 1
         const angleFactor =
@@ -55,6 +55,22 @@ function usePointAndClickControls() {
                 : 0
 
         return distanceFactor * angleFactor
+    }
+
+    function walkTowardsWaypoint(
+        character: AbstractMesh,
+        ground: AbstractMesh,
+        waypoint: AbstractMesh,
+        distanceToWaypoint: number,
+        degreesToWaypoint: number
+    ) {
+        const walkSpeedFactor = getWalkspeedFactor(distanceToWaypoint, degreesToWaypoint)
+        const isWalking = walkSpeedFactor > 0
+        walkAnimation.render(walkSpeedFactor)
+
+        if (isWalking) {
+            translateCharacter(character, waypoint, ground, walkSpeedFactor, 0.05)
+        }
     }
 
     useEffect(() => {
@@ -83,25 +99,20 @@ function usePointAndClickControls() {
         const isRotatingRight =
             distanceToWaypoint > 1 && degreesToWaypoint < 180 && degreesToWaypoint > 30
 
-        const walkSpeedFactor = getWalkspeedFactor(distanceToWaypoint, degreesToWaypoint)
-        const isWalking = walkSpeedFactor > 0
         const isRotating = distanceToWaypoint >= 1
 
         if (isRotating) {
             rotateCharacter(model.current.rootMesh, waypoint.current, 0.02)
         }
 
-        if (isWalking) {
-            translateCharacter(
-                model.current.rootMesh,
-                waypoint.current,
-                ground.current,
-                walkSpeedFactor,
-                0.05
-            )
-        }
+        walkTowardsWaypoint(
+            model.current.rootMesh,
+            ground.current,
+            waypoint.current,
+            distanceToWaypoint,
+            degreesToWaypoint
+        )
 
-        walkAnimation.render(walkSpeedFactor)
         leftAnimation.render(isRotatingLeft)
         rightAnimation.render(isRotatingRight)
     })
