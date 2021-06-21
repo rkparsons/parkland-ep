@@ -86,12 +86,12 @@ function usePointAndClickControls() {
         const isRotating = distanceToWaypoint >= 1 && Math.abs(angleToWaypoint.degrees()) >= 5
 
         if (isRotating) {
-            rotateCharacter(model.current, waypoint.current, 0.02)
+            rotateCharacter(model.current.rootMesh, waypoint.current, 0.02)
         }
 
         if (isWalking) {
             translateCharacter(
-                model.current,
+                model.current.rootMesh,
                 waypoint.current,
                 ground.current,
                 walkSpeedFactor,
