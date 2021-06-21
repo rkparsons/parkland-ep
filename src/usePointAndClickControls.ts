@@ -1,8 +1,8 @@
-import { Angle, GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
+import { Angle, GroundMesh, Mesh, PickingInfo, Quaternion, Vector3 } from '@babylonjs/core'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { useEffect, useRef } from 'react'
 
-import useTurnAction from './useTurnAction'
+import useAnimationBlended from './useAnimationBlended'
 import useWalkAction from './useWalkAction'
 
 // todo: pass generic array of actions which take all possible waypoint props
@@ -14,22 +14,12 @@ function usePointAndClickControls() {
     const distance = useRef<number>(0)
     const normal = useRef<Vector3>(Vector3.Zero())
     const scene = useScene()
-
-    const getIsTurningLeft = () =>
-        distance.current > 1 && angle.current.degrees() > 180 && angle.current.degrees() < 330
-
-    const getIsTurningRight = () =>
-        distance.current > 1 && angle.current.degrees() < 180 && angle.current.degrees() > 30
+    const rotationSpeed = 0.02
+    const quaternationRef = useRef<Quaternion>(Quaternion.Identity())
+    const leftAnimation = useAnimationBlended('TurnLeft')
+    const rightAnimation = useAnimationBlended('TurnRight')
 
     const walk = useWalkAction(angle, distance, model, ground, normal)
-    const turn = useTurnAction(
-        angle,
-        distance,
-        model,
-        waypoint,
-        getIsTurningLeft,
-        getIsTurningRight
-    )
 
     const updateAngle = () => {
         if (!model.current?.rootMesh || !waypoint.current) {
@@ -41,6 +31,27 @@ function usePointAndClickControls() {
         const direction = Vector3.Cross(v0, v1).y < 0 ? -1 : 1
 
         angle.current = Angle.FromRadians(direction * Math.acos(Vector3.Dot(v0, v1)))
+    }
+
+    const rotateRoot = () => {
+        if (!model.current || !waypoint.current || !model.current.rootMesh?.rotationQuaternion) {
+            return
+        }
+
+        const isRotating = distance.current >= 1 && Math.abs(angle.current.degrees()) >= 5
+
+        if (isRotating) {
+            quaternationRef.current.copyFrom(model.current.rootMesh.rotationQuaternion)
+
+            model.current.rootMesh.lookAt(waypoint.current.position)
+
+            Quaternion.SlerpToRef(
+                quaternationRef.current,
+                model.current.rootMesh.rotationQuaternion,
+                rotationSpeed,
+                model.current.rootMesh.rotationQuaternion
+            )
+        }
     }
 
     const onPointerDown = (e: PointerEvent, pickResult: PickingInfo) => {
@@ -70,7 +81,9 @@ function usePointAndClickControls() {
         })
 
         walk.init()
-        turn.init()
+
+        leftAnimation.init()
+        rightAnimation.init()
     }
 
     useEffect(() => {
@@ -81,9 +94,17 @@ function usePointAndClickControls() {
 
     useBeforeRender(() => {
         updateAngle()
+        rotateRoot()
+
+        const isTurningLeft =
+            distance.current > 1 && angle.current.degrees() > 180 && angle.current.degrees() < 330
+        const isTurningRight =
+            distance.current > 1 && angle.current.degrees() < 180 && angle.current.degrees() > 30
 
         walk.render()
-        turn.render()
+
+        leftAnimation.render(isTurningLeft)
+        rightAnimation.render(isTurningRight)
     })
 
     return {
