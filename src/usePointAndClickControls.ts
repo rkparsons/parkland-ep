@@ -19,15 +19,15 @@ function usePointAndClickControls() {
     const rightAnimation = useAnimationBlended('TurnRight')
     const walkAnimation = useAnimation('WalkForward')
 
-    const onPointerDown = (e: PointerEvent, pickResult: PickingInfo) => {
+    const onPointerDown = (e: PointerEvent, intersection: PickingInfo) => {
         if (
             e.button === 0 &&
-            pickResult.hit &&
-            pickResult.pickedPoint &&
-            pickResult.pickedMesh === ground.current &&
+            intersection.hit &&
+            intersection.pickedPoint &&
+            intersection.pickedMesh === ground.current &&
             waypoint.current
         ) {
-            waypoint.current.position = pickResult.pickedPoint.clone()
+            waypoint.current.position = intersection.pickedPoint.clone()
         }
     }
 
