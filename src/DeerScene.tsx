@@ -1,8 +1,8 @@
 import { Scene, Skybox } from 'react-babylonjs'
 
 import DeerModel from './DeerModel'
-import DesertGround from './DesertGround'
 import { FC } from 'react'
+import Ground from './Ground'
 import GroundProvider from './groundProvider'
 import { Vector3 } from '@babylonjs/core'
 import withPointAndClickControls from './withPointAndClickControls'
@@ -13,7 +13,7 @@ const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointCont
 // todo: move tweakable params to .env
 const DeerScene: FC = () => (
     <Scene>
-        <GroundProvider GroundComponent={DesertGround}>
+        <GroundProvider GroundComponent={Ground}>
             <arcRotateCamera
                 name="camera1"
                 alpha={Math.PI / 2}
