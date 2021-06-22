@@ -1,15 +1,17 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, MutableRefObject, useEffect, useRef } from 'react'
 import { GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { rotateCharacter, translateCharacter } from './utils'
 
 import DeerModel from './DeerModel'
-import Ground from './Ground'
 import { getAngleBetweenMeshes } from './utils'
 
-const DeerController: FC = () => {
+type ViewProps = {
+    ground: MutableRefObject<GroundMesh | undefined>
+}
+
+const DeerWithPointAndClickControls: FC<ViewProps> = ({ ground }) => {
     const model = useRef<ILoadedModel>()
-    const ground = useRef<GroundMesh>()
     const scene = useScene()
     const waypoint = useRef<Mesh>()
     const distanceToWaypoint = useRef(0)
@@ -73,7 +75,6 @@ const DeerController: FC = () => {
     return (
         <>
             <sphere name="waypoint" ref={waypoint} isVisible={false} />
-            <Ground ground={ground} />
             <DeerModel
                 model={model}
                 distanceToWaypoint={distanceToWaypoint}
@@ -85,4 +86,4 @@ const DeerController: FC = () => {
     )
 }
 
-export default DeerController
+export default DeerWithPointAndClickControls
