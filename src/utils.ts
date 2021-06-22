@@ -8,8 +8,11 @@ export function getAngleBetweenMeshes(mesh1: AbstractMesh, mesh2: AbstractMesh) 
     return Angle.FromRadians(direction * Math.acos(Vector3.Dot(v0, v1)))
 }
 
-// todo: put these methods in model class
-export function rotateCharacter(character: AbstractMesh, waypoint: AbstractMesh, factor: number) {
+export function rotateCharacterTowardsWaypoint(
+    character: AbstractMesh,
+    waypoint: AbstractMesh,
+    factor: number
+) {
     if (!character.rotationQuaternion) {
         return
     }
@@ -26,7 +29,7 @@ export function rotateCharacter(character: AbstractMesh, waypoint: AbstractMesh,
     )
 }
 
-export function translateCharacter(
+export function translateCharacterTowardsWaypoint(
     character: AbstractMesh,
     waypoint: AbstractMesh,
     ground: AbstractMesh,
@@ -43,10 +46,10 @@ export function translateCharacter(
     character.translate(normal, walkSpeed, Space.WORLD)
     character.moveWithCollisions(Vector3.Zero())
 
-    adjustForGroundCollisions(character, ground)
+    translateCharacterAboveGround(character, ground)
 }
 
-export function adjustForGroundCollisions(character: AbstractMesh, ground: AbstractMesh) {
+export function translateCharacterAboveGround(character: AbstractMesh, ground: AbstractMesh) {
     const intersection = getCharacterGroundIntersection(character, ground)
 
     if (intersection.hit && intersection.pickedPoint) {
@@ -68,17 +71,4 @@ export function getCharacterGroundIntersection(character: AbstractMesh, ground: 
     ground.getWorldMatrix().invertToRef(worldInverse)
     ray = Ray.Transform(ray, worldInverse)
     return ground.intersects(ray)
-}
-
-export function getCharacterSpeed(distanceToWaypoint: number, degreesToWaypoint: number) {
-    const distanceFactor =
-        distanceToWaypoint < 2 ? 0.5 : distanceToWaypoint < 4 ? distanceToWaypoint / 4 : 1
-    const angleFactor =
-        degreesToWaypoint < 15 || degreesToWaypoint > 345
-            ? 1
-            : degreesToWaypoint < 90 || degreesToWaypoint > 270
-            ? 0.2
-            : 0
-
-    return distanceFactor * angleFactor
 }

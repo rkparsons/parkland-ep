@@ -1,5 +1,5 @@
 import { ModelProps, WaypointControllerProps } from './types'
-import { getCharacterSpeed, rotateCharacter, translateCharacter } from './utils'
+import { rotateCharacterTowardsWaypoint, translateCharacterTowardsWaypoint } from './utils'
 
 import { FC } from 'react'
 import { useBeforeRender } from 'react-babylonjs'
@@ -21,10 +21,10 @@ const withWaypointController = (Model: FC<ModelProps>) => {
             }
 
             if (distanceToWaypoint.current >= 1) {
-                rotateCharacter(model.current?.rootMesh, waypoint.current, 0.02)
+                rotateCharacterTowardsWaypoint(model.current?.rootMesh, waypoint.current, 0.02)
             }
 
-            translateCharacter(
+            translateCharacterTowardsWaypoint(
                 model.current.rootMesh,
                 waypoint.current,
                 ground.current,
@@ -50,16 +50,24 @@ const withWaypointController = (Model: FC<ModelProps>) => {
         }
 
         function getSpeed() {
-            return getCharacterSpeed(distanceToWaypoint.current, degreesToWaypoint.current)
+            const distanceFactor =
+                distanceToWaypoint.current < 2
+                    ? 0.5
+                    : distanceToWaypoint.current < 4
+                    ? distanceToWaypoint.current / 4
+                    : 1
+            const angleFactor =
+                degreesToWaypoint.current < 15 || degreesToWaypoint.current > 345
+                    ? 1
+                    : degreesToWaypoint.current < 90 || degreesToWaypoint.current > 270
+                    ? 0.2
+                    : 0
+
+            return distanceFactor * angleFactor
         }
 
         useBeforeRender(() => {
-            const characterSpeed = getCharacterSpeed(
-                distanceToWaypoint.current,
-                degreesToWaypoint.current
-            )
-
-            rootMotion(characterSpeed)
+            rootMotion(getSpeed())
         })
 
         return (
