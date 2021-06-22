@@ -7,9 +7,10 @@ import useAnimation from './useAnimation'
 
 // todo: replace with getSpeed methods for left, right and straight
 const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRight, getSpeed }) => {
-    const leftAnimation = useAnimation('TurnLeft')
-    const rightAnimation = useAnimation('TurnRight')
-    const walkAnimation = useAnimation('WalkForward')
+    const idle = useAnimation('Idle')
+    const walk = useAnimation('WalkForward')
+    const left = useAnimation('TurnLeft')
+    const right = useAnimation('TurnRight')
 
     const onModelLoaded = (loadedModel: ILoadedModel) => {
         model.current = loadedModel
@@ -18,19 +19,23 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
             animationGroup.stop()
         })
 
-        walkAnimation.init()
-        leftAnimation.init()
-        rightAnimation.init()
+        idle.init()
+        walk.init()
+        left.init()
+        right.init()
     }
 
     useBeforeRender(() => {
+        const walkSpeed = getSpeed()
         const isRotatingLeft = getIsRotatingLeft()
         const isRotatingRight = getIsRotatingRight()
         const isRotating = isRotatingLeft || isRotatingRight
+        const isWalking = walkSpeed > 0
 
-        leftAnimation.render(1, isRotatingLeft)
-        rightAnimation.render(1, isRotatingRight)
-        walkAnimation.render(getSpeed(), !isRotating)
+        idle.render(1, !isWalking && !isRotating)
+        walk.render(walkSpeed, !isRotating)
+        left.render(1, isRotatingLeft)
+        right.render(1, isRotatingRight)
     })
 
     return (
