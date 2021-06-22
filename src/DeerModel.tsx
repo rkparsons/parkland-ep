@@ -1,8 +1,8 @@
 import { FC, MutableRefObject, Suspense } from 'react'
 import { ILoadedModel, Model, useBeforeRender } from 'react-babylonjs'
 import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
-import { getCharacterSpeed, translateCharacter } from './utils'
 
+import { getCharacterSpeed } from './utils'
 import useAnimation from './useAnimation'
 import useAnimationBlended from './useAnimationBlended'
 

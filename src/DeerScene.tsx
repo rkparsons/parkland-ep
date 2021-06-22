@@ -1,10 +1,13 @@
 import { Scene, Skybox } from 'react-babylonjs'
 
-import DeerWithPointAndClickControls from './deerWithPointAndClickControls'
+import DeerModel from './DeerModel'
 import DesertGround from './DesertGround'
 import { FC } from 'react'
 import GroundProvider from './groundProvider'
 import { Vector3 } from '@babylonjs/core'
+import withPointAndClickControls from './withPointAndClickControls'
+
+const DeerWithPointAndClickControls = withPointAndClickControls(DeerModel)
 
 // todo: move tweakable params to .env
 const DeerScene: FC = () => (
