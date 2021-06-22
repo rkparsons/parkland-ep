@@ -6,7 +6,8 @@ import { ModelProps } from './types'
 import useAnimation from './useAnimation'
 import useAnimationBlended from './useAnimationBlended'
 
-const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRight, speed }) => {
+// todo: replace with getSpeed methods for left, right and straight
+const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRight, getSpeed }) => {
     // todo: use identical animation functions
     const leftAnimation = useAnimationBlended('TurnLeft')
     const rightAnimation = useAnimationBlended('TurnRight')
@@ -27,7 +28,7 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
     useBeforeRender(() => {
         leftAnimation.render(getIsRotatingLeft())
         rightAnimation.render(getIsRotatingRight())
-        walkAnimation.render(speed)
+        walkAnimation.render(getSpeed())
     })
 
     return (

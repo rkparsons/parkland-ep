@@ -5,6 +5,7 @@ import { FC } from 'react'
 import { useBeforeRender } from 'react-babylonjs'
 import useGroundContext from './useGroundContext'
 
+// todo: separate root motion from waypoint logic if possible
 const withWaypoint = (Model: FC<ModelProps>) => {
     const modelWithWaypoint: FC<ModelWithWaypointProps> = ({
         model,
@@ -48,6 +49,10 @@ const withWaypoint = (Model: FC<ModelProps>) => {
             )
         }
 
+        function getSpeed() {
+            return getCharacterSpeed(distanceToWaypoint.current, degreesToWaypoint.current)
+        }
+
         useBeforeRender(() => {
             const characterSpeed = getCharacterSpeed(
                 distanceToWaypoint.current,
@@ -57,13 +62,12 @@ const withWaypoint = (Model: FC<ModelProps>) => {
             rootMotion(characterSpeed)
         })
 
-        // todo: avoid having model props changing on every frame
         return (
             <Model
                 model={model}
                 getIsRotatingLeft={getIsRotatingLeft}
                 getIsRotatingRight={getIsRotatingRight}
-                speed={getCharacterSpeed(distanceToWaypoint.current, degreesToWaypoint.current)}
+                getSpeed={getSpeed}
             />
         )
     }

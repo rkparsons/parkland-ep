@@ -13,5 +13,5 @@ export type ModelProps = {
     model: MutableRefObject<ILoadedModel | undefined>
     getIsRotatingLeft(): boolean
     getIsRotatingRight(): boolean
-    speed: number
+    getSpeed(): number
 }
