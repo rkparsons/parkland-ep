@@ -26,9 +26,13 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
     }
 
     useBeforeRender(() => {
-        leftAnimation.render(getIsRotatingLeft())
-        rightAnimation.render(getIsRotatingRight())
-        walkAnimation.render(getSpeed())
+        const isRotatingLeft = getIsRotatingLeft()
+        const isRotatingRight = getIsRotatingRight()
+        const isRotating = isRotatingLeft || isRotatingRight
+
+        leftAnimation.render(isRotatingLeft)
+        rightAnimation.render(isRotatingRight)
+        walkAnimation.render(getSpeed(), !isRotating)
     })
 
     return (
