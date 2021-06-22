@@ -1,16 +1,15 @@
 import { FC, MutableRefObject, useEffect, useRef } from 'react'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
-import { getAngleBetweenMeshes, rotateCharacter, translateCharacter } from './utils'
 
+import { getAngleBetweenMeshes } from './utils'
 import useGroundContext from './useGroundContext'
 
 type ModelProps = {
     model: MutableRefObject<ILoadedModel | undefined>
+    waypoint: MutableRefObject<Mesh | undefined>
     distanceToWaypoint: MutableRefObject<number>
     degreesToWaypoint: MutableRefObject<number>
-    rotate(factor: number): void
-    translate(maxSpeed: number, characterSpeed: number): void
 }
 
 const withPointAndClickControls = (Model: FC<ModelProps>) => {
@@ -29,7 +28,7 @@ const withPointAndClickControls = (Model: FC<ModelProps>) => {
         }, [scene])
 
         useBeforeRender(() => {
-            if (!model.current?.rootMesh || !waypoint.current || !ground.current) {
+            if (!model.current?.rootMesh || !waypoint.current) {
                 return
             }
 
@@ -56,36 +55,14 @@ const withPointAndClickControls = (Model: FC<ModelProps>) => {
             }
         }
 
-        function rotate(factor: number) {
-            if (!model.current?.rootMesh || !waypoint.current) {
-                return
-            }
-
-            rotateCharacter(model.current?.rootMesh, waypoint.current, factor)
-        }
-
-        function translate(maxSpeed: number, characterSpeed: number) {
-            if (!model.current?.rootMesh || !waypoint.current || !ground.current) {
-                return
-            }
-            translateCharacter(
-                model.current.rootMesh,
-                waypoint.current,
-                ground.current,
-                characterSpeed,
-                maxSpeed
-            )
-        }
-
         return (
             <>
                 <sphere name="waypoint" ref={waypoint} isVisible={false} />
                 <Model
                     model={model}
+                    waypoint={waypoint}
                     distanceToWaypoint={distanceToWaypoint}
                     degreesToWaypoint={degreesToWaypoint}
-                    rotate={rotate}
-                    translate={translate}
                 />
             </>
         )

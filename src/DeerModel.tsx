@@ -1,30 +1,58 @@
 import { FC, MutableRefObject, Suspense } from 'react'
 import { ILoadedModel, Model, useBeforeRender } from 'react-babylonjs'
-import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
+import { Mesh, Quaternion, Tools, Vector3 } from '@babylonjs/core'
+import { getCharacterSpeed, rotateCharacter, translateCharacter } from './utils'
 
-import { getCharacterSpeed } from './utils'
 import useAnimation from './useAnimation'
 import useAnimationBlended from './useAnimationBlended'
+import useGroundContext from './useGroundContext'
 
 type ViewProps = {
     model: MutableRefObject<ILoadedModel | undefined>
+    waypoint: MutableRefObject<Mesh | undefined>
     distanceToWaypoint: MutableRefObject<number>
     degreesToWaypoint: MutableRefObject<number>
-    rotate(factor: number): void
-    translate(maxSpeed: number, characterSpeed: number): void
 }
 
-const DeerModel: FC<ViewProps> = ({
-    model,
-    distanceToWaypoint,
-    degreesToWaypoint,
-    rotate,
-    translate
-}) => {
+const DeerModel: FC<ViewProps> = ({ model, waypoint, distanceToWaypoint, degreesToWaypoint }) => {
+    const { ground } = useGroundContext()
     // todo: use identical animation functions
     const leftAnimation = useAnimationBlended('TurnLeft')
     const rightAnimation = useAnimationBlended('TurnRight')
     const walkAnimation = useAnimation('WalkForward')
+
+    function rotate(factor: number) {
+        if (!model.current?.rootMesh || !waypoint.current) {
+            return
+        }
+
+        rotateCharacter(model.current?.rootMesh, waypoint.current, factor)
+    }
+
+    function translate(maxSpeed: number, characterSpeed: number) {
+        if (!model.current?.rootMesh || !waypoint.current || !ground.current) {
+            return
+        }
+        translateCharacter(
+            model.current.rootMesh,
+            waypoint.current,
+            ground.current,
+            characterSpeed,
+            maxSpeed
+        )
+    }
+
+    function rootMotion(characterSpeed: number) {
+        if (!model.current?.rootMesh) {
+            return
+        }
+
+        if (distanceToWaypoint.current >= 1) {
+            rotate(0.02)
+        }
+
+        translate(0.05, characterSpeed)
+    }
 
     function inPlaceAnimation(characterSpeed: number) {
         const isRotatingLeft =
@@ -40,18 +68,6 @@ const DeerModel: FC<ViewProps> = ({
         leftAnimation.render(isRotatingLeft)
         rightAnimation.render(isRotatingRight)
         walkAnimation.render(characterSpeed)
-    }
-
-    function rootMotion(characterSpeed: number) {
-        if (!model.current?.rootMesh) {
-            return
-        }
-
-        if (distanceToWaypoint.current >= 1) {
-            rotate(0.02)
-        }
-
-        translate(0.05, characterSpeed)
     }
 
     const onModelLoaded = (loadedModel: ILoadedModel) => {
