@@ -1,20 +1,20 @@
+import { FC, MutableRefObject, ReactNode, useEffect, useRef } from 'react'
 import { GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
-import {
-    getAngleBetweenMeshes,
-    getCharacterSpeed,
-    rotateCharacter,
-    translateCharacter
-} from './utils'
-import { useEffect, useRef } from 'react'
+import { getAngleBetweenMeshes, getCharacterSpeed } from './utils'
+import { rotateCharacter, translateCharacter } from './utils'
 
-// todo: separate translation/rotation from animation
-// todo: pass generic array of actions which take all possible waypoint props
-function usePointAndClickControls() {
-    const model = useRef<ILoadedModel>()
-    const ground = useRef<GroundMesh>()
-    const waypoint = useRef<Mesh>()
+import WaypointContext from './waypointContext'
+
+type ViewProps = {
+    children: ReactNode
+    model: MutableRefObject<ILoadedModel | undefined>
+    ground: MutableRefObject<GroundMesh | undefined>
+}
+
+const WaypointProvider: FC<ViewProps> = ({ children, model, ground }) => {
     const scene = useScene()
+    const waypoint = useRef<Mesh>()
     const distanceToWaypoint = useRef(0)
     const degreesToWaypoint = useRef(0)
 
@@ -51,14 +51,14 @@ function usePointAndClickControls() {
             model.current.rootMesh.position
         )
 
-        if (distanceToWaypoint.current >= 1) {
-            rotateCharacter(model.current.rootMesh, waypoint.current, 0.02)
-        }
-
         const characterSpeed = getCharacterSpeed(
             distanceToWaypoint.current,
             degreesToWaypoint.current
         )
+
+        if (distanceToWaypoint.current >= 1) {
+            rotateCharacter(model.current.rootMesh, waypoint.current, 0.02)
+        }
 
         translateCharacter(
             model.current.rootMesh,
@@ -69,13 +69,12 @@ function usePointAndClickControls() {
         )
     })
 
-    return {
-        model,
-        waypoint,
-        ground,
-        distanceToWaypoint,
-        degreesToWaypoint
-    }
+    return (
+        <WaypointContext.Provider value={{ distanceToWaypoint, degreesToWaypoint }}>
+            {children}
+            <sphere name="waypoint" ref={waypoint} isVisible={false} />
+        </WaypointContext.Provider>
+    )
 }
 
-export default usePointAndClickControls
+export default WaypointProvider
