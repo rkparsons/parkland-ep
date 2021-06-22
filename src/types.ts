@@ -2,7 +2,7 @@ import { ILoadedModel } from 'react-babylonjs'
 import { Mesh } from '@babylonjs/core'
 import { MutableRefObject } from 'react'
 
-export type ModelWithWaypointProps = {
+export type WaypointControllerProps = {
     model: MutableRefObject<ILoadedModel | undefined>
     waypoint: MutableRefObject<Mesh | undefined>
     distanceToWaypoint: MutableRefObject<number>

@@ -1,4 +1,4 @@
-import { ModelProps, ModelWithWaypointProps } from './types'
+import { ModelProps, WaypointControllerProps } from './types'
 import { getCharacterSpeed, rotateCharacter, translateCharacter } from './utils'
 
 import { FC } from 'react'
@@ -6,8 +6,8 @@ import { useBeforeRender } from 'react-babylonjs'
 import useGroundContext from './useGroundContext'
 
 // todo: separate root motion from waypoint logic if possible
-const withWaypoint = (Model: FC<ModelProps>) => {
-    const modelWithWaypoint: FC<ModelWithWaypointProps> = ({
+const withWaypointController = (Model: FC<ModelProps>) => {
+    const waypointController: FC<WaypointControllerProps> = ({
         model,
         waypoint,
         distanceToWaypoint,
@@ -72,7 +72,7 @@ const withWaypoint = (Model: FC<ModelProps>) => {
         )
     }
 
-    return modelWithWaypoint
+    return waypointController
 }
 
-export default withWaypoint
+export default withWaypointController

@@ -2,11 +2,11 @@ import { FC, useEffect, useRef } from 'react'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 
-import { ModelWithWaypointProps } from './types'
+import { WaypointControllerProps } from './types'
 import { getAngleBetweenMeshes } from './utils'
 import useGroundContext from './useGroundContext'
 
-const withPointAndClickControls = (ModelWithWaypoint: FC<ModelWithWaypointProps>) => {
+const withPointAndClickControls = (WaypointController: FC<WaypointControllerProps>) => {
     const modelWithPointAndClickControls = () => {
         const { ground } = useGroundContext()
         const model = useRef<ILoadedModel>()
@@ -52,7 +52,7 @@ const withPointAndClickControls = (ModelWithWaypoint: FC<ModelWithWaypointProps>
         return (
             <>
                 <sphere name="waypoint" ref={waypoint} isVisible={false} />
-                <ModelWithWaypoint
+                <WaypointController
                     model={model}
                     waypoint={waypoint}
                     distanceToWaypoint={distanceToWaypoint}

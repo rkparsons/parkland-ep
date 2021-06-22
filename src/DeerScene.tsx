@@ -6,9 +6,9 @@ import { FC } from 'react'
 import GroundProvider from './groundProvider'
 import { Vector3 } from '@babylonjs/core'
 import withPointAndClickControls from './withPointAndClickControls'
-import withWaypoint from './withWaypoint'
+import withWaypointController from './withWaypointController'
 
-const DeerWithPointAndClickControls = withPointAndClickControls(withWaypoint(DeerModel))
+const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointController(DeerModel))
 
 // todo: move tweakable params to .env
 const DeerScene: FC = () => (
