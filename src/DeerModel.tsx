@@ -4,13 +4,11 @@ import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
 
 import { ModelProps } from './types'
 import useAnimation from './useAnimation'
-import useAnimationBlended from './useAnimationBlended'
 
 // todo: replace with getSpeed methods for left, right and straight
 const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRight, getSpeed }) => {
-    // todo: use identical animation functions
-    const leftAnimation = useAnimationBlended('TurnLeft')
-    const rightAnimation = useAnimationBlended('TurnRight')
+    const leftAnimation = useAnimation('TurnLeft')
+    const rightAnimation = useAnimation('TurnRight')
     const walkAnimation = useAnimation('WalkForward')
 
     const onModelLoaded = (loadedModel: ILoadedModel) => {
@@ -30,8 +28,8 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
         const isRotatingRight = getIsRotatingRight()
         const isRotating = isRotatingLeft || isRotatingRight
 
-        leftAnimation.render(isRotatingLeft)
-        rightAnimation.render(isRotatingRight)
+        leftAnimation.render(1, isRotatingLeft)
+        rightAnimation.render(1, isRotatingRight)
         walkAnimation.render(getSpeed(), !isRotating)
     })
 
