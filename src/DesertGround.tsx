@@ -4,7 +4,8 @@ import React, { FC, MutableRefObject } from 'react'
 type ViewProps = {
     ground: MutableRefObject<GroundMesh | undefined>
 }
-const Ground: FC<ViewProps> = ({ ground }) => {
+
+const DesertGround: FC<ViewProps> = ({ ground }) => {
     return (
         <>
             <groundFromHeightMap
@@ -33,4 +34,4 @@ const Ground: FC<ViewProps> = ({ ground }) => {
     )
 }
 
-export default Ground
+export default DesertGround

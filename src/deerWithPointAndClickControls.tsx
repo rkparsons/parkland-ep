@@ -1,16 +1,14 @@
-import { FC, MutableRefObject, useEffect, useRef } from 'react'
-import { GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
+import { FC, useEffect, useRef } from 'react'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
+import { Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 import { rotateCharacter, translateCharacter } from './utils'
 
 import DeerModel from './DeerModel'
 import { getAngleBetweenMeshes } from './utils'
+import useGroundContext from './useGroundContext'
 
-type ViewProps = {
-    ground: MutableRefObject<GroundMesh | undefined>
-}
-
-const DeerWithPointAndClickControls: FC<ViewProps> = ({ ground }) => {
+const DeerWithPointAndClickControls: FC = () => {
+    const { ground } = useGroundContext()
     const model = useRef<ILoadedModel>()
     const scene = useScene()
     const waypoint = useRef<Mesh>()

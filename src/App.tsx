@@ -2,13 +2,16 @@ import '@babylonjs/core/Physics/physicsEngineComponent'
 import './App.css'
 import '@babylonjs/loaders/glTF'
 
-import DeerEngine from './DeerEngine'
+import DeerScene from './DeerScene'
+import { Engine } from 'react-babylonjs'
 import React from 'react'
 
 const App: React.FC = () => {
     return (
         <div className="App">
-            <DeerEngine />
+            <Engine antialias adaptToDeviceRatio canvasId="canvas">
+                <DeerScene />
+            </Engine>
         </div>
     )
 }
