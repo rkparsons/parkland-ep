@@ -1,18 +1,15 @@
-import { FC, MutableRefObject, ReactNode, useEffect, useRef } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { GroundMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
-import { getAngleBetweenMeshes, getCharacterSpeed } from './utils'
 import { rotateCharacter, translateCharacter } from './utils'
 
-import WaypointContext from './waypointContext'
+import DeerModel from './DeerModel'
+import Ground from './Ground'
+import { getAngleBetweenMeshes } from './utils'
 
-type ViewProps = {
-    children: ReactNode
-    model: MutableRefObject<ILoadedModel | undefined>
-    ground: MutableRefObject<GroundMesh | undefined>
-}
-
-const WaypointProvider: FC<ViewProps> = ({ children, model, ground }) => {
+const DeerController: FC = () => {
+    const model = useRef<ILoadedModel>()
+    const ground = useRef<GroundMesh>()
     const scene = useScene()
     const waypoint = useRef<Mesh>()
     const distanceToWaypoint = useRef(0)
@@ -28,6 +25,27 @@ const WaypointProvider: FC<ViewProps> = ({ children, model, ground }) => {
         ) {
             waypoint.current.position = intersection.pickedPoint.clone()
         }
+    }
+
+    function rotate(factor: number) {
+        if (!model.current?.rootMesh || !waypoint.current) {
+            return
+        }
+
+        rotateCharacter(model.current?.rootMesh, waypoint.current, factor)
+    }
+
+    function translate(maxSpeed: number, characterSpeed: number) {
+        if (!model.current?.rootMesh || !waypoint.current || !ground.current) {
+            return
+        }
+        translateCharacter(
+            model.current.rootMesh,
+            waypoint.current,
+            ground.current,
+            characterSpeed,
+            maxSpeed
+        )
     }
 
     useEffect(() => {
@@ -50,31 +68,21 @@ const WaypointProvider: FC<ViewProps> = ({ children, model, ground }) => {
             waypoint.current.position,
             model.current.rootMesh.position
         )
-
-        const characterSpeed = getCharacterSpeed(
-            distanceToWaypoint.current,
-            degreesToWaypoint.current
-        )
-
-        if (distanceToWaypoint.current >= 1) {
-            rotateCharacter(model.current.rootMesh, waypoint.current, 0.02)
-        }
-
-        translateCharacter(
-            model.current.rootMesh,
-            waypoint.current,
-            ground.current,
-            characterSpeed,
-            0.05
-        )
     })
 
     return (
-        <WaypointContext.Provider value={{ distanceToWaypoint, degreesToWaypoint }}>
-            {children}
+        <>
             <sphere name="waypoint" ref={waypoint} isVisible={false} />
-        </WaypointContext.Provider>
+            <Ground ground={ground} />
+            <DeerModel
+                model={model}
+                distanceToWaypoint={distanceToWaypoint}
+                degreesToWaypoint={degreesToWaypoint}
+                rotate={rotate}
+                translate={translate}
+            />
+        </>
     )
 }
 
-export default WaypointProvider
+export default DeerController

@@ -1,22 +1,58 @@
 import { FC, MutableRefObject, Suspense } from 'react'
 import { ILoadedModel, Model, useBeforeRender } from 'react-babylonjs'
 import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
+import { getCharacterSpeed, translateCharacter } from './utils'
 
-import { getCharacterSpeed } from './utils'
 import useAnimation from './useAnimation'
 import useAnimationBlended from './useAnimationBlended'
-import useWaypointContext from './useWaypointContext'
 
 type ViewProps = {
     model: MutableRefObject<ILoadedModel | undefined>
+    distanceToWaypoint: MutableRefObject<number>
+    degreesToWaypoint: MutableRefObject<number>
+    rotate(factor: number): void
+    translate(maxSpeed: number, characterSpeed: number): void
 }
 
-const DeerModel: FC<ViewProps> = ({ model }) => {
+const DeerModel: FC<ViewProps> = ({
+    model,
+    distanceToWaypoint,
+    degreesToWaypoint,
+    rotate,
+    translate
+}) => {
     // todo: use identical animation functions
     const leftAnimation = useAnimationBlended('TurnLeft')
     const rightAnimation = useAnimationBlended('TurnRight')
     const walkAnimation = useAnimation('WalkForward')
-    const { distanceToWaypoint, degreesToWaypoint } = useWaypointContext()
+
+    function inPlaceAnimation(characterSpeed: number) {
+        const isRotatingLeft =
+            distanceToWaypoint.current > 1 &&
+            degreesToWaypoint.current > 180 &&
+            degreesToWaypoint.current < 330
+
+        const isRotatingRight =
+            distanceToWaypoint.current > 1 &&
+            degreesToWaypoint.current < 180 &&
+            degreesToWaypoint.current > 30
+
+        leftAnimation.render(isRotatingLeft)
+        rightAnimation.render(isRotatingRight)
+        walkAnimation.render(characterSpeed)
+    }
+
+    function rootMotion(characterSpeed: number) {
+        if (!model.current?.rootMesh) {
+            return
+        }
+
+        if (distanceToWaypoint.current >= 1) {
+            rotate(0.02)
+        }
+
+        translate(0.05, characterSpeed)
+    }
 
     const onModelLoaded = (loadedModel: ILoadedModel) => {
         model.current = loadedModel
@@ -31,24 +67,13 @@ const DeerModel: FC<ViewProps> = ({ model }) => {
     }
 
     useBeforeRender(() => {
-        const isRotatingLeft =
-            distanceToWaypoint.current > 1 &&
-            degreesToWaypoint.current > 180 &&
-            degreesToWaypoint.current < 330
-
-        const isRotatingRight =
-            distanceToWaypoint.current > 1 &&
-            degreesToWaypoint.current < 180 &&
-            degreesToWaypoint.current > 30
-
         const characterSpeed = getCharacterSpeed(
             distanceToWaypoint.current,
             degreesToWaypoint.current
         )
 
-        leftAnimation.render(isRotatingLeft)
-        rightAnimation.render(isRotatingRight)
-        walkAnimation.render(characterSpeed)
+        inPlaceAnimation(characterSpeed)
+        rootMotion(characterSpeed)
     })
 
     return (
