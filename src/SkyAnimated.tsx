@@ -1,6 +1,7 @@
 import { Effect, Mesh, ShaderMaterial, Texture } from '@babylonjs/core'
-import React, { FC, useEffect, useRef } from 'react'
-import { useBeforeRender, useScene } from 'react-babylonjs'
+import React, { FC, useEffect } from 'react'
+
+import { useScene } from 'react-babylonjs'
 
 const SkyAnimated: FC = () => {
     const scene = useScene()
