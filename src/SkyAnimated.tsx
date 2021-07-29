@@ -46,8 +46,6 @@ const SkyAnimated: FC = () => {
 
         varying vec4 vPosition; 
 
-         precision mediump float; 
-
         // Day and night sky cycle. By László Matuska (@BitOfGold)
         // Creates a sky texture for a skydome
         // https://www.shadertoy.com/view/ltlSWB
@@ -198,7 +196,7 @@ const SkyAnimated: FC = () => {
 
             vec2 uv = (p.xy+vec2(37.0,17.0)*p.z) + f.xy;
              
-            vec2 rg = texture( iChannel0, (uv+ 0.5)/256.0, -100.0).yx;
+            vec2 rg = texture2D( iChannel0, (uv+ 0.5)/256.0, -100.0).yx;
             return mix( rg.x, rg.y, f.z );
         }
 
