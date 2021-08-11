@@ -7,6 +7,7 @@ import SkyAnimated from './SkyAnimated'
 import { Vector3 } from '@babylonjs/core'
 import withPointAndClickControls from './withPointAndClickControls'
 import withWaypointController from './withWaypointController'
+import AmbientSound from './AmbientSound'
 
 const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointController(DeerModel))
 
@@ -25,6 +26,7 @@ const DeerScene: FC = () => (
             <hemisphericLight name="hemi-light" intensity={0.7} direction={Vector3.Up()} />
             <SkyAnimated />
             <DeerWithPointAndClickControls />
+            <AmbientSound />
         </GroundProvider>
     </Scene>
 )
