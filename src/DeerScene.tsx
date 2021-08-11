@@ -1,3 +1,4 @@
+import AmbientSound from './AmbientSound'
 import DeerModel from './DeerModel'
 import { FC } from 'react'
 import Ground from './Ground'
@@ -7,7 +8,6 @@ import SkyAnimated from './SkyAnimated'
 import { Vector3 } from '@babylonjs/core'
 import withPointAndClickControls from './withPointAndClickControls'
 import withWaypointController from './withWaypointController'
-import AmbientSound from './AmbientSound'
 
 const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointController(DeerModel))
 

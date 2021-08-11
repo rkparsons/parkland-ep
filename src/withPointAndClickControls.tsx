@@ -1,6 +1,6 @@
+import { AbstractMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 import { FC, useEffect, useRef } from 'react'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
-import { Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 
 import { WaypointControllerProps } from './types'
 import { getAngleBetweenMeshes } from './utils'
@@ -20,6 +20,13 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 scene.onPointerDown = onPointerDown
             }
         }, [scene])
+
+        useEffect(() => {
+            if (scene && model.current?.rootMesh) {
+                scene.audioListenerPositionProvider = () =>
+                    model.current!.rootMesh!.absolutePosition
+            }
+        }, [scene, model.current])
 
         useBeforeRender(() => {
             if (!model.current?.rootMesh || !waypoint.current) {
