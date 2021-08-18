@@ -28,8 +28,9 @@ const DeerScene: FC = () => (
             <SkyAnimated />
             <DeerWithPointAndClickControls />
             <AmbientSound />
-            <SoundMesh url="audio/beepMid.mp3" position={new Vector3(0, 2, 15)} />
-            <SoundMesh url="audio/pads.mp3" position={new Vector3(15, 2, -5)} diameter={2} />
+            <SoundMesh url="audio/beepMid.mp3" position={new Vector3(0, 4, 15)} />
+            <SoundMesh url="audio/kickSnare.mp3" position={new Vector3(-20, 2, 5)} diameter={2} />
+            <SoundMesh url="audio/pads.mp3" position={new Vector3(15, 2, -15)} diameter={3} />
         </GroundProvider>
     </Scene>
 )
