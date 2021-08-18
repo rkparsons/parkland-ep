@@ -1,4 +1,4 @@
-import { Color3, Color4, HighlightLayer, Mesh, Sound, Vector3 } from '@babylonjs/core'
+import { Color3, HighlightLayer, Mesh, Sound, Vector3 } from '@babylonjs/core'
 import { FC, useEffect, useRef, useState } from 'react'
 import { useBeforeRender, useHover, useScene } from 'react-babylonjs'
 
@@ -49,7 +49,7 @@ const SoundMesh: FC<ViewProps> = ({ position, url, diameter = 1 }) => {
 
     useEffect(() => {
         if (highlightLayer.current && sphere.current && sphere.current instanceof Mesh) {
-            highlightLayer.current.addMesh(sphere.current, Color3.Green())
+            highlightLayer.current.addMesh(sphere.current, Color3.White())
         }
     }, [sphere.current, highlightLayer.current])
 
@@ -68,12 +68,7 @@ const SoundMesh: FC<ViewProps> = ({ position, url, diameter = 1 }) => {
 
     return (
         <>
-            <highlightLayer
-                name="hl"
-                ref={highlightLayer}
-                isEnabled={false}
-                neutralColor={new Color4(255, 255, 255, 0)}
-            />
+            <highlightLayer name="hl" ref={highlightLayer} isEnabled={false} />
             <sphere name={name} position={position} diameter={diameter} ref={sphere} />
         </>
     )
