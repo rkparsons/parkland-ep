@@ -21,13 +21,6 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             }
         }, [scene])
 
-        useEffect(() => {
-            if (scene && model.current?.rootMesh) {
-                scene.audioListenerPositionProvider = () =>
-                    model.current!.rootMesh!.absolutePosition
-            }
-        }, [scene, model.current])
-
         useBeforeRender(() => {
             if (!model.current?.rootMesh || !waypoint.current) {
                 return

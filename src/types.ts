@@ -1,7 +1,7 @@
 import { Mesh, Vector3 } from '@babylonjs/core'
+import { MutableRefObject, RefObject } from 'react'
 
 import { ILoadedModel } from 'react-babylonjs'
-import { MutableRefObject } from 'react'
 
 export type WaypointControllerProps = {
     model: MutableRefObject<ILoadedModel | undefined>
@@ -18,6 +18,8 @@ export type ModelProps = {
 }
 
 export type Feature = {
+    name: string
     position: Vector3
     soundURL: string
+    ref: RefObject<Mesh>
 }

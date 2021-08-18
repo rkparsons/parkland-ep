@@ -1,5 +1,5 @@
 import { FC, Suspense } from 'react'
-import { ILoadedModel, Model, useBeforeRender } from 'react-babylonjs'
+import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
 import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
 
 import { ModelProps } from './types'
@@ -7,6 +7,7 @@ import useAnimation from './useAnimation'
 
 // todo: replace with getSpeed methods for left, right and straight
 const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRight, getSpeed }) => {
+    const scene = useScene()
     const idle = useAnimation('Idle')
     const walk = useAnimation('WalkForward')
     const left = useAnimation('TurnLeft')
@@ -23,6 +24,8 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
         walk.init()
         left.init()
         right.init()
+
+        scene!.audioListenerPositionProvider = () => model.current!.rootMesh!.absolutePosition
     }
 
     useBeforeRender(() => {
