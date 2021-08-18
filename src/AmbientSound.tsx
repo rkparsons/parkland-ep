@@ -11,12 +11,18 @@ const AmbientSound: FC = () => {
             return
         }
 
-        const music = new Sound('Music', 'ambience.mp3', scene, null, {
+        const music = new Sound('ambient', 'ambience.mp3', scene, null, {
+            loop: true,
+            autoplay: true
+        })
+
+        const birdFx = new Sound('birdFx', 'birdFx.mp3', scene, null, {
             loop: true,
             autoplay: true
         })
 
         music.play()
+        birdFx.play()
     }, [scene])
 
     return <></>

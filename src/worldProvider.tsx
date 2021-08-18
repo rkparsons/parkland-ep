@@ -9,7 +9,7 @@ type ViewProps = {
 }
 
 const WorldProvider: FC<ViewProps> = ({ children }) => {
-    const features = useRef<Feature[]>([{ position: Vector3.Zero() }])
+    const features = useRef<Feature[]>([{ position: Vector3.Zero(), soundURL: '' }])
 
     return <WorldContext.Provider value={{ features }}>{children}</WorldContext.Provider>
 }
