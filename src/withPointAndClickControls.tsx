@@ -1,6 +1,6 @@
-import { AbstractMesh, Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
+import { Mesh, PickingInfo, Vector3 } from '@babylonjs/core'
 
 import { WaypointControllerProps } from './types'
 import { getAngleBetweenMeshes } from './utils'
@@ -9,6 +9,7 @@ import useGroundContext from './useGroundContext'
 const withPointAndClickControls = (WaypointController: FC<WaypointControllerProps>) => {
     const modelWithPointAndClickControls = () => {
         const { ground } = useGroundContext()
+        const [isInitialised, setIsInitialised] = useState(false)
         const model = useRef<ILoadedModel>()
         const scene = useScene()
         const waypoint = useRef<Mesh>()
@@ -45,6 +46,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 intersection.pickedMesh === ground.current &&
                 waypoint.current
             ) {
+                setIsInitialised(true)
                 waypoint.current.position = intersection.pickedPoint.clone()
             }
         }
@@ -57,6 +59,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                     waypoint={waypoint}
                     distanceToWaypoint={distanceToWaypoint}
                     degreesToWaypoint={degreesToWaypoint}
+                    isInitialised={isInitialised}
                 />
             </>
         )

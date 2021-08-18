@@ -7,6 +7,7 @@ export type WaypointControllerProps = {
     waypoint: MutableRefObject<Mesh | undefined>
     distanceToWaypoint: MutableRefObject<number>
     degreesToWaypoint: MutableRefObject<number>
+    isInitialised: boolean
 }
 
 export type ModelProps = {

@@ -11,7 +11,8 @@ const withWaypointController = (Model: FC<ModelProps>) => {
         model,
         waypoint,
         distanceToWaypoint,
-        degreesToWaypoint
+        degreesToWaypoint,
+        isInitialised
     }) => {
         const { ground } = useGroundContext()
 
@@ -67,7 +68,9 @@ const withWaypointController = (Model: FC<ModelProps>) => {
         }
 
         useBeforeRender(() => {
-            rootMotion(getSpeed())
+            if (isInitialised) {
+                rootMotion(getSpeed())
+            }
         })
 
         return (
