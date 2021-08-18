@@ -17,14 +17,6 @@ const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointCont
 const DeerScene: FC = () => (
     <Scene>
         <GroundProvider GroundComponent={Ground}>
-            <arcRotateCamera
-                name="camera1"
-                alpha={Math.PI}
-                beta={Math.PI / 2.3}
-                radius={20.0}
-                target={Vector3.Zero()}
-                minZ={0.001}
-            />
             <hemisphericLight name="hemi-light" intensity={0.7} direction={Vector3.Up()} />
             {/* <Sky /> */}
             {/* <SkyAnimated /> */}
