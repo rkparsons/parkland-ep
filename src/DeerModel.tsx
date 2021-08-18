@@ -53,14 +53,6 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
                 minZ={0.001}
                 ref={camera}
             />
-            {/* <arcFollowCamera
-                name="camera1"
-                alpha={Math.PI}
-                beta={Math.PI / 2.3}
-                radius={20.0}
-                lockedTarget={model.current?.rootMesh}
-                minZ={0.001}
-            /> */}
             <Suspense fallback={null}>
                 <Model
                     name="deer"
