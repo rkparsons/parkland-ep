@@ -37,8 +37,7 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
         new Sound('pads', 'audio/pads.mp3', scene, null, {
             loop: true,
             autoplay: true,
-            maxDistance: 20,
-            playbackRate: -100
+            maxDistance: 20
         }).attachToMesh(padsRef.current)
     }, [beepMidRef, scene])
 
