@@ -1,7 +1,6 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Mesh, Sound, Vector3 } from '@babylonjs/core'
-
-import { useScene } from 'react-babylonjs'
+import { useHover, useScene } from 'react-babylonjs'
 
 type ViewProps = {
     position: Vector3
@@ -9,7 +8,14 @@ type ViewProps = {
     url: string
 }
 
-const SoundMesh: FC<ViewProps> = ({ position, url, diameter }) => {
+const SoundMesh: FC<ViewProps> = ({ position, url, diameter = 1 }) => {
+    const [scaling, setScaling] = useState(new Vector3(1, 1, 1))
+
+    const [sphere] = useHover(
+        () => setScaling(new Vector3(1.5, 1.5, 1.5)),
+        () => setScaling(new Vector3(1, 1, 1))
+    )
+
     const scene = useScene()
     const mesh = useRef<Mesh>()
     const name = url.split('/').slice(-1)[0]
@@ -26,7 +32,11 @@ const SoundMesh: FC<ViewProps> = ({ position, url, diameter }) => {
         }).attachToMesh(mesh.current)
     }, [mesh, scene])
 
-    return <sphere name={name} position={position} diameter={diameter} ref={mesh} />
+    return (
+        <sphere name={name} position={position} diameter={diameter} scaling={scaling} ref={sphere}>
+            <mesh name="soundMesh" ref={mesh} />
+        </sphere>
+    )
 }
 
 export default SoundMesh
