@@ -1,6 +1,8 @@
 import { Color3, HighlightLayer, Mesh, Sound, Vector3 } from '@babylonjs/core'
 import { FC, useEffect, useRef, useState } from 'react'
-import { useHover, useScene } from 'react-babylonjs'
+import { useBeforeRender, useHover, useScene } from 'react-babylonjs'
+
+import { useSpring } from 'react-spring'
 
 type ViewProps = {
     position: Vector3
@@ -9,24 +11,38 @@ type ViewProps = {
 }
 
 const SoundMesh: FC<ViewProps> = ({ position, url, diameter = 1 }) => {
-    const [scaling, setScaling] = useState(new Vector3(1, 1, 1))
+    const [isHover, setIsHover] = useState(false)
     const highlightLayer = useRef<HighlightLayer>(null)
+    const { scaling } = useSpring({
+        scaling: isHover ? 1.5 : 1
+    })
 
     const [sphere] = useHover(
         () => {
-            setScaling(new Vector3(1.5, 1.5, 1.5))
+            setIsHover(true)
 
             if (highlightLayer.current) {
                 highlightLayer.current.isEnabled = true
             }
         },
         () => {
-            setScaling(new Vector3(1, 1, 1))
+            setIsHover(false)
+
             if (highlightLayer.current) {
                 highlightLayer.current.isEnabled = false
             }
         }
     )
+
+    useBeforeRender(() => {
+        if (!sphere.current || !(sphere.current instanceof Mesh)) {
+            return
+        }
+
+        const newScaling = scaling.get()
+
+        sphere.current.scaling.set(newScaling, newScaling, newScaling)
+    })
 
     const scene = useScene()
     const name = url.split('/').slice(-1)[0]
@@ -53,13 +69,7 @@ const SoundMesh: FC<ViewProps> = ({ position, url, diameter = 1 }) => {
     return (
         <>
             <highlightLayer name="hl" ref={highlightLayer} isEnabled={false} />
-            <sphere
-                name={name}
-                position={position}
-                diameter={diameter}
-                scaling={scaling}
-                ref={sphere}
-            />
+            <sphere name={name} position={position} diameter={diameter} ref={sphere} />
         </>
     )
 }
