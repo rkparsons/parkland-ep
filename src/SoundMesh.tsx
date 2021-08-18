@@ -27,7 +27,8 @@ const SoundMesh: FC<ViewProps> = ({ position, url, diameter = 1 }) => {
         new Sound(name, url, scene, null, {
             loop: true,
             autoplay: true,
-            maxDistance: 20
+            maxDistance: 20,
+            volume: 0.2
         }).attachToMesh(sphere.current)
     }, [sphere, scene])
 
