@@ -47,11 +47,16 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
     return (
         <>
             <followCamera
-                name="camera1"
-                radius={20.0}
-                position={Vector3.Zero()}
-                minZ={0.001}
                 ref={camera}
+                name="camera1"
+                radius={15.0}
+                position={Vector3.Zero()}
+                heightOffset={5}
+                lowerHeightOffsetLimit={2}
+                upperHeightOffsetLimit={8}
+                lowerRadiusLimit={10}
+                upperRadiusLimit={30}
+                rotationOffset={130}
             />
             <Suspense fallback={null}>
                 <Model
