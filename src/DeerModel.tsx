@@ -1,14 +1,15 @@
-import { FC, Suspense, useRef } from 'react'
-import { FollowCamera, Quaternion, Tools, Vector3 } from '@babylonjs/core'
+import { FC, Suspense } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
+import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
 
 import { ModelProps } from './types'
 import useAnimation from './useAnimation'
+import useCameraContext from './useCameraContext'
 
 // todo: replace with getSpeed methods for left, right and straight
 const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRight, getSpeed }) => {
     const scene = useScene()
-    const camera = useRef<FollowCamera>()
+    const { setLockedTarget } = useCameraContext()
     const idle = useAnimation('Idle')
     const walk = useAnimation('WalkForward')
     const left = useAnimation('TurnLeft')
@@ -27,8 +28,7 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
         right.init()
 
         scene!.audioListenerPositionProvider = () => model.current!.rootMesh!.absolutePosition
-
-        camera.current!.lockedTarget = loadedModel.rootMesh!
+        setLockedTarget(loadedModel.rootMesh!)
     }
 
     useBeforeRender(() => {
@@ -45,33 +45,19 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
     })
 
     return (
-        <>
-            <followCamera
-                ref={camera}
-                name="camera1"
-                radius={15.0}
-                position={Vector3.Zero()}
-                heightOffset={5}
-                lowerHeightOffsetLimit={2}
-                upperHeightOffsetLimit={8}
-                lowerRadiusLimit={10}
-                upperRadiusLimit={30}
-                rotationOffset={130}
+        <Suspense fallback={null}>
+            <Model
+                name="deer"
+                position={new Vector3(0, 1, 0)}
+                rootUrl={`${process.env.PUBLIC_URL}/`}
+                sceneFilename="Deer.glb"
+                scaleToDimension={3}
+                rotation={new Vector3(0, Tools.ToRadians(240), 0)}
+                onModelLoaded={onModelLoaded}
+                checkCollisions={true}
+                rotationQuaternion={Quaternion.Identity()}
             />
-            <Suspense fallback={null}>
-                <Model
-                    name="deer"
-                    position={new Vector3(0, 1, 0)}
-                    rootUrl={`${process.env.PUBLIC_URL}/`}
-                    sceneFilename="Deer.glb"
-                    scaleToDimension={3}
-                    rotation={new Vector3(0, Tools.ToRadians(240), 0)}
-                    onModelLoaded={onModelLoaded}
-                    checkCollisions={true}
-                    rotationQuaternion={Quaternion.Identity()}
-                />
-            </Suspense>
-        </>
+        </Suspense>
     )
 }
 
