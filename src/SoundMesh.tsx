@@ -1,4 +1,4 @@
-import { Color3, HighlightLayer, Mesh, Sound, Vector3 } from '@babylonjs/core'
+import { Color3, Color4, HighlightLayer, Mesh, Sound, Vector3 } from '@babylonjs/core'
 import { FC, useEffect, useRef, useState } from 'react'
 import { useBeforeRender, useHover, useScene } from 'react-babylonjs'
 
@@ -68,7 +68,12 @@ const SoundMesh: FC<ViewProps> = ({ position, url, diameter = 1 }) => {
 
     return (
         <>
-            <highlightLayer name="hl" ref={highlightLayer} isEnabled={false} />
+            <highlightLayer
+                name="hl"
+                ref={highlightLayer}
+                isEnabled={false}
+                neutralColor={new Color4(255, 255, 255, 0)}
+            />
             <sphere name={name} position={position} diameter={diameter} ref={sphere} />
         </>
     )
