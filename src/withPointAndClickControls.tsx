@@ -38,16 +38,25 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             )
         })
 
+        function setWaypoint(intersection: PickingInfo) {
+            const isGroundIntersection = intersection.pickedMesh === ground.current
+            const clickPosition = intersection.pickedPoint!.clone()
+
+            if (isGroundIntersection) {
+                waypoint.current!.position = clickPosition
+            } else {
+                clickPosition._y = 0
+                waypoint.current!.position = clickPosition
+            }
+        }
+
         function onPointerDown(e: PointerEvent, intersection: PickingInfo) {
-            if (
-                e.button === 0 &&
-                intersection.hit &&
-                intersection.pickedPoint &&
-                intersection.pickedMesh === ground.current &&
-                waypoint.current
-            ) {
+            const isMouseDownHit =
+                e.button === 0 && intersection.hit && intersection.pickedPoint && waypoint.current
+
+            if (isMouseDownHit) {
                 setIsInitialised(true)
-                waypoint.current.position = intersection.pickedPoint.clone()
+                setWaypoint(intersection)
             }
         }
 
