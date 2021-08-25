@@ -1,4 +1,4 @@
-import { AbstractMesh, Angle, Matrix, Quaternion, Ray, Space, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, Angle, Matrix, Mesh, Quaternion, Ray, Space, Vector3 } from '@babylonjs/core'
 
 export function getAngleBetweenMeshes(mesh1: AbstractMesh, mesh2: AbstractMesh) {
     const v0 = mesh1.getDirection(new Vector3(0, 0, 1)).normalize()
@@ -71,4 +71,10 @@ export function getCharacterGroundIntersection(character: AbstractMesh, ground: 
     ground.getWorldMatrix().invertToRef(worldInverse)
     ray = Ray.Transform(ray, worldInverse)
     return ground.intersects(ray)
+}
+
+export function vectorToLocal(vector: Vector3, mesh: AbstractMesh) {
+    const worldMatrix = mesh.getWorldMatrix()
+
+    return Vector3.TransformCoordinates(vector, worldMatrix)
 }

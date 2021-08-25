@@ -37,7 +37,7 @@ const SoundMesh: FC<ViewProps> = ({ position, url, diameter = 1 }) => {
     )
 
     useClick(() => {
-        console.log('clicked')
+        // console.log('clicked')
     }, sphere)
 
     useBeforeRender(() => {
