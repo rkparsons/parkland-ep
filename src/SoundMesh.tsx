@@ -1,6 +1,6 @@
 import { Color3, HighlightLayer, Mesh, Sound, Vector3 } from '@babylonjs/core'
 import { FC, useEffect, useRef, useState } from 'react'
-import { useBeforeRender, useHover, useScene } from 'react-babylonjs'
+import { useBeforeRender, useClick, useHover, useScene } from 'react-babylonjs'
 
 import { useSpring } from 'react-spring'
 
@@ -16,8 +16,9 @@ const SoundMesh: FC<ViewProps> = ({ position, url, diameter = 1 }) => {
     const { scaling } = useSpring({
         scaling: isHover ? 1.5 : 1
     })
+    const sphere = useRef<Mesh>(null)
 
-    const [sphere] = useHover(
+    useHover(
         () => {
             setIsHover(true)
 
@@ -31,8 +32,13 @@ const SoundMesh: FC<ViewProps> = ({ position, url, diameter = 1 }) => {
             if (highlightLayer.current) {
                 highlightLayer.current.isEnabled = false
             }
-        }
+        },
+        sphere
     )
+
+    useClick(() => {
+        console.log('clicked')
+    }, sphere)
 
     useBeforeRender(() => {
         if (!sphere.current || !(sphere.current instanceof Mesh)) {
