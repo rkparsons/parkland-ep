@@ -5,7 +5,6 @@ import '@babylonjs/loaders/glTF'
 import DeerScene from './DeerScene'
 import { Engine } from 'react-babylonjs'
 import React from 'react'
-import { Sound } from '@babylonjs/core'
 
 const App: React.FC = () => {
     return (

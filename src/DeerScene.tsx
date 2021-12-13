@@ -5,12 +5,13 @@ import { FC } from 'react'
 import Ground from './Ground'
 import GroundProvider from './groundProvider'
 import { Scene } from 'react-babylonjs'
-import Sky from './Sky'
-import SkyAnimated from './SkyAnimated'
 import SoundMesh from './SoundMesh'
 import { Vector3 } from '@babylonjs/core'
 import withPointAndClickControls from './withPointAndClickControls'
 import withWaypointController from './withWaypointController'
+
+// import Sky from './Sky'
+// import SkyAnimated from './SkyAnimated'
 
 const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointController(DeerModel))
 
