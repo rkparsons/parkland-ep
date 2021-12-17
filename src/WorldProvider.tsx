@@ -17,8 +17,6 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
         // loadedModel.meshes?.forEach((x => console.log(x.name))
 
         if (planet) {
-            console.log(planet.position)
-            planet.position = Vector3.Zero()
             world.current = planet
         }
     }
