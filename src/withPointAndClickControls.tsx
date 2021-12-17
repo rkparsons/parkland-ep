@@ -72,7 +72,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
         return (
             <>
-                <sphere name="waypoint" ref={waypoint} position={new Vector3(0, 268, 0)} />
+                <sphere name="waypoint" ref={waypoint} position={new Vector3(0, 260.5, 0)} />
                 <WaypointController
                     model={model}
                     waypoint={waypoint}
