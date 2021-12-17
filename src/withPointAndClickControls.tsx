@@ -4,11 +4,11 @@ import { Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
 import { getAngleBetweenMeshes, vectorToLocal } from './utils'
 
 import { WaypointControllerProps } from './types'
-import useGroundContext from './useGroundContext'
+import useWorldContext from './useWorldContext'
 
 const withPointAndClickControls = (WaypointController: FC<WaypointControllerProps>) => {
     const modelWithPointAndClickControls = () => {
-        const { ground } = useGroundContext()
+        const { world } = useWorldContext()
         const [isInitialised, setIsInitialised] = useState(false)
         const model = useRef<ILoadedModel>()
         const scene = useScene()
@@ -39,7 +39,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         })
 
         function setWaypoint(intersection: PickingInfo) {
-            const isGroundIntersection = intersection.pickedMesh === ground.current
+            const isGroundIntersection = intersection.pickedMesh === world.current
 
             if (isGroundIntersection) {
                 waypoint.current!.position = intersection.pickedPoint!.clone()
@@ -49,7 +49,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 const direction = Vector3.Normalize(down.subtract(origin))
                 const ray = new Ray(origin, direction)
 
-                const pickingInfo = ground.current?.intersects(ray)
+                const pickingInfo = world.current?.intersects(ray)
 
                 if (pickingInfo?.pickedPoint) {
                     waypoint.current!.position = pickingInfo.pickedPoint.clone()

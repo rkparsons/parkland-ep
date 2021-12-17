@@ -23,10 +23,10 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
                 radius={15.0}
                 position={Vector3.Zero()}
                 heightOffset={5}
-                lowerHeightOffsetLimit={2}
-                upperHeightOffsetLimit={8}
-                lowerRadiusLimit={10}
-                upperRadiusLimit={30}
+                // lowerHeightOffsetLimit={2}
+                // upperHeightOffsetLimit={8}
+                // lowerRadiusLimit={10}
+                // upperRadiusLimit={30}
                 rotationOffset={130}
             />
         </CameraContext.Provider>

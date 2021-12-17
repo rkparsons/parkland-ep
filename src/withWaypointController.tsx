@@ -3,7 +3,7 @@ import { rotateCharacterTowardsWaypoint, translateCharacterTowardsWaypoint } fro
 
 import { FC } from 'react'
 import { useBeforeRender } from 'react-babylonjs'
-import useGroundContext from './useGroundContext'
+import useWorldContext from './useWorldContext'
 
 // todo: separate root motion from waypoint logic if possible
 const withWaypointController = (Model: FC<ModelProps>) => {
@@ -14,10 +14,10 @@ const withWaypointController = (Model: FC<ModelProps>) => {
         degreesToWaypoint,
         isInitialised
     }) => {
-        const { ground } = useGroundContext()
+        const { world } = useWorldContext()
 
         function rootMotion(characterSpeed: number) {
-            if (!model.current?.rootMesh || !waypoint.current || !ground.current) {
+            if (!model.current?.rootMesh || !waypoint.current || !world.current) {
                 return
             }
 
@@ -28,7 +28,7 @@ const withWaypointController = (Model: FC<ModelProps>) => {
             translateCharacterTowardsWaypoint(
                 model.current.rootMesh,
                 waypoint.current,
-                ground.current,
+                world.current,
                 characterSpeed,
                 0.05
             )
