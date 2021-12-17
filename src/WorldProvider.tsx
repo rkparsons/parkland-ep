@@ -1,6 +1,6 @@
 import { AbstractMesh, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, Suspense, useRef } from 'react'
-import { ILoadedModel, Model, useScene } from 'react-babylonjs'
+import { ILoadedModel, Model } from 'react-babylonjs'
 
 import GroundContext from './WorldContext'
 
@@ -9,26 +9,12 @@ type ViewProps = {
 }
 
 const WorldProvider: FC<ViewProps> = ({ children }) => {
-    const scene = useScene()
     const world = useRef<AbstractMesh>()
 
     const onModelLoaded = (loadedModel: ILoadedModel) => {
-        const planet = scene?.getMeshByName('Planet')
+        const planet = loadedModel.meshes?.find((x) => x.name === 'Planet')
 
-        loadedModel.meshes?.forEach((x) => console.log(x.name))
-
-        // loadedModel.meshes?.forEach((x) => console.log(x.name))
-
-        // Cube with peaks
-        // Pokemon
-        // Cross
-        // Icosphere
-        // Anvil
-        // TCube
-        // Double tetrahedron
-        // dodecahedron
-        // Star
-        // octahedron
+        // loadedModel.meshes?.forEach((x => console.log(x.name))
 
         if (planet) {
             world.current = planet

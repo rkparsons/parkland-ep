@@ -45,9 +45,12 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 waypoint.current!.position = intersection.pickedPoint!.clone()
             } else {
                 const origin = intersection.pickedMesh!.position
-                const down = vectorToLocal(Vector3.Down(), intersection.pickedMesh!)
+                // const down = vectorToLocal(Vector3.Down(), intersection.pickedMesh!)
+                const down = origin.negate()
                 const direction = Vector3.Normalize(down.subtract(origin))
-                const ray = new Ray(origin, direction)
+                const ray = new Ray(origin, down)
+
+                console.log(world.current?.position)
 
                 const pickingInfo = world.current?.intersects(ray)
 
@@ -69,7 +72,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
         return (
             <>
-                <sphere name="waypoint" ref={waypoint} isVisible={false} />
+                <sphere name="waypoint" ref={waypoint} position={new Vector3(0, 268, 0)} />
                 <WaypointController
                     model={model}
                     waypoint={waypoint}

@@ -24,8 +24,8 @@ const DeerScene: FC = () => (
     <Scene enablePhysics={[Vector3.Zero(), new CannonJSPlugin()]}>
         <CameraProvider>
             <WorldProvider>
-                <hemisphericLight name="hemi-light" intensity={1} direction={Vector3.Up()} />
-                <pointLight name="sun" position={new Vector3(0, 400, 0)} intensity={1000} />
+                {/* <hemisphericLight name="hemi-light" intensity={1} direction={Vector3.Up()} />
+                <pointLight name="sun" position={new Vector3(0, 400, 0)} intensity={1000} /> */}
                 {/* <Sky /> */}
                 {/* <SkyAnimated /> */}
                 <DeerWithPointAndClickControls />
