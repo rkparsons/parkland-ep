@@ -27,8 +27,8 @@ const withWaypointController = (Model: FC<ModelProps>) => {
 
             translateCharacterTowardsWaypoint(
                 model.current.rootMesh,
-                waypoint.current,
                 world.current,
+                waypoint.current,
                 characterSpeed,
                 0.05
             )

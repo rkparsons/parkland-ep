@@ -31,8 +31,8 @@ export function rotateCharacterTowardsWaypoint(
 
 export function translateCharacterTowardsWaypoint(
     character: AbstractMesh,
-    waypoint: AbstractMesh,
     ground: AbstractMesh,
+    waypoint: AbstractMesh,
     speedFactor: number,
     maxSpeed: number
 ) {
@@ -45,37 +45,17 @@ export function translateCharacterTowardsWaypoint(
 
     character.translate(normal, walkSpeed, Space.WORLD)
     character.moveWithCollisions(Vector3.Zero())
-
     translateCharacterAboveGround(character, ground)
 }
 
 export function translateCharacterAboveGround(character: AbstractMesh, ground: AbstractMesh) {
-    if (character.intersectsMesh(ground)) {
-        character.translate(Vector3.Normalize(character.position), 0.003, Space.WORLD)
-        console.log('intersects')
-    } else {
-        character.translate(Vector3.Normalize(character.position), -0.003, Space.WORLD)
-    }
-}
+    const { x, y, z } = character.position
+    // const up = Vector3.Normalize(new Vector3(x, y, z))
+    const down = Vector3.Down()
+    const rayDown = new Ray(character.position, down, 0.1)
+    const isAboveGround = ground.intersects(rayDown).hit
 
-export function getCharacterGroundIntersection(character: AbstractMesh, ground: AbstractMesh) {
-    let ray = new Ray(
-        new Vector3(
-            character.position.x,
-            ground.getBoundingInfo().boundingBox.maximumWorld.y + 1,
-            character.position.z
-        ),
-        new Vector3(0, 0, 0)
-    )
+    character.translate(down, isAboveGround ? 0.1 : -0.1, Space.LOCAL)
 
-    const worldInverse = new Matrix()
-    ground.getWorldMatrix().invertToRef(worldInverse)
-    ray = Ray.Transform(ray, worldInverse)
-    return ground.intersects(ray)
-}
-
-export function vectorToLocal(vector: Vector3, mesh: AbstractMesh) {
-    const worldMatrix = mesh.getWorldMatrix()
-
-    return Vector3.TransformCoordinates(vector, worldMatrix)
+    console.log('isAboveGround', isAboveGround)
 }

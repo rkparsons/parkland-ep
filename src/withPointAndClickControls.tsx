@@ -1,9 +1,9 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
-import { getAngleBetweenMeshes, vectorToLocal } from './utils'
 
 import { WaypointControllerProps } from './types'
+import { getAngleBetweenMeshes } from './utils'
 import useWorldContext from './useWorldContext'
 
 const withPointAndClickControls = (WaypointController: FC<WaypointControllerProps>) => {

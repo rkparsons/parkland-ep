@@ -1,6 +1,6 @@
-import { AbstractMesh, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, PhysicsImpostor, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, Suspense, useRef } from 'react'
-import { ILoadedModel, Model } from 'react-babylonjs'
+import { ILoadedModel, Model, useScene } from 'react-babylonjs'
 
 import GroundContext from './WorldContext'
 
@@ -12,12 +12,7 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
     const world = useRef<AbstractMesh>()
 
     const onModelLoaded = (loadedModel: ILoadedModel) => {
-        const planet = loadedModel.meshes?.find((x) => x.name === 'Planet')
-
-        if (planet) {
-            planet.checkCollisions = true
-            world.current = planet
-        }
+        world.current = loadedModel.meshes?.find((x) => x.name === 'Planet')
     }
 
     return (
@@ -32,7 +27,16 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
                     sceneFilename="World.glb"
                     checkCollisions={true}
                     onModelLoaded={onModelLoaded}
-                />
+                >
+                    <physicsImpostor
+                        type={PhysicsImpostor.SphereImpostor}
+                        _options={{
+                            mass: 0,
+                            friction: 1,
+                            restitution: 0.0
+                        }}
+                    />
+                </Model>
             </Suspense>
         </GroundContext.Provider>
     )
