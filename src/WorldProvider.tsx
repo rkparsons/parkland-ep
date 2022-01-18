@@ -14,9 +14,8 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
     const onModelLoaded = (loadedModel: ILoadedModel) => {
         const planet = loadedModel.meshes?.find((x) => x.name === 'Planet')
 
-        // loadedModel.meshes?.forEach((x => console.log(x.name))
-
         if (planet) {
+            planet.checkCollisions = true
             world.current = planet
         }
     }
