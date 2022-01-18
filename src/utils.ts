@@ -50,10 +50,11 @@ export function translateCharacterTowardsWaypoint(
 }
 
 export function translateCharacterAboveGround(character: AbstractMesh, ground: AbstractMesh) {
-    const intersection = getCharacterGroundIntersection(character, ground)
-
-    if (intersection.hit && intersection.pickedPoint) {
-        character.position.y = intersection.pickedPoint.y + 1
+    if (character.intersectsMesh(ground)) {
+        character.translate(Vector3.Normalize(character.position), 0.003, Space.WORLD)
+        console.log('intersects')
+    } else {
+        character.translate(Vector3.Normalize(character.position), -0.003, Space.WORLD)
     }
 }
 
