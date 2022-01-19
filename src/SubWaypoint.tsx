@@ -1,7 +1,9 @@
 import { FC, MutableRefObject, useEffect } from 'react'
-import { Mesh, Vector3 } from '@babylonjs/core'
+import { Mesh, Ray, Vector3 } from '@babylonjs/core'
 
 import { Path } from './types'
+import { useScene } from 'react-babylonjs'
+import useWorldContext from './useWorldContext'
 
 type ViewProps = {
     index: number
@@ -10,29 +12,39 @@ type ViewProps = {
 }
 
 const SubWaypoint: FC<ViewProps> = ({ index, subWaypoints, path }) => {
-    // function setDebug() {
-    //     if (!model.current?.rootMesh || !world.current || !debug.current || !scene) {
-    //         return
-    //     }
-
-    //     const origin = model.current.rootMesh.position
-    //     const down = Vector3.Normalize(origin.negate())
-    //     const rayDown = new Ray(origin, down)
-    //     const pickingInfo = scene.pickWithRay(rayDown)
-
-    //     if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
-    //         debug.current.position = pickingInfo.pickedPoint!.clone()
-    //     }
-    // }
-
-    function initPosition() {
-        subWaypoints.current[index].position = path.start.add(
-            path.direction.scale(++index / subWaypoints.current.length)
-        )
-    }
+    const scene = useScene()
+    const { world } = useWorldContext()
 
     useEffect(() => {
-        initPosition()
+        const origin = path.start.add(
+            path.direction.scale((index + 1) / subWaypoints.current.length)
+        )
+        const down = Vector3.Normalize(origin.negate())
+        const rayDown = new Ray(origin, down, 1)
+        const groundBelowPick = scene?.pickWithRay(rayDown)
+
+        subWaypoints.current[index].position = origin
+
+        if (
+            groundBelowPick &&
+            groundBelowPick.hit &&
+            groundBelowPick.pickedMesh === world.current
+        ) {
+            subWaypoints.current[index].position = groundBelowPick.pickedPoint!.clone()
+            return
+        }
+
+        const up = Vector3.Normalize(origin)
+        const rayUp = new Ray(origin, up)
+        const groundAbovePick = scene?.pickWithRay(rayUp)
+
+        if (
+            groundAbovePick &&
+            groundAbovePick.hit &&
+            groundAbovePick.pickedMesh === world.current
+        ) {
+            subWaypoints.current[index].position = groundAbovePick.pickedPoint!.clone()
+        }
     }, [path])
 
     return (
