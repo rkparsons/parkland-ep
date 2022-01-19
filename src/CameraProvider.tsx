@@ -23,6 +23,8 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
                 Math.max(distanceToWaypoint / 2, minimumRadius),
                 maximumRadius
             )
+            camera.current.lowerRadiusLimit = camera.current.radius
+            camera.current.upperRadiusLimit = camera.current.radius
         }
     }
 
