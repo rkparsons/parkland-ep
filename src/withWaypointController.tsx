@@ -18,7 +18,7 @@ const withWaypointController = (Model: FC<ModelProps>) => {
         const { world } = useWorldContext()
 
         function rootMotion(characterSpeed: number) {
-            const activeSubWaypoint = subWaypoints.current[activeSubWaypointIndex]
+            const activeSubWaypoint = subWaypoints.current[activeSubWaypointIndex.current]
 
             if (!model.current?.rootMesh || !activeSubWaypoint || !world.current) {
                 return

@@ -7,12 +7,11 @@ import useWorldContext from './useWorldContext'
 
 type ViewProps = {
     index: number
-    isActive: boolean
     subWaypoints: MutableRefObject<Mesh[]>
     path: Path
 }
 
-const SubWaypoint: FC<ViewProps> = ({ index, isActive, subWaypoints, path }) => {
+const SubWaypoint: FC<ViewProps> = ({ index, subWaypoints, path }) => {
     const scene = useScene()
     const { world } = useWorldContext()
 
@@ -48,12 +47,8 @@ const SubWaypoint: FC<ViewProps> = ({ index, isActive, subWaypoints, path }) => 
             name={`waypoint_${index}`}
             ref={(el) => (subWaypoints.current[index] = el as Mesh)}
             position={Vector3.Zero()}
-        >
-            <standardMaterial
-                name="debugMaterial"
-                diffuseColor={isActive ? Color3.Red() : Color3.White()}
-            />
-        </sphere>
+            visibility={0}
+        />
     )
 }
 

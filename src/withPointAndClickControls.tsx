@@ -17,7 +17,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const waypoint = useRef<Mesh>()
         const subWaypoints = useRef<Mesh[]>([])
         const subWaypointCount = 10
-        const [activeSubWaypointIndex, setActiveSubWaypointIndex] = useState(0)
+        const activeSubWaypointIndex = useRef(0)
         const [path, setPath] = useState<Path>()
         const distanceToWaypoint = useRef(0)
         const degreesToActiveSubWaypoint = useRef(0)
@@ -34,7 +34,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 return
             }
 
-            const activeSubWaypoint = subWaypoints.current[activeSubWaypointIndex]
+            const activeSubWaypoint = subWaypoints.current[activeSubWaypointIndex.current]
 
             degreesToActiveSubWaypoint.current = getAngleBetweenMeshes(
                 model.current.rootMesh,
@@ -53,8 +53,11 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
             adjustZoomToWaypointDistance(distanceToWaypoint.current)
 
-            if (distanceToActiveSubWaypoint < 1 && activeSubWaypointIndex < subWaypointCount - 1) {
-                setActiveSubWaypointIndex(activeSubWaypointIndex + 1)
+            if (
+                distanceToActiveSubWaypoint < 1 &&
+                activeSubWaypointIndex.current < subWaypointCount - 1
+            ) {
+                activeSubWaypointIndex.current += 1
             }
         })
 
@@ -86,7 +89,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             setIsInitialised(true)
             setWaypoint(intersection)
 
-            setActiveSubWaypointIndex(0)
+            activeSubWaypointIndex.current = 0
 
             if (!waypoint.current || !model.current?.rootMesh) {
                 return
@@ -106,13 +109,13 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                     ref={waypoint}
                     isPickable={false}
                     position={new Vector3(0, 260.5, 0)}
+                    visibility={0}
                 />
                 {path &&
                     Array.from(Array(subWaypointCount).keys()).map((index) => (
                         <SubWaypoint
                             key={index}
                             index={index}
-                            isActive={index === activeSubWaypointIndex}
                             subWaypoints={subWaypoints}
                             path={path}
                         />

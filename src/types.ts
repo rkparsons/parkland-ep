@@ -6,7 +6,7 @@ import { MutableRefObject } from 'react'
 export type WaypointControllerProps = {
     model: MutableRefObject<ILoadedModel | undefined>
     subWaypoints: MutableRefObject<Mesh[]>
-    activeSubWaypointIndex: number
+    activeSubWaypointIndex: MutableRefObject<number>
     distanceToWaypoint: MutableRefObject<number>
     degreesToWaypoint: MutableRefObject<number>
     isInitialised: boolean
