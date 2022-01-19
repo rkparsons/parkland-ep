@@ -1,38 +1,11 @@
 import { FC, MutableRefObject, ReactNode, useEffect, useRef, useState } from 'react'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
+import { Path, WaypointControllerProps } from './types'
 
-import { WaypointControllerProps } from './types'
+import SubWaypoint from './SubWaypoint'
 import { getAngleBetweenMeshes } from './utils'
 import useWorldContext from './useWorldContext'
-
-type Path = {
-    start: Vector3
-    direction: Vector3
-    end: Vector3
-}
-
-type SubWaypointProps = {
-    index: number
-    subWaypoints: MutableRefObject<Mesh[]>
-    path: Path
-}
-
-const SubWaypoint: FC<SubWaypointProps> = ({ index, subWaypoints, path }) => {
-    useEffect(() => {
-        subWaypoints.current[index].position = path.start.add(
-            path.direction.scale(++index / subWaypoints.current.length)
-        )
-    }, [path])
-
-    return (
-        <sphere
-            name={`waypoint_${index}`}
-            ref={(el) => (subWaypoints.current[index] = el as Mesh)}
-            position={Vector3.Zero()}
-        />
-    )
-}
 
 const withPointAndClickControls = (WaypointController: FC<WaypointControllerProps>) => {
     const modelWithPointAndClickControls: FC = () => {
@@ -42,6 +15,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const scene = useScene()
         const waypoint = useRef<Mesh>()
         const subWaypoints = useRef<Mesh[]>([])
+        const subWaypointCount = 10
         const [path, setPath] = useState<Path>()
         const debug = useRef<Mesh>()
         const distanceToWaypoint = useRef(0)
@@ -132,7 +106,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                     position={new Vector3(0, 260.5, 0)}
                 />
                 {path &&
-                    Array.from(Array(10).keys()).map((index) => (
+                    Array.from(Array(subWaypointCount).keys()).map((index) => (
                         <SubWaypoint
                             key={index}
                             index={index}

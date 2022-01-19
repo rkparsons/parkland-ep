@@ -1,5 +1,6 @@
+import { Mesh, Vector3 } from '@babylonjs/core'
+
 import { ILoadedModel } from 'react-babylonjs'
-import { Mesh } from '@babylonjs/core'
 import { MutableRefObject } from 'react'
 
 export type WaypointControllerProps = {
@@ -15,4 +16,10 @@ export type ModelProps = {
     getIsRotatingLeft(): boolean
     getIsRotatingRight(): boolean
     getSpeed(): number
+}
+
+export type Path = {
+    start: Vector3
+    direction: Vector3
+    end: Vector3
 }
