@@ -25,10 +25,14 @@ const SubWaypoint: FC<ViewProps> = ({ index, subWaypoints, path }) => {
     //     }
     // }
 
-    useEffect(() => {
+    function initPosition() {
         subWaypoints.current[index].position = path.start.add(
             path.direction.scale(++index / subWaypoints.current.length)
         )
+    }
+
+    useEffect(() => {
+        initPosition()
     }, [path])
 
     return (
