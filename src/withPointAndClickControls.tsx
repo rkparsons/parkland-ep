@@ -7,7 +7,7 @@ import { getAngleBetweenMeshes } from './utils'
 import useWorldContext from './useWorldContext'
 
 const withPointAndClickControls = (WaypointController: FC<WaypointControllerProps>) => {
-    const modelWithPointAndClickControls = () => {
+    const modelWithPointAndClickControls: FC = () => {
         const { world } = useWorldContext()
         const [isInitialised, setIsInitialised] = useState(false)
         const model = useRef<ILoadedModel>()
@@ -27,8 +27,6 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             if (!model.current?.rootMesh || !waypoint.current) {
                 return
             }
-
-            setDebug()
 
             degreesToWaypoint.current = getAngleBetweenMeshes(
                 model.current.rootMesh,
@@ -77,10 +75,24 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             const isMouseDownHit =
                 e.button === 0 && intersection.hit && intersection.pickedPoint && waypoint.current
 
-            if (isMouseDownHit) {
-                setIsInitialised(true)
-                setWaypoint(intersection)
+            if (!isMouseDownHit) {
+                return
             }
+
+            setIsInitialised(true)
+            setWaypoint(intersection)
+
+            if (!waypoint.current || !model.current?.rootMesh || !debug.current) {
+                return
+            }
+
+            const midpoint = waypoint.current.position
+                .subtract(model.current.rootMesh.position)
+                .scale(0.5)
+
+            console.log(midpoint)
+
+            debug.current.position = model.current.rootMesh.position.add(midpoint)
         }
 
         return (
