@@ -13,6 +13,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const model = useRef<ILoadedModel>()
         const scene = useScene()
         const waypoint = useRef<Mesh>()
+        const debug = useRef<Mesh>()
         const distanceToWaypoint = useRef(0)
         const degreesToWaypoint = useRef(0)
 
@@ -26,6 +27,8 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             if (!model.current?.rootMesh || !waypoint.current) {
                 return
             }
+
+            setDebug()
 
             degreesToWaypoint.current = getAngleBetweenMeshes(
                 model.current.rootMesh,
@@ -55,6 +58,21 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             }
         }
 
+        function setDebug() {
+            if (!model.current?.rootMesh || !world.current || !debug.current || !scene) {
+                return
+            }
+
+            const origin = model.current.rootMesh.position
+            const down = Vector3.Normalize(origin.negate())
+            const rayDown = new Ray(origin, down)
+            const pickingInfo = scene.pickWithRay(rayDown)
+
+            if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
+                debug.current.position = pickingInfo.pickedPoint!.clone()
+            }
+        }
+
         function onPointerDown(e: PointerEvent, intersection: PickingInfo) {
             const isMouseDownHit =
                 e.button === 0 && intersection.hit && intersection.pickedPoint && waypoint.current
@@ -67,7 +85,13 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
         return (
             <>
-                <sphere name="waypoint" ref={waypoint} position={new Vector3(0, 260.5, 0)} />
+                <sphere
+                    name="waypoint"
+                    ref={waypoint}
+                    isPickable={false}
+                    position={new Vector3(0, 260.5, 0)}
+                />
+                <sphere name="debug" ref={debug} position={Vector3.Zero()} />
                 <WaypointController
                     model={model}
                     waypoint={waypoint}
