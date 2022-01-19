@@ -1,10 +1,25 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, MutableRefObject, ReactNode, useEffect, useRef, useState } from 'react'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
 
 import { WaypointControllerProps } from './types'
 import { getAngleBetweenMeshes } from './utils'
 import useWorldContext from './useWorldContext'
+
+type WaypointProps = {
+    index: number
+    waypoints: MutableRefObject<Mesh[]>
+}
+
+const Waypoint: FC<WaypointProps> = ({ index, waypoints }) => {
+    return (
+        <sphere
+            name={`waypoint_${index}`}
+            ref={(el) => (waypoints.current[index] = el as Mesh)}
+            position={Vector3.Zero()}
+        />
+    )
+}
 
 const withPointAndClickControls = (WaypointController: FC<WaypointControllerProps>) => {
     const modelWithPointAndClickControls: FC = () => {
@@ -90,11 +105,10 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             const startPosition = model.current.rootMesh.position
             const endPosition = waypoint.current.position
             const totalPath = endPosition.subtract(startPosition)
-            const midpoint = totalPath.scale(0.5)
 
             waypoints.current.forEach(
                 (point, index) =>
-                    (waypoints.current[index].position = model.current!.rootMesh!.position.add(
+                    (point.position = model.current!.rootMesh!.position.add(
                         totalPath.scale(++index / waypoints.current.length)
                     ))
             )
@@ -109,12 +123,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                     position={new Vector3(0, 260.5, 0)}
                 />
                 {Array.from(Array(10).keys()).map((index) => (
-                    <sphere
-                        key={index}
-                        name={`waypoint_${index}`}
-                        ref={(el) => (waypoints.current[index] = el as Mesh)}
-                        position={Vector3.Zero()}
-                    />
+                    <Waypoint key={index} index={index} waypoints={waypoints} />
                 ))}
 
                 <WaypointController
