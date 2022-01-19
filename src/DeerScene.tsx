@@ -1,13 +1,10 @@
-import * as CANNON from 'cannon'
-
-import { CannonJSPlugin, Color3, Vector3 } from '@babylonjs/core'
-
 import AmbientSound from './AmbientSound'
 import CameraProvider from './CameraProvider'
 import DeerModel from './DeerModel'
 import { FC } from 'react'
 import { Scene } from 'react-babylonjs'
 import SoundMesh from './SoundMesh'
+import { Vector3 } from '@babylonjs/core'
 import WorldProvider from './WorldProvider'
 import withPointAndClickControls from './withPointAndClickControls'
 import withWaypointController from './withWaypointController'
@@ -15,13 +12,11 @@ import withWaypointController from './withWaypointController'
 // import SkyAnimated from './SkyAnimated'
 // import Sky from './Sky'
 
-window.CANNON = CANNON
-
 const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointController(DeerModel))
 
 // todo: move tweakable params to .env
 const DeerScene: FC = () => (
-    <Scene enablePhysics={[Vector3.Zero(), new CannonJSPlugin()]}>
+    <Scene>
         <CameraProvider>
             <WorldProvider>
                 {/* <hemisphericLight name="hemi-light" intensity={1} direction={Vector3.Up()} />
