@@ -10,6 +10,7 @@ const withWaypointController = (Model: FC<ModelProps>) => {
     const waypointController: FC<WaypointControllerProps> = ({
         model,
         waypoint,
+        subWaypoints,
         distanceToWaypoint,
         degreesToWaypoint,
         isInitialised

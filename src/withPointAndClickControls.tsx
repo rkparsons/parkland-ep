@@ -15,10 +15,11 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const scene = useScene()
         const waypoint = useRef<Mesh>()
         const subWaypoints = useRef<Mesh[]>([])
-        const subWaypointCount = 10
+        const subWaypointCount = 3
+        const activeSubWaypointIndex = useRef(0)
         const [path, setPath] = useState<Path>()
         const distanceToWaypoint = useRef(0)
-        const degreesToWaypoint = useRef(0)
+        const degreesToActiveSubWaypoint = useRef(0)
 
         useEffect(() => {
             if (scene) {
@@ -27,19 +28,31 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         }, [scene])
 
         useBeforeRender(() => {
-            if (!model.current?.rootMesh || !waypoint.current) {
+            if (!model.current?.rootMesh || !waypoint.current || !subWaypoints.current.length) {
                 return
             }
 
-            degreesToWaypoint.current = getAngleBetweenMeshes(
+            const activeSubWaypoint = subWaypoints.current[activeSubWaypointIndex.current]
+
+            degreesToActiveSubWaypoint.current = getAngleBetweenMeshes(
                 model.current.rootMesh,
-                waypoint.current
+                activeSubWaypoint
             ).degrees()
+
+            const distanceToActiveSubWaypoint = Vector3.Distance(
+                model.current.rootMesh.position,
+                activeSubWaypoint.position
+            )
+            console.log(distanceToActiveSubWaypoint)
 
             distanceToWaypoint.current = Vector3.Distance(
                 waypoint.current.position,
                 model.current.rootMesh.position
             )
+
+            if (distanceToActiveSubWaypoint < 1) {
+                activeSubWaypointIndex.current += 1
+            }
         })
 
         function setWaypoint(intersection: PickingInfo) {
@@ -102,8 +115,9 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 <WaypointController
                     model={model}
                     waypoint={waypoint}
+                    subWaypoints={subWaypoints}
                     distanceToWaypoint={distanceToWaypoint}
-                    degreesToWaypoint={degreesToWaypoint}
+                    degreesToWaypoint={degreesToActiveSubWaypoint}
                     isInitialised={isInitialised}
                 />
             </>
