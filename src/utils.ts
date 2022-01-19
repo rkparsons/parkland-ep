@@ -8,9 +8,9 @@ export function getAngleBetweenMeshes(mesh1: AbstractMesh, mesh2: AbstractMesh) 
     return Angle.FromRadians(direction * Math.acos(Vector3.Dot(v0, v1)))
 }
 
-export function rotateCharacterTowardsWaypoint(
+export function rotateCharacterTowardsPoint(
     character: AbstractMesh,
-    waypoint: AbstractMesh,
+    position: Vector3,
     factor: number
 ) {
     if (!character.rotationQuaternion) {
@@ -19,7 +19,7 @@ export function rotateCharacterTowardsWaypoint(
 
     const quaternation = character.rotationQuaternion.clone()
 
-    character.lookAt(waypoint.position)
+    character.lookAt(position)
 
     Quaternion.SlerpToRef(
         quaternation,
@@ -29,10 +29,9 @@ export function rotateCharacterTowardsWaypoint(
     )
 }
 
-export function translateCharacterTowardsWaypoint(
+export function translateCharacterTowardsPoint(
     character: AbstractMesh,
-    ground: AbstractMesh,
-    waypoint: AbstractMesh,
+    position: Vector3,
     speedFactor: number,
     maxSpeed: number
 ) {
@@ -40,24 +39,9 @@ export function translateCharacterTowardsWaypoint(
         return
     }
 
-    const normal = Vector3.Normalize(waypoint.position.subtract(character.position))
+    const normal = Vector3.Normalize(position.subtract(character.position))
     const walkSpeed = speedFactor * maxSpeed
 
     character.translate(normal, walkSpeed, Space.WORLD)
     character.moveWithCollisions(Vector3.Zero())
-    // translateCharacterAboveGround(character, ground)
-}
-
-export function translateCharacterAboveGround(character: AbstractMesh, ground: AbstractMesh) {
-    const origin = character.position
-    const up = Vector3.Normalize(origin)
-    const down = up.negate()
-    const rayDown = new Ray(origin, down, 0.2)
-    const isAboveGround = ground.intersects(rayDown).hit
-
-    if (isAboveGround) {
-        character.translate(down, 0.1, Space.LOCAL)
-    } else {
-        character.translate(up, 1, Space.LOCAL)
-    }
 }

@@ -15,7 +15,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const scene = useScene()
         const waypoint = useRef<Mesh>()
         const subWaypoints = useRef<Mesh[]>([])
-        const subWaypointCount = 3
+        const subWaypointCount = 10
         const activeSubWaypointIndex = useRef(0)
         const [path, setPath] = useState<Path>()
         const distanceToWaypoint = useRef(0)
@@ -43,14 +43,16 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 model.current.rootMesh.position,
                 activeSubWaypoint.position
             )
-            console.log(distanceToActiveSubWaypoint)
 
             distanceToWaypoint.current = Vector3.Distance(
                 waypoint.current.position,
                 model.current.rootMesh.position
             )
 
-            if (distanceToActiveSubWaypoint < 1) {
+            if (
+                distanceToActiveSubWaypoint < 1 &&
+                activeSubWaypointIndex.current < subWaypointCount - 1
+            ) {
                 activeSubWaypointIndex.current += 1
             }
         })
@@ -83,6 +85,8 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             setIsInitialised(true)
             setWaypoint(intersection)
 
+            activeSubWaypointIndex.current = 0
+
             if (!waypoint.current || !model.current?.rootMesh) {
                 return
             }
@@ -114,8 +118,8 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
                 <WaypointController
                     model={model}
-                    waypoint={waypoint}
                     subWaypoints={subWaypoints}
+                    activeSubWaypointIndex={activeSubWaypointIndex}
                     distanceToWaypoint={distanceToWaypoint}
                     degreesToWaypoint={degreesToActiveSubWaypoint}
                     isInitialised={isInitialised}

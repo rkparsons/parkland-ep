@@ -1,5 +1,5 @@
 import { ModelProps, WaypointControllerProps } from './types'
-import { rotateCharacterTowardsWaypoint, translateCharacterTowardsWaypoint } from './utils'
+import { rotateCharacterTowardsPoint, translateCharacterTowardsPoint } from './utils'
 
 import { FC } from 'react'
 import { useBeforeRender } from 'react-babylonjs'
@@ -9,8 +9,8 @@ import useWorldContext from './useWorldContext'
 const withWaypointController = (Model: FC<ModelProps>) => {
     const waypointController: FC<WaypointControllerProps> = ({
         model,
-        waypoint,
         subWaypoints,
+        activeSubWaypointIndex,
         distanceToWaypoint,
         degreesToWaypoint,
         isInitialised
@@ -18,18 +18,23 @@ const withWaypointController = (Model: FC<ModelProps>) => {
         const { world } = useWorldContext()
 
         function rootMotion(characterSpeed: number) {
-            if (!model.current?.rootMesh || !waypoint.current || !world.current) {
+            const activeSubWaypoint = subWaypoints.current[activeSubWaypointIndex.current]
+
+            if (!model.current?.rootMesh || !activeSubWaypoint || !world.current) {
                 return
             }
 
             if (distanceToWaypoint.current >= 1) {
-                rotateCharacterTowardsWaypoint(model.current?.rootMesh, waypoint.current, 0.02)
+                rotateCharacterTowardsPoint(
+                    model.current?.rootMesh,
+                    activeSubWaypoint.position,
+                    0.02
+                )
             }
 
-            translateCharacterTowardsWaypoint(
+            translateCharacterTowardsPoint(
                 model.current.rootMesh,
-                world.current,
-                waypoint.current,
+                activeSubWaypoint.position,
                 characterSpeed,
                 0.05
             )
