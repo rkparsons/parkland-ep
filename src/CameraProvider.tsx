@@ -18,6 +18,7 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
 
     function adjustZoomToWaypointDistance(distanceToWaypoint: number) {
         if (camera.current) {
+            camera.current.cameraAcceleration = 0.01
             camera.current.radius = Math.min(
                 Math.max(distanceToWaypoint / 2, minimumRadius),
                 maximumRadius
