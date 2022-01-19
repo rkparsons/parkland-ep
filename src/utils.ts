@@ -45,17 +45,19 @@ export function translateCharacterTowardsWaypoint(
 
     character.translate(normal, walkSpeed, Space.WORLD)
     character.moveWithCollisions(Vector3.Zero())
-    translateCharacterAboveGround(character, ground)
+    // translateCharacterAboveGround(character, ground)
 }
 
 export function translateCharacterAboveGround(character: AbstractMesh, ground: AbstractMesh) {
-    const { x, y, z } = character.position
-    // const up = Vector3.Normalize(new Vector3(x, y, z))
-    const down = Vector3.Down()
-    const rayDown = new Ray(character.position, down, 0.1)
+    const origin = character.position
+    const up = Vector3.Normalize(origin)
+    const down = up.negate()
+    const rayDown = new Ray(origin, down, 0.2)
     const isAboveGround = ground.intersects(rayDown).hit
 
-    character.translate(down, isAboveGround ? 0.1 : -0.1, Space.LOCAL)
-
-    console.log('isAboveGround', isAboveGround)
+    if (isAboveGround) {
+        character.translate(down, 0.1, Space.LOCAL)
+    } else {
+        character.translate(up, 1, Space.LOCAL)
+    }
 }
