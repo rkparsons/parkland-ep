@@ -6,19 +6,24 @@ import { WaypointControllerProps } from './types'
 import { getAngleBetweenMeshes } from './utils'
 import useWorldContext from './useWorldContext'
 
+type Path = {
+    start: Vector3
+    direction: Vector3
+    end: Vector3
+}
+
 type SubWaypointProps = {
     index: number
     subWaypoints: MutableRefObject<Mesh[]>
-    pathOrigin: Vector3
-    pathEnd: Vector3
+    path: Path
 }
 
-const SubWaypoint: FC<SubWaypointProps> = ({ index, subWaypoints, pathOrigin, pathEnd }) => {
+const SubWaypoint: FC<SubWaypointProps> = ({ index, subWaypoints, path }) => {
     useEffect(() => {
-        subWaypoints.current[index].position = pathOrigin.add(
-            pathEnd.subtract(pathOrigin).scale(++index / subWaypoints.current.length)
+        subWaypoints.current[index].position = path.start.add(
+            path.direction.scale(++index / subWaypoints.current.length)
         )
-    }, [pathOrigin, pathEnd])
+    }, [path])
 
     return (
         <sphere
@@ -37,8 +42,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const scene = useScene()
         const waypoint = useRef<Mesh>()
         const subWaypoints = useRef<Mesh[]>([])
-        const [pathOrigin, setPathOrigin] = useState<Vector3>(Vector3.Zero())
-        const [pathEnd, setPathEnd] = useState<Vector3>(Vector3.Zero())
+        const [path, setPath] = useState<Path>()
         const debug = useRef<Mesh>()
         const distanceToWaypoint = useRef(0)
         const degreesToWaypoint = useRef(0)
@@ -112,8 +116,11 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 return
             }
 
-            setPathOrigin(model.current.rootMesh.position)
-            setPathEnd(waypoint.current.position)
+            setPath({
+                start: model.current.rootMesh.position,
+                direction: waypoint.current.position.subtract(model.current.rootMesh.position),
+                end: waypoint.current.position
+            })
         }
 
         return (
@@ -124,15 +131,15 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                     isPickable={false}
                     position={new Vector3(0, 260.5, 0)}
                 />
-                {Array.from(Array(10).keys()).map((index) => (
-                    <SubWaypoint
-                        key={index}
-                        index={index}
-                        subWaypoints={subWaypoints}
-                        pathOrigin={pathOrigin}
-                        pathEnd={pathEnd}
-                    />
-                ))}
+                {path &&
+                    Array.from(Array(10).keys()).map((index) => (
+                        <SubWaypoint
+                            key={index}
+                            index={index}
+                            subWaypoints={subWaypoints}
+                            path={path}
+                        />
+                    ))}
 
                 <WaypointController
                     model={model}
