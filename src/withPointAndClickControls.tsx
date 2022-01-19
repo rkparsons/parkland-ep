@@ -5,6 +5,7 @@ import { Path, WaypointControllerProps } from './types'
 
 import SubWaypoint from './SubWaypoint'
 import { getAngleBetweenMeshes } from './utils'
+import useCameraContext from './useCameraContext'
 import useWorldContext from './useWorldContext'
 
 const withPointAndClickControls = (WaypointController: FC<WaypointControllerProps>) => {
@@ -20,6 +21,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const [path, setPath] = useState<Path>()
         const distanceToWaypoint = useRef(0)
         const degreesToActiveSubWaypoint = useRef(0)
+        const { adjustZoomToWaypointDistance } = useCameraContext()
 
         useEffect(() => {
             if (scene) {
@@ -48,6 +50,8 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 waypoint.current.position,
                 model.current.rootMesh.position
             )
+
+            adjustZoomToWaypointDistance(distanceToWaypoint.current)
 
             if (distanceToActiveSubWaypoint < 1 && activeSubWaypointIndex < subWaypointCount - 1) {
                 setActiveSubWaypointIndex(activeSubWaypointIndex + 1)
