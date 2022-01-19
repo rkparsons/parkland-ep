@@ -13,6 +13,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const model = useRef<ILoadedModel>()
         const scene = useScene()
         const waypoint = useRef<Mesh>()
+        const waypoints = useRef<Mesh[]>([])
         const debug = useRef<Mesh>()
         const distanceToWaypoint = useRef(0)
         const degreesToWaypoint = useRef(0)
@@ -82,17 +83,21 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             setIsInitialised(true)
             setWaypoint(intersection)
 
-            if (!waypoint.current || !model.current?.rootMesh || !debug.current) {
+            if (!waypoint.current || !model.current?.rootMesh) {
                 return
             }
 
-            const midpoint = waypoint.current.position
-                .subtract(model.current.rootMesh.position)
-                .scale(0.5)
+            const startPosition = model.current.rootMesh.position
+            const endPosition = waypoint.current.position
+            const totalPath = endPosition.subtract(startPosition)
+            const midpoint = totalPath.scale(0.5)
 
-            console.log(midpoint)
-
-            debug.current.position = model.current.rootMesh.position.add(midpoint)
+            waypoints.current.forEach(
+                (point, index) =>
+                    (waypoints.current[index].position = model.current!.rootMesh!.position.add(
+                        totalPath.scale(++index / waypoints.current.length)
+                    ))
+            )
         }
 
         return (
@@ -103,7 +108,15 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                     isPickable={false}
                     position={new Vector3(0, 260.5, 0)}
                 />
-                <sphere name="debug" ref={debug} position={Vector3.Zero()} />
+                {Array.from(Array(10).keys()).map((index) => (
+                    <sphere
+                        key={index}
+                        name={`waypoint_${index}`}
+                        ref={(el) => (waypoints.current[index] = el as Mesh)}
+                        position={Vector3.Zero()}
+                    />
+                ))}
+
                 <WaypointController
                     model={model}
                     waypoint={waypoint}
