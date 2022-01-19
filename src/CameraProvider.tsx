@@ -10,6 +10,7 @@ type ViewProps = {
 const CameraProvider: FC<ViewProps> = ({ children }) => {
     const camera = useRef<FollowCamera>()
     const minimumRadius = 10
+    const maximumRadius = 25
 
     function setLockedTarget(mesh: AbstractMesh) {
         camera.current!.lockedTarget = mesh
@@ -17,7 +18,10 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
 
     function adjustZoomToWaypointDistance(distanceToWaypoint: number) {
         if (camera.current) {
-            camera.current.radius = Math.max(distanceToWaypoint / 2, minimumRadius)
+            camera.current.radius = Math.min(
+                Math.max(distanceToWaypoint / 2, minimumRadius),
+                maximumRadius
+            )
         }
     }
 
