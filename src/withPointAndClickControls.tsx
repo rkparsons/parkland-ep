@@ -6,16 +6,16 @@ import { WaypointControllerProps } from './types'
 import { getAngleBetweenMeshes } from './utils'
 import useWorldContext from './useWorldContext'
 
-type WaypointProps = {
+type SubWaypointProps = {
     index: number
-    waypoints: MutableRefObject<Mesh[]>
+    subWaypoints: MutableRefObject<Mesh[]>
 }
 
-const Waypoint: FC<WaypointProps> = ({ index, waypoints }) => {
+const SubWaypoint: FC<SubWaypointProps> = ({ index, subWaypoints }) => {
     return (
         <sphere
             name={`waypoint_${index}`}
-            ref={(el) => (waypoints.current[index] = el as Mesh)}
+            ref={(el) => (subWaypoints.current[index] = el as Mesh)}
             position={Vector3.Zero()}
         />
     )
@@ -28,7 +28,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const model = useRef<ILoadedModel>()
         const scene = useScene()
         const waypoint = useRef<Mesh>()
-        const waypoints = useRef<Mesh[]>([])
+        const subWaypoints = useRef<Mesh[]>([])
         const debug = useRef<Mesh>()
         const distanceToWaypoint = useRef(0)
         const degreesToWaypoint = useRef(0)
@@ -106,10 +106,10 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             const endPosition = waypoint.current.position
             const totalPath = endPosition.subtract(startPosition)
 
-            waypoints.current.forEach(
-                (point, index) =>
-                    (point.position = model.current!.rootMesh!.position.add(
-                        totalPath.scale(++index / waypoints.current.length)
+            subWaypoints.current.forEach(
+                (subWaypoint, index) =>
+                    (subWaypoint.position = model.current!.rootMesh!.position.add(
+                        totalPath.scale(++index / subWaypoints.current.length)
                     ))
             )
         }
@@ -123,7 +123,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                     position={new Vector3(0, 260.5, 0)}
                 />
                 {Array.from(Array(10).keys()).map((index) => (
-                    <Waypoint key={index} index={index} waypoints={waypoints} />
+                    <SubWaypoint key={index} index={index} subWaypoints={subWaypoints} />
                 ))}
 
                 <WaypointController
