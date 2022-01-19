@@ -1,4 +1,4 @@
-import { FC, MutableRefObject, ReactNode, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
 import { Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
 import { Path, WaypointControllerProps } from './types'
@@ -17,7 +17,6 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const subWaypoints = useRef<Mesh[]>([])
         const subWaypointCount = 10
         const [path, setPath] = useState<Path>()
-        const debug = useRef<Mesh>()
         const distanceToWaypoint = useRef(0)
         const degreesToWaypoint = useRef(0)
 
@@ -59,21 +58,6 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 }
             }
         }
-
-        // function setDebug() {
-        //     if (!model.current?.rootMesh || !world.current || !debug.current || !scene) {
-        //         return
-        //     }
-
-        //     const origin = model.current.rootMesh.position
-        //     const down = Vector3.Normalize(origin.negate())
-        //     const rayDown = new Ray(origin, down)
-        //     const pickingInfo = scene.pickWithRay(rayDown)
-
-        //     if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
-        //         debug.current.position = pickingInfo.pickedPoint!.clone()
-        //     }
-        // }
 
         function onPointerDown(e: PointerEvent, intersection: PickingInfo) {
             const isMouseDownHit =

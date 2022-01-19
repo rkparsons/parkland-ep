@@ -10,6 +10,21 @@ type ViewProps = {
 }
 
 const SubWaypoint: FC<ViewProps> = ({ index, subWaypoints, path }) => {
+    // function setDebug() {
+    //     if (!model.current?.rootMesh || !world.current || !debug.current || !scene) {
+    //         return
+    //     }
+
+    //     const origin = model.current.rootMesh.position
+    //     const down = Vector3.Normalize(origin.negate())
+    //     const rayDown = new Ray(origin, down)
+    //     const pickingInfo = scene.pickWithRay(rayDown)
+
+    //     if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
+    //         debug.current.position = pickingInfo.pickedPoint!.clone()
+    //     }
+    // }
+
     useEffect(() => {
         subWaypoints.current[index].position = path.start.add(
             path.direction.scale(++index / subWaypoints.current.length)
