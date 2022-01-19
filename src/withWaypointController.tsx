@@ -57,6 +57,9 @@ const withWaypointController = (Model: FC<ModelProps>) => {
         }
 
         function getSpeed() {
+            if (!isInitialised) {
+                return 0
+            }
             const distanceFactor =
                 distanceToWaypoint.current < 2
                     ? 0.5
