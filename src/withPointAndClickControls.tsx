@@ -9,9 +9,17 @@ import useWorldContext from './useWorldContext'
 type SubWaypointProps = {
     index: number
     subWaypoints: MutableRefObject<Mesh[]>
+    pathOrigin: Vector3
+    pathEnd: Vector3
 }
 
-const SubWaypoint: FC<SubWaypointProps> = ({ index, subWaypoints }) => {
+const SubWaypoint: FC<SubWaypointProps> = ({ index, subWaypoints, pathOrigin, pathEnd }) => {
+    useEffect(() => {
+        subWaypoints.current[index].position = pathOrigin.add(
+            pathEnd.subtract(pathOrigin).scale(++index / subWaypoints.current.length)
+        )
+    }, [pathOrigin, pathEnd])
+
     return (
         <sphere
             name={`waypoint_${index}`}
@@ -29,6 +37,8 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const scene = useScene()
         const waypoint = useRef<Mesh>()
         const subWaypoints = useRef<Mesh[]>([])
+        const [pathOrigin, setPathOrigin] = useState<Vector3>(Vector3.Zero())
+        const [pathEnd, setPathEnd] = useState<Vector3>(Vector3.Zero())
         const debug = useRef<Mesh>()
         const distanceToWaypoint = useRef(0)
         const degreesToWaypoint = useRef(0)
@@ -61,9 +71,9 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             if (isGroundIntersection) {
                 waypoint.current!.position = intersection.pickedPoint!.clone()
             } else {
-                const origin = intersection.pickedMesh!.position
-                const down = origin.negate()
-                const ray = new Ray(origin, down)
+                const clickOrigin = intersection.pickedMesh!.position
+                const down = clickOrigin.negate()
+                const ray = new Ray(clickOrigin, down)
                 const pickingInfo = world.current?.intersects(ray)
 
                 if (pickingInfo?.pickedPoint) {
@@ -72,20 +82,20 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             }
         }
 
-        function setDebug() {
-            if (!model.current?.rootMesh || !world.current || !debug.current || !scene) {
-                return
-            }
+        // function setDebug() {
+        //     if (!model.current?.rootMesh || !world.current || !debug.current || !scene) {
+        //         return
+        //     }
 
-            const origin = model.current.rootMesh.position
-            const down = Vector3.Normalize(origin.negate())
-            const rayDown = new Ray(origin, down)
-            const pickingInfo = scene.pickWithRay(rayDown)
+        //     const origin = model.current.rootMesh.position
+        //     const down = Vector3.Normalize(origin.negate())
+        //     const rayDown = new Ray(origin, down)
+        //     const pickingInfo = scene.pickWithRay(rayDown)
 
-            if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
-                debug.current.position = pickingInfo.pickedPoint!.clone()
-            }
-        }
+        //     if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
+        //         debug.current.position = pickingInfo.pickedPoint!.clone()
+        //     }
+        // }
 
         function onPointerDown(e: PointerEvent, intersection: PickingInfo) {
             const isMouseDownHit =
@@ -102,16 +112,8 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 return
             }
 
-            const startPosition = model.current.rootMesh.position
-            const endPosition = waypoint.current.position
-            const totalPath = endPosition.subtract(startPosition)
-
-            subWaypoints.current.forEach(
-                (subWaypoint, index) =>
-                    (subWaypoint.position = model.current!.rootMesh!.position.add(
-                        totalPath.scale(++index / subWaypoints.current.length)
-                    ))
-            )
+            setPathOrigin(model.current.rootMesh.position)
+            setPathEnd(waypoint.current.position)
         }
 
         return (
@@ -123,7 +125,13 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                     position={new Vector3(0, 260.5, 0)}
                 />
                 {Array.from(Array(10).keys()).map((index) => (
-                    <SubWaypoint key={index} index={index} subWaypoints={subWaypoints} />
+                    <SubWaypoint
+                        key={index}
+                        index={index}
+                        subWaypoints={subWaypoints}
+                        pathOrigin={pathOrigin}
+                        pathEnd={pathEnd}
+                    />
                 ))}
 
                 <WaypointController
