@@ -21,31 +21,26 @@ const SubWaypoint: FC<ViewProps> = ({ index, subWaypoints, path }) => {
         )
         const down = Vector3.Normalize(origin.negate())
         const rayDown = new Ray(origin, down, 1)
-        const groundBelowPick = scene?.pickWithRay(rayDown)
+        const isSnapped = snapToTerrain(rayDown)
 
-        subWaypoints.current[index].position = origin
-
-        if (
-            groundBelowPick &&
-            groundBelowPick.hit &&
-            groundBelowPick.pickedMesh === world.current
-        ) {
-            subWaypoints.current[index].position = groundBelowPick.pickedPoint!.clone()
-            return
-        }
-
-        const up = Vector3.Normalize(origin)
-        const rayUp = new Ray(origin, up)
-        const groundAbovePick = scene?.pickWithRay(rayUp)
-
-        if (
-            groundAbovePick &&
-            groundAbovePick.hit &&
-            groundAbovePick.pickedMesh === world.current
-        ) {
-            subWaypoints.current[index].position = groundAbovePick.pickedPoint!.clone()
+        if (!isSnapped) {
+            const up = Vector3.Normalize(origin)
+            const rayUp = new Ray(origin, up)
+            snapToTerrain(rayUp)
         }
     }, [path])
+
+    function snapToTerrain(ray: Ray) {
+        const pickingInfo = scene?.pickWithRay(ray)
+
+        if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
+            subWaypoints.current[index].position = pickingInfo.pickedPoint!.clone()
+
+            return true
+        }
+
+        return false
+    }
 
     return (
         <sphere
