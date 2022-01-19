@@ -1,5 +1,5 @@
+import { Color3, Color4, Mesh, Ray, Vector3 } from '@babylonjs/core'
 import { FC, MutableRefObject, useEffect } from 'react'
-import { Mesh, Ray, Vector3 } from '@babylonjs/core'
 
 import { Path } from './types'
 import { useScene } from 'react-babylonjs'
@@ -7,11 +7,12 @@ import useWorldContext from './useWorldContext'
 
 type ViewProps = {
     index: number
+    isActive: boolean
     subWaypoints: MutableRefObject<Mesh[]>
     path: Path
 }
 
-const SubWaypoint: FC<ViewProps> = ({ index, subWaypoints, path }) => {
+const SubWaypoint: FC<ViewProps> = ({ index, isActive, subWaypoints, path }) => {
     const scene = useScene()
     const { world } = useWorldContext()
 
@@ -47,7 +48,12 @@ const SubWaypoint: FC<ViewProps> = ({ index, subWaypoints, path }) => {
             name={`waypoint_${index}`}
             ref={(el) => (subWaypoints.current[index] = el as Mesh)}
             position={Vector3.Zero()}
-        />
+        >
+            <standardMaterial
+                name="debugMaterial"
+                diffuseColor={isActive ? Color3.Red() : Color3.White()}
+            />
+        </sphere>
     )
 }
 

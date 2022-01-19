@@ -111,6 +111,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                         <SubWaypoint
                             key={index}
                             index={index}
+                            isActive={index === activeSubWaypointIndex.current}
                             subWaypoints={subWaypoints}
                             path={path}
                         />
