@@ -21,7 +21,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const [path, setPath] = useState<Path>()
         const distanceToWaypoint = useRef(0)
         const degreesToActiveSubWaypoint = useRef(0)
-        const { adjustZoomToWaypointDistance } = useCameraContext()
+        const { followWithCamera } = useCameraContext()
 
         useEffect(() => {
             if (scene) {
@@ -51,7 +51,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 model.current.rootMesh.position
             )
 
-            adjustZoomToWaypointDistance(distanceToWaypoint.current)
+            followWithCamera(model.current.rootMesh.position, distanceToWaypoint.current)
 
             if (
                 distanceToActiveSubWaypoint < 1 &&

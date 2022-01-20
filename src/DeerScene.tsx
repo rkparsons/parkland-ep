@@ -17,8 +17,8 @@ const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointCont
 // todo: move tweakable params to .env
 const DeerScene: FC = () => (
     <Scene>
-        <CameraProvider>
-            <WorldProvider>
+        <WorldProvider>
+            <CameraProvider>
                 {/* <hemisphericLight name="hemi-light" intensity={1} direction={Vector3.Up()} />
                 <pointLight name="sun" position={new Vector3(0, 400, 0)} intensity={1000} /> */}
                 {/* <Sky /> */}
@@ -32,8 +32,8 @@ const DeerScene: FC = () => (
                     diameter={2}
                 />
                 <SoundMesh url="audio/pads.mp3" position={new Vector3(15, 3, -15)} diameter={3} />
-            </WorldProvider>
-        </CameraProvider>
+            </CameraProvider>
+        </WorldProvider>
     </Scene>
 )
 

@@ -1,14 +1,16 @@
-import { AbstractMesh, FollowCamera, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, ArcRotateCamera, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, useRef } from 'react'
 
 import CameraContext from './cameraContext'
+import useWorldContext from './useWorldContext'
 
 type ViewProps = {
     children: ReactNode
 }
 
 const CameraProvider: FC<ViewProps> = ({ children }) => {
-    const camera = useRef<FollowCamera>()
+    const camera = useRef<ArcRotateCamera>()
+    const { world } = useWorldContext()
     const minimumRadius = 10
     const maximumRadius = 25
 
@@ -16,28 +18,35 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
         camera.current!.lockedTarget = mesh
     }
 
-    function adjustZoomToWaypointDistance(distanceToWaypoint: number) {
-        if (camera.current) {
-            camera.current.cameraAcceleration = 0.01
-            camera.current.radius = Math.min(
-                Math.max(distanceToWaypoint / 2, minimumRadius),
-                maximumRadius
-            )
-            camera.current.lowerRadiusLimit = camera.current.radius
-            camera.current.upperRadiusLimit = camera.current.radius
+    function lerp(value1: number, value2: number, amount: number) {
+        return value1 + (value2 - value1) * amount
+    }
+
+    function followWithCamera(position: Vector3, distanceToWaypoint: number) {
+        if (!camera.current) {
+            return
         }
+
+        const targetRadius = Math.min(
+            Math.max(distanceToWaypoint / 2, minimumRadius),
+            maximumRadius
+        )
+
+        // https://www.babylonjs-playground.com/#LYCSQ#256
+        camera.current.target = position.clone()
+        camera.current.radius = lerp(camera.current.radius, targetRadius, 0.05)
     }
 
     return (
-        <CameraContext.Provider value={{ camera, setLockedTarget, adjustZoomToWaypointDistance }}>
+        <CameraContext.Provider value={{ camera, setLockedTarget, followWithCamera }}>
             {children}
-            <followCamera
+            <arcRotateCamera
                 name="camera1"
                 ref={camera}
-                radius={15.0}
-                position={new Vector3(0, 360.5, 0)}
-                heightOffset={5}
-                rotationOffset={130}
+                alpha={1.8 * Math.PI}
+                beta={0.4 * Math.PI}
+                radius={15}
+                target={Vector3.Zero()}
             />
         </CameraContext.Provider>
     )
