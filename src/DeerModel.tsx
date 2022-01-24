@@ -57,7 +57,7 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
         <Suspense fallback={null}>
             <Model
                 name="deer"
-                position={new Vector3(0, 260.5, 0)}
+                position={new Vector3(0, 93, 0)}
                 rootUrl={`${process.env.PUBLIC_URL}/`}
                 sceneFilename="Deer.glb"
                 scaleToDimension={3}

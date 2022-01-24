@@ -7,11 +7,12 @@ import useWorldContext from './useWorldContext'
 
 type ViewProps = {
     index: number
+    isActive: boolean
     subWaypoints: MutableRefObject<Mesh[]>
     path: Path
 }
 
-const SubWaypoint: FC<ViewProps> = ({ index, subWaypoints, path }) => {
+const SubWaypoint: FC<ViewProps> = ({ index, isActive, subWaypoints, path }) => {
     const scene = useScene()
     const { world } = useWorldContext()
 
@@ -19,14 +20,11 @@ const SubWaypoint: FC<ViewProps> = ({ index, subWaypoints, path }) => {
         const origin = path.start.add(
             path.direction.scale((index + 1) / subWaypoints.current.length)
         )
-        const down = Vector3.Normalize(origin.negate())
-        const rayDown = new Ray(origin, down, 1)
-        const isSnapped = snapToTerrain(rayDown)
+
+        const isSnapped = snapToTerrain(new Ray(origin, Vector3.Up()))
 
         if (!isSnapped) {
-            const up = Vector3.Normalize(origin)
-            const rayUp = new Ray(origin, up)
-            snapToTerrain(rayUp)
+            snapToTerrain(new Ray(origin, Vector3.Down()))
         }
     }, [path])
 
@@ -47,8 +45,13 @@ const SubWaypoint: FC<ViewProps> = ({ index, subWaypoints, path }) => {
             name={`waypoint_${index}`}
             ref={(el) => (subWaypoints.current[index] = el as Mesh)}
             position={Vector3.Zero()}
-            visibility={0}
-        />
+            visibility={1}
+        >
+            <standardMaterial
+                name="waypointMaterial"
+                diffuseColor={isActive ? Color3.Red() : Color3.White()}
+            />
+        </sphere>
     )
 }
 

@@ -1,5 +1,6 @@
-import { AbstractMesh, ArcRotateCamera, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, ArcRotateCamera, Ray, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, useRef } from 'react'
+import { useBeforeRender, useScene } from 'react-babylonjs'
 
 import CameraContext from './cameraContext'
 import useWorldContext from './useWorldContext'
@@ -9,10 +10,27 @@ type ViewProps = {
 }
 
 const CameraProvider: FC<ViewProps> = ({ children }) => {
+    const scene = useScene()
     const camera = useRef<ArcRotateCamera>()
     const { world } = useWorldContext()
     const minimumRadius = 10
     const maximumRadius = 25
+
+    useBeforeRender(() => {
+        if (!camera.current) {
+            return
+        }
+
+        const ray = new Ray(camera.current.position, Vector3.Up())
+        const pickingInfo = scene?.pickWithRay(ray)
+
+        if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
+            const { x, y, z } = pickingInfo.pickedPoint!
+            camera.current.position = new Vector3(x, y + 1, z)
+
+            return true
+        }
+    })
 
     function setLockedTarget(mesh: AbstractMesh) {
         camera.current!.lockedTarget = mesh
