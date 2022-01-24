@@ -9,31 +9,32 @@ import useCameraContext from './useCameraContext'
 import useWorldContext from './useWorldContext'
 
 type ViewProps = {
-    waypoint: MutableRefObject<Mesh | undefined>
+    waypoint: MutableRefObject<ILoadedModel | undefined>
 }
 
 const Waypoint: FC<ViewProps> = ({ waypoint }) => {
-    const waypointModel = useRef<ILoadedModel>()
-
     useBeforeRender(() => {
-        if (!waypointModel.current) {
+        if (!waypoint.current?.rootMesh) {
             return
         }
+
+        waypoint.current.rootMesh.rotation.y += 0.01
     })
 
     function onModelLoaded(loadedModel: ILoadedModel) {
-        waypointModel.current = loadedModel
+        waypoint.current = loadedModel
     }
 
     return (
         <Suspense fallback={null}>
             <Model
                 name="deer"
-                position={waypoint.current?.position}
+                position={new Vector3(0, 260.5, 0)}
                 rootUrl={`${process.env.PUBLIC_URL}/`}
                 onModelLoaded={onModelLoaded}
                 sceneFilename="Waypoint.glb"
                 scaleToDimension={3}
+                isPickable={false}
             />
         </Suspense>
     )

@@ -15,7 +15,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const [isInitialised, setIsInitialised] = useState(false)
         const model = useRef<ILoadedModel>()
         const scene = useScene()
-        const waypoint = useRef<Mesh>()
+        const waypoint = useRef<ILoadedModel>()
         const subWaypoints = useRef<Mesh[]>([])
         const subWaypointCount = 10
         const [activeSubWaypointIndex, setActiveSubWaypointIndex] = useState(0)
@@ -48,7 +48,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             )
 
             distanceToWaypoint.current = Vector3.Distance(
-                waypoint.current.position,
+                waypoint.current.rootMesh!.position,
                 model.current.rootMesh.position
             )
 
@@ -63,7 +63,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             const isGroundIntersection = intersection.pickedMesh === world.current
 
             if (isGroundIntersection) {
-                waypoint.current!.position = intersection.pickedPoint!.clone()
+                waypoint.current!.rootMesh!.position = intersection.pickedPoint!.clone()
             } else {
                 const clickOrigin = intersection.pickedMesh!.position
                 const down = clickOrigin.negate()
@@ -71,7 +71,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 const pickingInfo = world.current?.intersects(ray)
 
                 if (pickingInfo?.pickedPoint) {
-                    waypoint.current!.position = pickingInfo.pickedPoint.clone()
+                    waypoint.current!.rootMesh!.position = pickingInfo.pickedPoint.clone()
                 }
             }
         }
@@ -95,20 +95,15 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
             setPath({
                 start: model.current.rootMesh.position,
-                direction: waypoint.current.position.subtract(model.current.rootMesh.position),
-                end: waypoint.current.position
+                direction: waypoint.current.rootMesh!.position.subtract(
+                    model.current.rootMesh.position
+                ),
+                end: waypoint.current.rootMesh!.position
             })
         }
 
         return (
             <>
-                <sphere
-                    name="waypoint"
-                    ref={waypoint}
-                    isPickable={false}
-                    position={new Vector3(0, 260.5, 0)}
-                    visibility={0}
-                />
                 <Waypoint waypoint={waypoint} />
                 {path &&
                     Array.from(Array(subWaypointCount).keys()).map((index) => (
