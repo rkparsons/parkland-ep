@@ -104,7 +104,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
         return (
             <>
-                <Waypoint waypoint={waypoint} />
+                <Waypoint waypoint={waypoint} distanceToWaypoint={distanceToWaypoint} />
                 {path &&
                     Array.from(Array(subWaypointCount).keys()).map((index) => (
                         <SubWaypoint

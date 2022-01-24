@@ -1,24 +1,19 @@
-import { FC, MutableRefObject, Suspense, useEffect, useRef, useState } from 'react'
+import { Color3, PBRMaterial, Vector3 } from '@babylonjs/core'
+import { FC, MutableRefObject, Suspense } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
-import { Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
-import { Path, WaypointControllerProps } from './types'
-
-import SubWaypoint from './SubWaypoint'
-import { getAngleBetweenMeshes } from './utils'
-import useCameraContext from './useCameraContext'
-import useWorldContext from './useWorldContext'
 
 type ViewProps = {
     waypoint: MutableRefObject<ILoadedModel | undefined>
+    distanceToWaypoint: MutableRefObject<number>
 }
 
-const Waypoint: FC<ViewProps> = ({ waypoint }) => {
+const Waypoint: FC<ViewProps> = ({ waypoint, distanceToWaypoint }) => {
     useBeforeRender(() => {
         if (!waypoint.current?.rootMesh) {
             return
         }
 
-        waypoint.current.rootMesh.rotation.y += 0.01
+        waypoint.current.rootMesh.rotation.y += 0.02
     })
 
     function onModelLoaded(loadedModel: ILoadedModel) {
@@ -33,7 +28,7 @@ const Waypoint: FC<ViewProps> = ({ waypoint }) => {
                 rootUrl={`${process.env.PUBLIC_URL}/`}
                 onModelLoaded={onModelLoaded}
                 sceneFilename="Waypoint.glb"
-                scaleToDimension={3}
+                scaleToDimension={1.5}
                 isPickable={false}
             />
         </Suspense>
