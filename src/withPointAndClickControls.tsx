@@ -4,6 +4,7 @@ import { Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
 import { Path, WaypointControllerProps } from './types'
 
 import SubWaypoint from './SubWaypoint'
+import Waypoint from './Waypoint'
 import { getAngleBetweenMeshes } from './utils'
 import useCameraContext from './useCameraContext'
 import useWorldContext from './useWorldContext'
@@ -15,6 +16,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const model = useRef<ILoadedModel>()
         const scene = useScene()
         const waypoint = useRef<Mesh>()
+        const waypointModel = useRef<ILoadedModel>()
         const subWaypoints = useRef<Mesh[]>([])
         const subWaypointCount = 10
         const [activeSubWaypointIndex, setActiveSubWaypointIndex] = useState(0)
@@ -99,6 +101,10 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             })
         }
 
+        function onModelLoaded(loadedModel: ILoadedModel) {
+            waypointModel.current = loadedModel
+        }
+
         return (
             <>
                 <sphere
@@ -108,15 +114,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                     position={new Vector3(0, 260.5, 0)}
                     visibility={0}
                 />
-                <Suspense fallback={null}>
-                    <Model
-                        name="deer"
-                        position={waypoint.current?.position}
-                        rootUrl={`${process.env.PUBLIC_URL}/`}
-                        sceneFilename="Waypoint.glb"
-                        scaleToDimension={3}
-                    />
-                </Suspense>
+                <Waypoint waypoint={waypoint} />
                 {path &&
                     Array.from(Array(subWaypointCount).keys()).map((index) => (
                         <SubWaypoint
