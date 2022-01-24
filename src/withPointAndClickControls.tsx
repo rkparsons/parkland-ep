@@ -1,5 +1,5 @@
-import { FC, useEffect, useRef, useState } from 'react'
-import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
+import { FC, Suspense, useEffect, useRef, useState } from 'react'
+import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
 import { Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
 import { Path, WaypointControllerProps } from './types'
 
@@ -108,6 +108,15 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                     position={new Vector3(0, 260.5, 0)}
                     visibility={0}
                 />
+                <Suspense fallback={null}>
+                    <Model
+                        name="deer"
+                        position={waypoint.current?.position}
+                        rootUrl={`${process.env.PUBLIC_URL}/`}
+                        sceneFilename="Waypoint.glb"
+                        scaleToDimension={3}
+                    />
+                </Suspense>
                 {path &&
                     Array.from(Array(subWaypointCount).keys()).map((index) => (
                         <SubWaypoint
