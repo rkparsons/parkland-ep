@@ -1,4 +1,4 @@
-import { AbstractMesh, ArcRotateCamera, Ray, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, ArcRotateCamera, Color3, Mesh, Ray, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, useRef } from 'react'
 import { useBeforeRender, useScene } from 'react-babylonjs'
 
@@ -16,7 +16,15 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
     const minimumRadius = 10
     const maximumRadius = 25
 
-    useBeforeRender(() => {
+    function setLockedTarget(mesh: AbstractMesh) {
+        camera.current!.lockedTarget = mesh
+    }
+
+    function lerp(value1: number, value2: number, amount: number) {
+        return value1 + (value2 - value1) * amount
+    }
+
+    function forceAboveGround() {
         if (!camera.current) {
             return
         }
@@ -26,21 +34,30 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
 
         if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
             const { x, y, z } = pickingInfo.pickedPoint!
-            camera.current.position = new Vector3(x, y + 1, z)
-
-            return true
+            camera.current.position = new Vector3(x, y + 2, z)
         }
-    })
-
-    function setLockedTarget(mesh: AbstractMesh) {
-        camera.current!.lockedTarget = mesh
     }
 
-    function lerp(value1: number, value2: number, amount: number) {
-        return value1 + (value2 - value1) * amount
+    function forceLineOfSight(characterPosition: Vector3) {
+        if (!camera.current) {
+            return
+        }
+
+        const cameraToCharacter = characterPosition
+            .add(Vector3.Up().scale(2))
+            .subtract(camera.current.position)
+        const rayLength = Vector3.Distance(camera.current.position, characterPosition)
+        const rayDirection = Vector3.Normalize(cameraToCharacter)
+        const ray = new Ray(camera.current.position, rayDirection, rayLength)
+        const pickingInfo = scene?.pickWithRay(ray)
+
+        if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
+            const { x, y, z } = camera.current.position
+            camera.current.position = new Vector3(x, y + 2, z)
+        }
     }
 
-    function followWithCamera(position: Vector3, distanceToWaypoint: number) {
+    function followWithCamera(characterPosition: Vector3, distanceToWaypoint: number) {
         if (!camera.current) {
             return
         }
@@ -51,8 +68,11 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
         )
 
         // https://www.babylonjs-playground.com/#LYCSQ#256
-        camera.current.target = position.clone()
+        camera.current.target = characterPosition.clone()
         camera.current.radius = lerp(camera.current.radius, targetRadius, 0.05)
+
+        forceAboveGround()
+        forceLineOfSight(characterPosition)
     }
 
     return (
