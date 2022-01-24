@@ -16,7 +16,6 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const model = useRef<ILoadedModel>()
         const scene = useScene()
         const waypoint = useRef<Mesh>()
-        const waypointModel = useRef<ILoadedModel>()
         const subWaypoints = useRef<Mesh[]>([])
         const subWaypointCount = 10
         const [activeSubWaypointIndex, setActiveSubWaypointIndex] = useState(0)
@@ -99,10 +98,6 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 direction: waypoint.current.position.subtract(model.current.rootMesh.position),
                 end: waypoint.current.position
             })
-        }
-
-        function onModelLoaded(loadedModel: ILoadedModel) {
-            waypointModel.current = loadedModel
         }
 
         return (
