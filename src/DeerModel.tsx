@@ -1,6 +1,6 @@
 import { FC, Suspense } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
-import { PhysicsImpostor, Quaternion, Tools, Vector3 } from '@babylonjs/core'
+import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
 
 import { ModelProps } from './types'
 import useAnimation from './useAnimation'
@@ -42,15 +42,6 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
         walk.render(walkSpeed, !isRotating)
         left.render(1, isRotatingLeft)
         right.render(1, isRotatingRight)
-
-        // if (model.current && model.current.rootMesh) {
-        //     const contactLocalRefPoint = Vector3.Zero()
-        //     const contactPoint = model.current.rootMesh.absolutePosition.add(contactLocalRefPoint)
-        //     const position = model.current.rootMesh.position
-        //     model.current.rootMesh
-        //         .getPhysicsImpostor()
-        //         ?.applyForce(new Vector3(-position.x, -position.y, -position.z), contactPoint)
-        // }
     })
 
     return (
@@ -65,17 +56,7 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
                 onModelLoaded={onModelLoaded}
                 checkCollisions={true}
                 rotationQuaternion={Quaternion.Identity()}
-            >
-                <physicsImpostor
-                    type={PhysicsImpostor.SphereImpostor}
-                    object={model.current?.rootMesh}
-                    _options={{
-                        mass: 1,
-                        friction: 1,
-                        restitution: 0.7
-                    }}
-                />
-            </Model>
+            />
         </Suspense>
     )
 }

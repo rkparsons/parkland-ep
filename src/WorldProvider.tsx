@@ -1,4 +1,4 @@
-import { AbstractMesh, PhysicsImpostor, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, Suspense, useRef } from 'react'
 import { ILoadedModel, Model, useScene } from 'react-babylonjs'
 
@@ -27,16 +27,7 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
                     sceneFilename="World.glb"
                     checkCollisions={true}
                     onModelLoaded={onModelLoaded}
-                >
-                    <physicsImpostor
-                        type={PhysicsImpostor.SphereImpostor}
-                        _options={{
-                            mass: 0,
-                            friction: 1,
-                            restitution: 0.0
-                        }}
-                    />
-                </Model>
+                />
             </Suspense>
         </GroundContext.Provider>
     )
