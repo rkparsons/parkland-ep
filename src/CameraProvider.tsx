@@ -29,12 +29,16 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
             return
         }
 
-        const ray = new Ray(camera.current.position, Vector3.Up())
+        const ray = new Ray(camera.current.position.add(Vector3.Down().scale(20)), Vector3.Up())
         const pickingInfo = scene?.pickWithRay(ray)
 
         if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
             const { x, y, z } = pickingInfo.pickedPoint!
-            camera.current.position = new Vector3(x, y + 2, z)
+            camera.current.position = Vector3.Lerp(
+                camera.current.position,
+                new Vector3(x, y + 2, z),
+                0.05
+            )
         }
     }
 
@@ -53,7 +57,11 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
 
         if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
             const { x, y, z } = camera.current.position
-            camera.current.position = new Vector3(x, y + 2, z)
+            camera.current.position = Vector3.Lerp(
+                camera.current.position,
+                new Vector3(x, y + 2, z),
+                0.05
+            )
         }
     }
 
@@ -61,6 +69,9 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
         if (!camera.current) {
             return
         }
+
+        forceAboveGround()
+        forceLineOfSight(characterPosition)
 
         const targetRadius = Math.min(
             Math.max(distanceToWaypoint / 2, minimumRadius),
@@ -70,9 +81,6 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
         // https://www.babylonjs-playground.com/#LYCSQ#256
         camera.current.target = characterPosition.clone()
         camera.current.radius = lerp(camera.current.radius, targetRadius, 0.05)
-
-        forceAboveGround()
-        forceLineOfSight(characterPosition)
     }
 
     return (
