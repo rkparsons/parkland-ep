@@ -12,7 +12,7 @@ import withWaypointController from './withWaypointController'
 // import SkyAnimated from './SkyAnimated'
 // import Sky from './Sky'
 
-// const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointController(DeerModel))
+const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointController(DeerModel))
 
 // todo: move tweakable params to .env
 const DeerScene: FC = () => (
@@ -23,7 +23,7 @@ const DeerScene: FC = () => (
                 <pointLight name="sun" position={new Vector3(0, 400, 0)} intensity={1000} /> */}
                 {/* <Sky /> */}
                 {/* <SkyAnimated /> */}
-                {/* <DeerWithPointAndClickControls /> */}
+                <DeerWithPointAndClickControls />
                 <AmbientSound />
                 <SoundMesh url="audio/beepMid.mp3" position={new Vector3(0, 4, 15)} />
                 <SoundMesh
