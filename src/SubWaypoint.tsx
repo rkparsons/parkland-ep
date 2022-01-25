@@ -21,11 +21,7 @@ const SubWaypoint: FC<ViewProps> = ({ index, isActive, subWaypoints, path }) => 
             path.direction.scale((index + 1) / subWaypoints.current.length)
         )
 
-        const isSnapped = snapToTerrain(new Ray(origin, Vector3.Up()))
-
-        if (!isSnapped) {
-            snapToTerrain(new Ray(origin, Vector3.Down()))
-        }
+        snapToTerrain(new Ray(origin.addInPlace(Vector3.Down().scale(10)), Vector3.Up(), 20))
     }, [path])
 
     function snapToTerrain(ray: Ray) {
@@ -33,11 +29,7 @@ const SubWaypoint: FC<ViewProps> = ({ index, isActive, subWaypoints, path }) => 
 
         if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
             subWaypoints.current[index].position = pickingInfo.pickedPoint!.clone()
-
-            return true
         }
-
-        return false
     }
 
     return (
