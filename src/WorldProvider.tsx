@@ -18,7 +18,7 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
     return (
         <GroundContext.Provider value={{ world }}>
             {children}
-            {/* <Suspense fallback={null}>
+            <Suspense fallback={null}>
                 <Model
                     name="world"
                     position={Vector3.Zero()}
@@ -28,7 +28,7 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
                     checkCollisions={true}
                     onModelLoaded={onModelLoaded}
                 />
-            </Suspense> */}
+            </Suspense>
             <Suspense fallback={null}>
                 <Model
                     name="satellite"
