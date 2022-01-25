@@ -25,13 +25,12 @@ const Waypoint: FC<ViewProps> = ({ character, waypoint, waypointTarget, distance
         waypointMarker.current.rootMesh!.rotation.y += 0.02
 
         if (distanceToWaypoint.current < 2) {
-            waypointMarker.current.rootMesh.position = Vector3.Lerp(
-                waypointMarker.current.rootMesh.position,
-                waypointTarget.current.absolutePosition.clone(),
-                0.2
-            )
+            waypointMarker.current.rootMesh.position =
+                waypointTarget.current.absolutePosition.clone()
+            waypointMarker.current.scaleTo(0.8)
         } else {
-            waypointMarker.current.rootMesh.position = waypoint.current.position
+            waypointMarker.current.rootMesh.position = waypoint.current.position.clone()
+            waypointMarker.current.scaleTo(1)
         }
     })
 
