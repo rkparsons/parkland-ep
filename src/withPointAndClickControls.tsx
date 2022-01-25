@@ -52,7 +52,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 model.current.rootMesh.position
             )
 
-            followWithCamera(model.current.rootMesh.position, distanceToWaypoint.current)
+            // followWithCamera(model.current.rootMesh.position, distanceToWaypoint.current)
 
             if (distanceToActiveSubWaypoint < 1 && activeSubWaypointIndex < subWaypointCount - 1) {
                 setActiveSubWaypointIndex(activeSubWaypointIndex + 1)
