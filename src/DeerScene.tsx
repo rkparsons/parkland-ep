@@ -1,3 +1,5 @@
+import { Color3, Color4, Vector3 } from '@babylonjs/core'
+
 import CameraProvider from './CameraProvider'
 import DeerModel from './DeerModel'
 import { FC } from 'react'
@@ -17,7 +19,7 @@ const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointCont
 
 // todo: move tweakable params to .env
 const DeerScene: FC = () => (
-    <Scene>
+    <Scene clearColor={new Color4(162 / 255, 140 / 255, 147 / 255, 1)}>
         <WorldProvider>
             <CameraProvider>
                 {/* <hemisphericLight name="hemi-light" intensity={1} direction={Vector3.Up()} />
