@@ -65,7 +65,6 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
             if (isGroundIntersection) {
                 waypoint.current!.position = intersection.pickedPoint!.clone()
-                console.log(waypoint.current!.position)
             } else {
                 const clickOrigin = intersection.pickedMesh!.position
                 const down = clickOrigin.negate()
