@@ -16,7 +16,6 @@ const Ground: FC<ViewProps> = ({ ground }) => {
                 height={100}
                 subdivisions={40}
                 url={`${process.env.PUBLIC_URL}/textures/ground/heightmap.png`}
-                checkCollisions={true}
             >
                 <standardMaterial
                     name="groundMaterial"

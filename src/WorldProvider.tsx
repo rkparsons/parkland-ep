@@ -25,7 +25,6 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
                     scaling={new Vector3(10, 10, 10)}
                     rootUrl={`${process.env.PUBLIC_URL}/`}
                     sceneFilename="World.glb"
-                    checkCollisions={true}
                     onModelLoaded={onModelLoaded}
                 />
             </Suspense>
@@ -36,7 +35,6 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
                     scaling={new Vector3(10, 10, 10)}
                     rootUrl={`${process.env.PUBLIC_URL}/`}
                     sceneFilename="Satellite.glb"
-                    checkCollisions={false}
                 />
             </Suspense>
         </GroundContext.Provider>
