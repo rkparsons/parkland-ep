@@ -7,7 +7,13 @@ import useAnimation from './useAnimation'
 import useCameraContext from './useCameraContext'
 
 // todo: replace with getSpeed methods for left, right and straight
-const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRight, getSpeed }) => {
+const DeerModel: FC<ModelProps> = ({
+    model,
+    waypointTarget,
+    getIsRotatingLeft,
+    getIsRotatingRight,
+    getSpeed
+}) => {
     const scene = useScene()
     const { setLockedTarget } = useCameraContext()
     const idle = useAnimation('Idle')
@@ -17,6 +23,9 @@ const DeerModel: FC<ModelProps> = ({ model, getIsRotatingLeft, getIsRotatingRigh
 
     const onModelLoaded = (loadedModel: ILoadedModel) => {
         model.current = loadedModel
+
+        waypointTarget.current = loadedModel.meshes?.find((x) => x.name === 'WaypointTarget')
+        waypointTarget.current!.isVisible = false
 
         loadedModel.animationGroups?.forEach((animationGroup) => {
             animationGroup.stop()

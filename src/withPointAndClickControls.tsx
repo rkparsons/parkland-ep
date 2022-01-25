@@ -1,6 +1,6 @@
+import { AbstractMesh, Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
 import { FC, Suspense, useEffect, useRef, useState } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
-import { Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
 import { Path, WaypointControllerProps } from './types'
 
 import SubWaypoint from './SubWaypoint'
@@ -15,7 +15,8 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const [isInitialised, setIsInitialised] = useState(false)
         const model = useRef<ILoadedModel>()
         const scene = useScene()
-        const waypoint = useRef<ILoadedModel>()
+        const waypoint = useRef<Mesh>()
+        const waypointTarget = useRef<AbstractMesh>()
         const subWaypoints = useRef<Mesh[]>([])
         const subWaypointCount = 10
         const [activeSubWaypointIndex, setActiveSubWaypointIndex] = useState(0)
@@ -48,7 +49,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             )
 
             distanceToWaypoint.current = Vector3.Distance(
-                waypoint.current.rootMesh!.position,
+                waypoint.current.position,
                 model.current.rootMesh.position
             )
 
@@ -63,8 +64,8 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
             const isGroundIntersection = intersection.pickedMesh === world.current
 
             if (isGroundIntersection) {
-                waypoint.current!.rootMesh!.position = intersection.pickedPoint!.clone()
-                console.log(waypoint.current!.rootMesh!.position)
+                waypoint.current!.position = intersection.pickedPoint!.clone()
+                console.log(waypoint.current!.position)
             } else {
                 const clickOrigin = intersection.pickedMesh!.position
                 const down = clickOrigin.negate()
@@ -72,7 +73,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 const pickingInfo = world.current?.intersects(ray)
 
                 if (pickingInfo?.pickedPoint) {
-                    waypoint.current!.rootMesh!.position = pickingInfo.pickedPoint.clone()
+                    waypoint.current!.position = pickingInfo.pickedPoint.clone()
                 }
             }
         }
@@ -96,16 +97,19 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
             setPath({
                 start: model.current.rootMesh.position,
-                direction: waypoint.current.rootMesh!.position.subtract(
-                    model.current.rootMesh.position
-                ),
-                end: waypoint.current.rootMesh!.position
+                direction: waypoint.current.position.subtract(model.current.rootMesh.position),
+                end: waypoint.current.position
             })
         }
 
         return (
             <>
-                <Waypoint waypoint={waypoint} distanceToWaypoint={distanceToWaypoint} />
+                <Waypoint
+                    character={model}
+                    waypoint={waypoint}
+                    waypointTarget={waypointTarget}
+                    distanceToWaypoint={distanceToWaypoint}
+                />
                 {path &&
                     Array.from(Array(subWaypointCount).keys()).map((index) => (
                         <SubWaypoint
@@ -119,6 +123,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
                 <WaypointController
                     model={model}
+                    waypointTarget={waypointTarget}
                     subWaypoints={subWaypoints}
                     activeSubWaypointIndex={activeSubWaypointIndex}
                     distanceToWaypoint={distanceToWaypoint}

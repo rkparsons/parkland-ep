@@ -1,36 +1,58 @@
-import { Color3, PBRMaterial, Vector3 } from '@babylonjs/core'
-import { FC, MutableRefObject, Suspense } from 'react'
+import { AbstractMesh, Color3, Mesh, Vector3 } from '@babylonjs/core'
+import { FC, MutableRefObject, Suspense, useRef } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
 
 type ViewProps = {
-    waypoint: MutableRefObject<ILoadedModel | undefined>
+    character: MutableRefObject<ILoadedModel | undefined>
+    waypoint: MutableRefObject<Mesh | undefined>
+    waypointTarget: MutableRefObject<AbstractMesh | undefined>
     distanceToWaypoint: MutableRefObject<number>
 }
 
-const Waypoint: FC<ViewProps> = ({ waypoint, distanceToWaypoint }) => {
+const Waypoint: FC<ViewProps> = ({ character, waypoint, waypointTarget, distanceToWaypoint }) => {
+    const waypointMarker = useRef<ILoadedModel>()
+
     useBeforeRender(() => {
-        if (!waypoint.current?.rootMesh) {
+        if (
+            !waypointMarker.current?.rootMesh ||
+            !character.current?.rootMesh ||
+            !waypoint.current ||
+            !waypointTarget.current
+        ) {
             return
         }
 
-        waypoint.current.rootMesh.rotation.y += 0.02
+        waypointMarker.current.rootMesh!.rotation.y += 0.02
 
-        // if (distanceToWaypoint.current < 1 && waypoint.current.scaledToDimension > 0) {
-        //     waypoint.current.scaleTo(0.1)
-        // } else {
-        //     waypoint.current.scaleTo(1.25)
-        // }
+        if (distanceToWaypoint.current < 2) {
+            waypointMarker.current.rootMesh.position = Vector3.Lerp(
+                waypointMarker.current.rootMesh.position,
+                waypointTarget.current.absolutePosition.clone(),
+                0.2
+            )
+        } else {
+            waypointMarker.current.rootMesh.position = waypoint.current.position
+        }
     })
 
     function onModelLoaded(loadedModel: ILoadedModel) {
-        waypoint.current = loadedModel
+        waypointMarker.current = loadedModel
     }
 
     return (
         <Suspense fallback={null}>
-            <Model
+            <sphere
                 name="waypoint"
-                position={new Vector3(0, 260.5, 0)}
+                ref={waypoint}
+                position={Vector3.Zero()}
+                visibility={0}
+                isPickable={false}
+            >
+                {/* <standardMaterial name="waypointMaterial" diffuseColor={Color3.Green()} /> */}
+            </sphere>
+            <Model
+                name="waypointMarker"
+                position={waypoint.current?.position}
                 rootUrl={`${process.env.PUBLIC_URL}/`}
                 onModelLoaded={onModelLoaded}
                 sceneFilename="Waypoint.glb"
