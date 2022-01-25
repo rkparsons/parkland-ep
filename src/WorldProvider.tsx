@@ -12,7 +12,9 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
     const world = useRef<AbstractMesh>()
 
     const onModelLoaded = (loadedModel: ILoadedModel) => {
-        world.current = loadedModel.meshes?.find((x) => x.name === 'Planet')
+        world.current = loadedModel.meshes?.find((x) => x.name === 'Planet Top')
+
+        loadedModel.meshes?.forEach((x) => console.log(x.name))
     }
 
     return (
