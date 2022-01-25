@@ -83,14 +83,12 @@ const withWaypointController = (Model: FC<ModelProps>) => {
         })
 
         return (
-            <>
-                {/* <Model
+            <Model
                 model={model}
                 getIsRotatingLeft={getIsRotatingLeft}
                 getIsRotatingRight={getIsRotatingRight}
                 getSpeed={getSpeed}
-            /> */}
-            </>
+            />
         )
     }
 
