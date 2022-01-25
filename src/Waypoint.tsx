@@ -14,6 +14,12 @@ const Waypoint: FC<ViewProps> = ({ waypoint, distanceToWaypoint }) => {
         }
 
         waypoint.current.rootMesh.rotation.y += 0.02
+
+        // if (distanceToWaypoint.current < 1 && waypoint.current.scaledToDimension > 0) {
+        //     waypoint.current.scaleTo(0.1)
+        // } else {
+        //     waypoint.current.scaleTo(1.25)
+        // }
     })
 
     function onModelLoaded(loadedModel: ILoadedModel) {
@@ -23,12 +29,12 @@ const Waypoint: FC<ViewProps> = ({ waypoint, distanceToWaypoint }) => {
     return (
         <Suspense fallback={null}>
             <Model
-                name="deer"
+                name="waypoint"
                 position={new Vector3(0, 260.5, 0)}
                 rootUrl={`${process.env.PUBLIC_URL}/`}
                 onModelLoaded={onModelLoaded}
                 sceneFilename="Waypoint.glb"
-                scaleToDimension={1.5}
+                scaleToDimension={1.25}
                 isPickable={false}
             />
         </Suspense>

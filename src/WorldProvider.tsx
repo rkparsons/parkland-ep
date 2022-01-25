@@ -29,6 +29,16 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
                     onModelLoaded={onModelLoaded}
                 />
             </Suspense>
+            <Suspense fallback={null}>
+                <Model
+                    name="satellite"
+                    position={new Vector3(0, 93, 10)}
+                    scaling={new Vector3(10, 10, 10)}
+                    rootUrl={`${process.env.PUBLIC_URL}/`}
+                    sceneFilename="Satellite.glb"
+                    checkCollisions={false}
+                />
+            </Suspense>
         </GroundContext.Provider>
     )
 }
