@@ -1,6 +1,6 @@
-import { FC, Suspense } from 'react'
+import { Bone, Quaternion, Tools, Vector3 } from '@babylonjs/core'
+import { FC, Suspense, useRef } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
-import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
 
 import { ModelProps } from './types'
 import useAnimation from './useAnimation'
@@ -9,7 +9,7 @@ import useCameraContext from './useCameraContext'
 // todo: replace with getSpeed methods for left, right and straight
 const DeerModel: FC<ModelProps> = ({
     model,
-    waypointTarget,
+    headBone,
     getIsRotatingLeft,
     getIsRotatingRight,
     getSpeed
@@ -24,8 +24,7 @@ const DeerModel: FC<ModelProps> = ({
     const onModelLoaded = (loadedModel: ILoadedModel) => {
         model.current = loadedModel
 
-        waypointTarget.current = loadedModel.meshes?.find((x) => x.name === 'WaypointTarget')
-        waypointTarget.current!.isVisible = false
+        headBone.current = model.current.skeletons![0].bones.find((x) => x.name === 'Waypoint')
 
         loadedModel.animationGroups?.forEach((animationGroup) => {
             animationGroup.stop()
@@ -48,7 +47,7 @@ const DeerModel: FC<ModelProps> = ({
         const isWalking = walkSpeed > 0
 
         idle.render(1, !isWalking && !isRotating)
-        walk.render(walkSpeed, !isRotating)
+        walk.render(walkSpeed, isWalking && !isRotating)
         left.render(1, isRotatingLeft)
         right.render(1, isRotatingRight)
     })

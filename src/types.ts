@@ -1,11 +1,11 @@
-import { AbstractMesh, Mesh, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, Bone, Mesh, Vector3 } from '@babylonjs/core'
 
 import { ILoadedModel } from 'react-babylonjs'
 import { MutableRefObject } from 'react'
 
 export type WaypointControllerProps = {
     model: MutableRefObject<ILoadedModel | undefined>
-    waypointTarget: MutableRefObject<AbstractMesh | undefined>
+    headBone: MutableRefObject<Bone | undefined>
     subWaypoints: MutableRefObject<Mesh[]>
     activeSubWaypointIndex: number
     distanceToWaypoint: MutableRefObject<number>
@@ -15,7 +15,7 @@ export type WaypointControllerProps = {
 
 export type ModelProps = {
     model: MutableRefObject<ILoadedModel | undefined>
-    waypointTarget: MutableRefObject<AbstractMesh | undefined>
+    headBone: MutableRefObject<Bone | undefined>
     getIsRotatingLeft(): boolean
     getIsRotatingRight(): boolean
     getSpeed(): number

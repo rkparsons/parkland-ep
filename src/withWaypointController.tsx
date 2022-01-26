@@ -9,7 +9,7 @@ import useWorldContext from './useWorldContext'
 const withWaypointController = (Model: FC<ModelProps>) => {
     const waypointController: FC<WaypointControllerProps> = ({
         model,
-        waypointTarget,
+        headBone,
         subWaypoints,
         activeSubWaypointIndex,
         distanceToWaypoint,
@@ -86,7 +86,7 @@ const withWaypointController = (Model: FC<ModelProps>) => {
         return (
             <Model
                 model={model}
-                waypointTarget={waypointTarget}
+                headBone={headBone}
                 getIsRotatingLeft={getIsRotatingLeft}
                 getIsRotatingRight={getIsRotatingRight}
                 getSpeed={getSpeed}

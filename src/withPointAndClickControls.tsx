@@ -1,4 +1,4 @@
-import { AbstractMesh, Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, Bone, Mesh, PickingInfo, Ray, Vector3 } from '@babylonjs/core'
 import { FC, Suspense, useEffect, useRef, useState } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
 import { Path, WaypointControllerProps } from './types'
@@ -16,7 +16,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const model = useRef<ILoadedModel>()
         const scene = useScene()
         const waypoint = useRef<Mesh>()
-        const waypointTarget = useRef<AbstractMesh>()
+        const headBone = useRef<Bone>()
         const subWaypoints = useRef<Mesh[]>([])
         const subWaypointCount = 20
         const [activeSubWaypointIndex, setActiveSubWaypointIndex] = useState(0)
@@ -105,7 +105,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 <Waypoint
                     character={model}
                     waypoint={waypoint}
-                    waypointTarget={waypointTarget}
+                    headBone={headBone}
                     distanceToWaypoint={distanceToWaypoint}
                 />
                 {path &&
@@ -121,7 +121,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
                 <WaypointController
                     model={model}
-                    waypointTarget={waypointTarget}
+                    headBone={headBone}
                     subWaypoints={subWaypoints}
                     activeSubWaypointIndex={activeSubWaypointIndex}
                     distanceToWaypoint={distanceToWaypoint}

@@ -1,15 +1,15 @@
-import { AbstractMesh, Color3, Mesh, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, Bone, Color3, Mesh, Quaternion, Space, Vector3 } from '@babylonjs/core'
 import { FC, MutableRefObject, Suspense, useRef } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
 
 type ViewProps = {
     character: MutableRefObject<ILoadedModel | undefined>
     waypoint: MutableRefObject<Mesh | undefined>
-    waypointTarget: MutableRefObject<AbstractMesh | undefined>
+    headBone: MutableRefObject<Bone | undefined>
     distanceToWaypoint: MutableRefObject<number>
 }
 
-const Waypoint: FC<ViewProps> = ({ character, waypoint, waypointTarget, distanceToWaypoint }) => {
+const Waypoint: FC<ViewProps> = ({ character, waypoint, headBone, distanceToWaypoint }) => {
     const waypointMarker = useRef<ILoadedModel>()
 
     useBeforeRender(() => {
@@ -17,7 +17,7 @@ const Waypoint: FC<ViewProps> = ({ character, waypoint, waypointTarget, distance
             !waypointMarker.current?.rootMesh ||
             !character.current?.rootMesh ||
             !waypoint.current ||
-            !waypointTarget.current
+            !headBone.current
         ) {
             return
         }
@@ -25,9 +25,10 @@ const Waypoint: FC<ViewProps> = ({ character, waypoint, waypointTarget, distance
         waypointMarker.current.rootMesh!.rotation.y += 0.02
 
         if (distanceToWaypoint.current < 2) {
-            waypointMarker.current.rootMesh.position =
-                waypointTarget.current.absolutePosition.clone()
             waypointMarker.current.scaleTo(0.8)
+            waypointMarker.current.rootMesh.position = headBone.current
+                .getPosition(Space.WORLD, character.current?.rootMesh)
+                .add(Vector3.Up().scale(0.2))
         } else {
             waypointMarker.current.rootMesh.position = waypoint.current.position.clone()
             waypointMarker.current.scaleTo(1)

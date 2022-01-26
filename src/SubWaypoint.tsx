@@ -39,10 +39,10 @@ const SubWaypoint: FC<ViewProps> = ({ index, isActive, subWaypoints, path }) => 
             position={Vector3.Zero()}
             visibility={0}
         >
-            {/* <standardMaterial
+            <standardMaterial
                 name="waypointMaterial"
                 diffuseColor={isActive ? Color3.Red() : Color3.White()}
-            /> */}
+            />
         </sphere>
     )
 }
