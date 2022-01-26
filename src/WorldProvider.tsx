@@ -13,6 +13,7 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
     const shards = useRef<AbstractMesh[]>([])
     const spikes = useRef<AbstractMesh[]>([])
     const solids = useRef<AbstractMesh[]>([])
+    const stars = useRef<AbstractMesh[]>([])
     const world = useRef<AbstractMesh>()
     const scene = useScene()
 
@@ -20,6 +21,8 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
         shards.current
             .concat(spikes.current)
             .concat(solids.current)
+            .concat(stars.current)
+            .concat(world.current!)
             .forEach((mesh) => {
                 mesh.actionManager = new ActionManager(scene!)
                 mesh.actionManager.registerAction(
@@ -41,15 +44,33 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
         shards.current = getWorldObjects('Shard')
         spikes.current = getWorldObjects('Spikes')
         solids.current = getWorldObjects('Solid')
+        stars.current = getWorldObjects('Star')
 
         initHoverObjectsCursor()
     }
 
-    useBeforeRender(() => {
+    function rotateShards() {
         shards.current.forEach((shard) => {
             shard.rotation.y += 0.005
             shard.rotationQuaternion = null
         })
+    }
+
+    function rotateNonShards() {
+        spikes.current
+            .concat(solids.current)
+            .concat(stars.current)
+            .forEach((shard) => {
+                shard.rotation.x += 0.002
+                shard.rotation.y += 0.002
+                shard.rotation.z += 0.002
+                shard.rotationQuaternion = null
+            })
+    }
+
+    useBeforeRender(() => {
+        rotateShards()
+        rotateNonShards()
     })
 
     return (
