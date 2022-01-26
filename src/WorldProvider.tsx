@@ -1,13 +1,6 @@
-import {
-    AbstractMesh,
-    ActionManager,
-    ExecuteCodeAction,
-    Mesh,
-    Quaternion,
-    Vector3
-} from '@babylonjs/core'
-import { FC, ReactNode, Suspense, useEffect, useRef, useState } from 'react'
-import { ILoadedModel, Model, useBeforeRender, useHover, useScene } from 'react-babylonjs'
+import { AbstractMesh, ActionManager, ExecuteCodeAction, Vector3 } from '@babylonjs/core'
+import { FC, ReactNode, Suspense, useRef } from 'react'
+import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
 
 import GroundContext from './WorldContext'
 
@@ -15,50 +8,39 @@ type ViewProps = {
     children: ReactNode
 }
 
-const meshNames = [
-    'Cube with peaks',
-    'Pokemon',
-    'Cross',
-    'Anvil',
-    'TCube',
-    'Double tetrahedron',
-    'dodecahedron',
-    'Star',
-    'octahedron ',
-    'Rock',
-    'wheel',
-    'Classic Solid',
-    'Solid'
-]
-
-const shardNames = ['FO1', 'FO2', 'FO3']
-
 const WorldProvider: FC<ViewProps> = ({ children }) => {
     const model = useRef<ILoadedModel>()
-    const objects = useRef<AbstractMesh[]>([])
     const shards = useRef<AbstractMesh[]>([])
+    const spikes = useRef<AbstractMesh[]>([])
+    const solids = useRef<AbstractMesh[]>([])
     const world = useRef<AbstractMesh>()
     const scene = useScene()
 
     function initHoverObjectsCursor() {
-        objects.current.forEach((mesh) => {
-            mesh.actionManager = new ActionManager(scene!)
-            mesh.actionManager.registerAction(
-                new ExecuteCodeAction(
-                    ActionManager.OnPointerOverTrigger,
-                    () => (scene!.hoverCursor = 'pointer')
+        shards.current
+            .concat(spikes.current)
+            .concat(solids.current)
+            .forEach((mesh) => {
+                mesh.actionManager = new ActionManager(scene!)
+                mesh.actionManager.registerAction(
+                    new ExecuteCodeAction(
+                        ActionManager.OnPointerOverTrigger,
+                        () => (scene!.hoverCursor = 'pointer')
+                    )
                 )
-            )
-        })
+            })
+    }
+
+    function getWorldObjects(typeName: string) {
+        return model.current?.meshes?.filter(({ name }) => name.includes(typeName)) || []
     }
 
     function onModelLoaded(loadedModel: ILoadedModel) {
         model.current = loadedModel
         world.current = loadedModel.meshes?.find((x) => x.name === 'Planet Top')
-        objects.current =
-            model.current?.meshes?.filter(({ name }) => meshNames.includes(name)) || []
-        shards.current =
-            model.current?.meshes?.filter(({ name }) => shardNames.includes(name)) || []
+        shards.current = getWorldObjects('Shard')
+        spikes.current = getWorldObjects('Spikes')
+        solids.current = getWorldObjects('Solid')
 
         initHoverObjectsCursor()
     }
