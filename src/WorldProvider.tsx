@@ -22,32 +22,43 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
     const world = useRef<AbstractMesh>()
     const octahedron = useRef<Mesh | null>(null)
     const scene = useScene()
-    const highlightLayer = useRef<HighlightLayer>(null)
+    const highlightLayer = useRef<HighlightLayer>()
 
     const onModelLoaded = (loadedModel: ILoadedModel) => {
         world.current = loadedModel.meshes?.find((x) => x.name === 'Planet Top')
         octahedron.current = loadedModel.meshes?.find((x) => x.name === 'octahedron ') as Mesh
-        highlightLayer.current!.addMesh(octahedron.current, Color3.White())
-    }
 
-    useHover(
-        () => {
-            if (highlightLayer.current) {
-                highlightLayer.current.isEnabled = true
-            }
-        },
-        () => {
-            if (highlightLayer.current) {
-                highlightLayer.current.isEnabled = false
-            }
-        },
-        octahedron
-    )
+        highlightLayer.current = new HighlightLayer('octahedronHighlight', scene!)
+        highlightLayer.current.isEnabled = false
+        highlightLayer.current.addMesh(
+            octahedron.current,
+            new Color3(162 / 255, 140 / 255, 147 / 255)
+        )
+        highlightLayer.current.blurHorizontalSize = 5
+        highlightLayer.current.blurVerticalSize = 5
+
+        octahedron.current.actionManager = new ActionManager(scene!)
+        octahedron.current.actionManager.registerAction(
+            new SetValueAction(
+                ActionManager.OnPointerOverTrigger,
+                highlightLayer.current,
+                'isEnabled',
+                true
+            )
+        )
+        octahedron.current.actionManager.registerAction(
+            new SetValueAction(
+                ActionManager.OnPointerOutTrigger,
+                highlightLayer.current,
+                'isEnabled',
+                false
+            )
+        )
+    }
 
     return (
         <GroundContext.Provider value={{ world }}>
             {children}
-            <highlightLayer name="hl" ref={highlightLayer} />
             <Suspense fallback={null}>
                 <Model
                     name="world"
