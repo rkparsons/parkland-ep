@@ -8,36 +8,33 @@ type ViewProps = {
     children: ReactNode
 }
 
+const meshNames = [
+    'Cube with peaks',
+    'Pokemon',
+    'Cross',
+    'Anvil',
+    'TCube',
+    'Double tetrahedron',
+    'dodecahedron',
+    'Star',
+    'octahedron ',
+    'Rock',
+    'wheel',
+    'Classic Solid',
+    'Solid',
+    'FO1',
+    'FO2',
+    'FO3'
+]
+
 const WorldProvider: FC<ViewProps> = ({ children }) => {
+    const model = useRef<ILoadedModel>()
     const world = useRef<AbstractMesh>()
-    const octahedron = useRef<Mesh | null>(null)
     const scene = useScene()
 
-    const onModelLoaded = (loadedModel: ILoadedModel) => {
-        world.current = loadedModel.meshes?.find((x) => x.name === 'Planet Top')
-        loadedModel.meshes?.forEach(({ name }) => console.log(name))
-        octahedron.current = loadedModel.meshes?.find((x) => x.name === 'octahedron ') as Mesh
-        loadedModel.meshes
-            ?.filter(({ name }) =>
-                [
-                    'Cube with peaks',
-                    'Pokemon',
-                    'Cross',
-                    'Anvil',
-                    'TCube',
-                    'Double tetrahedron',
-                    'dodecahedron',
-                    'Star',
-                    'octahedron ',
-                    'Rock',
-                    'wheel',
-                    'Classic Solid',
-                    'Solid',
-                    'FO1',
-                    'FO2',
-                    'FO3'
-                ].includes(name)
-            )
+    function initMeshHoverCursor() {
+        model.current?.meshes
+            ?.filter(({ name }) => meshNames.includes(name))
             .forEach((mesh) => {
                 mesh.actionManager = new ActionManager(scene!)
                 mesh.actionManager.registerAction(
@@ -48,6 +45,14 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
                 )
             })
     }
+
+    function onModelLoaded(loadedModel: ILoadedModel) {
+        model.current = loadedModel
+        world.current = loadedModel.meshes?.find((x) => x.name === 'Planet Top')
+
+        initMeshHoverCursor()
+    }
+
     return (
         <GroundContext.Provider value={{ world }}>
             {children}
