@@ -37,6 +37,7 @@ const SubWaypoint: FC<ViewProps> = ({ index, isActive, subWaypoints, path }) => 
             name={`waypoint_${index}`}
             ref={(el) => (subWaypoints.current[index] = el as Mesh)}
             position={Vector3.Zero()}
+            isPickable={false}
             visibility={0}
         >
             <standardMaterial
