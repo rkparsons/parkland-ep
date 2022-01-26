@@ -90,8 +90,8 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
                 name="camera1"
                 ref={camera}
                 alpha={2.6 * Math.PI}
-                beta={0.4 * Math.PI}
-                radius={15}
+                beta={0.42 * Math.PI}
+                radius={18}
                 target={Vector3.Zero()}
             />
         </CameraContext.Provider>
