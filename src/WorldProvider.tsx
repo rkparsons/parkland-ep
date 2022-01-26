@@ -50,27 +50,50 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
     }
 
     function rotateShards() {
-        shards.current.forEach((shard) => {
-            shard.rotation.y += 0.005
+        shards.current.forEach((shard, index) => {
+            const plusOrMinus = index % 2 === 0 ? -1 : 1
+
+            shard.rotation.y += plusOrMinus * 0.005
             shard.rotationQuaternion = null
         })
     }
 
-    function rotateNonShards() {
-        spikes.current
-            .concat(solids.current)
-            .concat(stars.current)
-            .forEach((shard) => {
-                shard.rotation.x += 0.002
-                shard.rotation.y += 0.002
-                shard.rotation.z += 0.002
-                shard.rotationQuaternion = null
-            })
+    function rotateSpikes() {
+        spikes.current.forEach((shard, index) => {
+            const plusOrMinus = index % 2 === 0 ? -1 : 1
+
+            shard.rotation.x += 0.0015
+            shard.rotation.y += 0.001
+            shard.rotation.z += plusOrMinus * 0.0015
+            shard.rotationQuaternion = null
+        })
+    }
+
+    function rotateSolids() {
+        solids.current.forEach((shard) => {
+            shard.rotation.x -= 0.0015
+            shard.rotation.y -= 0.0015
+            shard.rotation.z -= 0.002
+            shard.rotationQuaternion = null
+        })
+    }
+
+    function rotateStars() {
+        stars.current.forEach((shard, index) => {
+            const plusOrMinus = index % 2 === 0 ? -1 : 1
+
+            shard.rotation.x += plusOrMinus * 0.002
+            shard.rotation.y += plusOrMinus * 0.002
+            shard.rotation.z += plusOrMinus * 0.002
+            shard.rotationQuaternion = null
+        })
     }
 
     useBeforeRender(() => {
         rotateShards()
-        rotateNonShards()
+        rotateSpikes()
+        rotateSolids()
+        rotateStars()
     })
 
     return (
