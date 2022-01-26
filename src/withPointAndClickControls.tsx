@@ -18,7 +18,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
         const waypoint = useRef<Mesh>()
         const waypointTarget = useRef<AbstractMesh>()
         const subWaypoints = useRef<Mesh[]>([])
-        const subWaypointCount = 10
+        const subWaypointCount = 20
         const [activeSubWaypointIndex, setActiveSubWaypointIndex] = useState(0)
         const [path, setPath] = useState<Path>()
         const distanceToWaypoint = useRef(0)
@@ -67,8 +67,7 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
                 waypoint.current!.position = intersection.pickedPoint!.clone()
             } else {
                 const clickOrigin = intersection.pickedMesh!.position
-                const down = clickOrigin.negate()
-                const ray = new Ray(clickOrigin, down)
+                const ray = new Ray(clickOrigin, Vector3.Down())
                 const pickingInfo = world.current?.intersects(ray)
 
                 if (pickingInfo?.pickedPoint) {
