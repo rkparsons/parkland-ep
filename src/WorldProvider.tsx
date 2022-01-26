@@ -1,4 +1,11 @@
-import { AbstractMesh, ActionManager, ExecuteCodeAction, Mesh, Vector3 } from '@babylonjs/core'
+import {
+    AbstractMesh,
+    ActionManager,
+    ExecuteCodeAction,
+    Mesh,
+    Quaternion,
+    Vector3
+} from '@babylonjs/core'
 import { FC, ReactNode, Suspense, useEffect, useRef, useState } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useHover, useScene } from 'react-babylonjs'
 
@@ -21,37 +28,47 @@ const meshNames = [
     'Rock',
     'wheel',
     'Classic Solid',
-    'Solid',
-    'FO1',
-    'FO2',
-    'FO3'
+    'Solid'
 ]
+
+const shardNames = ['FO1', 'FO2', 'FO3']
 
 const WorldProvider: FC<ViewProps> = ({ children }) => {
     const model = useRef<ILoadedModel>()
+    const objects = useRef<AbstractMesh[]>([])
+    const shards = useRef<AbstractMesh[]>([])
     const world = useRef<AbstractMesh>()
     const scene = useScene()
 
-    function initMeshHoverCursor() {
-        model.current?.meshes
-            ?.filter(({ name }) => meshNames.includes(name))
-            .forEach((mesh) => {
-                mesh.actionManager = new ActionManager(scene!)
-                mesh.actionManager.registerAction(
-                    new ExecuteCodeAction(
-                        ActionManager.OnPointerOverTrigger,
-                        () => (scene!.hoverCursor = 'pointer')
-                    )
+    function initHoverObjectsCursor() {
+        objects.current.forEach((mesh) => {
+            mesh.actionManager = new ActionManager(scene!)
+            mesh.actionManager.registerAction(
+                new ExecuteCodeAction(
+                    ActionManager.OnPointerOverTrigger,
+                    () => (scene!.hoverCursor = 'pointer')
                 )
-            })
+            )
+        })
     }
 
     function onModelLoaded(loadedModel: ILoadedModel) {
         model.current = loadedModel
         world.current = loadedModel.meshes?.find((x) => x.name === 'Planet Top')
+        objects.current =
+            model.current?.meshes?.filter(({ name }) => meshNames.includes(name)) || []
+        shards.current =
+            model.current?.meshes?.filter(({ name }) => shardNames.includes(name)) || []
 
-        initMeshHoverCursor()
+        initHoverObjectsCursor()
     }
+
+    useBeforeRender(() => {
+        shards.current.forEach((shard) => {
+            shard.rotation.y += 0.005
+            shard.rotationQuaternion = null
+        })
+    })
 
     return (
         <GroundContext.Provider value={{ world }}>
