@@ -12,9 +12,9 @@ const useSpikes = () => {
             mesh.rotationQuaternion = null
         },
         {
-            url: 'audio/kickSnare.mp3',
-            maxDistance: 70,
-            volume: 1
+            url: 'audio/arp.mp3',
+            maxDistance: 30,
+            volume: 0.5
         }
     )
 
