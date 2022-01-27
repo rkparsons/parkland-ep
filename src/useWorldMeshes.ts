@@ -1,26 +1,45 @@
-import { ILoadedModel, useBeforeRender } from 'react-babylonjs'
-import { MutableRefObject, useRef } from 'react'
-import { cursorPointerOnHover, getModelObjects } from './utils'
+import { ILoadedModel } from 'react-babylonjs'
+import { MutableRefObject } from 'react'
+import useWorldMeshesOfType from './useWorldMeshesOfType'
 
-import { AbstractMesh } from '@babylonjs/core'
+const useWorldMeshes = (model: MutableRefObject<ILoadedModel | undefined>) => {
+    const { init: initShards } = useWorldMeshesOfType(model, 'Shard', (mesh, index) => {
+        const plusOrMinus = index % 2 === 0 ? -1 : 1
 
-const useWorldMeshes = (
-    model: MutableRefObject<ILoadedModel | undefined>,
-    typeName: string,
-    render: (mesh: AbstractMesh, index: number) => void
-) => {
-    const meshes = useRef<AbstractMesh[]>([])
+        mesh.rotation.y += plusOrMinus * 0.005
+        mesh.rotationQuaternion = null
+    })
+    const { init: initSpikes } = useWorldMeshesOfType(model, 'Spikes', (mesh, index) => {
+        const plusOrMinus = index % 2 === 0 ? -1 : 1
 
-    function init() {
-        meshes.current = getModelObjects(model, typeName)
-        meshes.current.forEach(cursorPointerOnHover)
-    }
+        mesh.rotation.x += 0.0015
+        mesh.rotation.y += 0.001
+        mesh.rotation.z += plusOrMinus * 0.0015
+        mesh.rotationQuaternion = null
+    })
+    const { init: initSolids } = useWorldMeshesOfType(model, 'Solid', (mesh) => {
+        mesh.rotation.x -= 0.0015
+        mesh.rotation.y -= 0.0015
+        mesh.rotation.z -= 0.002
+        mesh.rotationQuaternion = null
+    })
+    const { init: initStars } = useWorldMeshesOfType(model, 'Star', (mesh, index) => {
+        const plusOrMinus = index % 2 === 0 ? -1 : 1
 
-    useBeforeRender(() => {
-        meshes.current.forEach(render)
+        mesh.rotation.x += plusOrMinus * 0.002
+        mesh.rotation.y += plusOrMinus * 0.002
+        mesh.rotation.z += plusOrMinus * 0.002
+        mesh.rotationQuaternion = null
     })
 
-    return { init }
+    function initMeshes() {
+        initShards()
+        initSpikes()
+        initSolids()
+        initStars()
+    }
+
+    return { initMeshes }
 }
 
 export default useWorldMeshes
