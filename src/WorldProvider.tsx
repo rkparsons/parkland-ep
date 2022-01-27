@@ -1,10 +1,10 @@
-import { AbstractMesh, ActionManager, ExecuteCodeAction, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, Suspense, useRef } from 'react'
-import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
-import { cursorPointerOnHover, getModelObjects } from './utils'
+import { ILoadedModel, Model } from 'react-babylonjs'
 
 import GroundContext from './WorldContext'
-import useSpikesObjects from './useSpikesObjects'
+import { cursorPointerOnHover } from './utils'
+import useWorldMeshes from './useWorldMeshes'
 
 type ViewProps = {
     children: ReactNode
@@ -12,67 +12,46 @@ type ViewProps = {
 
 const WorldProvider: FC<ViewProps> = ({ children }) => {
     const model = useRef<ILoadedModel>()
-    const shards = useRef<AbstractMesh[]>([])
-
-    const { initSpikes } = useSpikesObjects(model)
-
-    const solids = useRef<AbstractMesh[]>([])
-    const stars = useRef<AbstractMesh[]>([])
     const world = useRef<AbstractMesh>()
 
-    function initHoverObjectsCursor() {
-        shards.current
-            .concat(solids.current)
-            .concat(stars.current)
-            .concat(world.current!)
-            .forEach(cursorPointerOnHover)
-    }
+    const { init: initShards } = useWorldMeshes(model, 'Shard', (mesh, index) => {
+        const plusOrMinus = index % 2 === 0 ? -1 : 1
+
+        mesh.rotation.y += plusOrMinus * 0.005
+        mesh.rotationQuaternion = null
+    })
+    const { init: initSpikes } = useWorldMeshes(model, 'Spikes', (mesh, index) => {
+        const plusOrMinus = index % 2 === 0 ? -1 : 1
+
+        mesh.rotation.x += 0.0015
+        mesh.rotation.y += 0.001
+        mesh.rotation.z += plusOrMinus * 0.0015
+        mesh.rotationQuaternion = null
+    })
+    const { init: initSolids } = useWorldMeshes(model, 'Solid', (mesh) => {
+        mesh.rotation.x -= 0.0015
+        mesh.rotation.y -= 0.0015
+        mesh.rotation.z -= 0.002
+        mesh.rotationQuaternion = null
+    })
+    const { init: initStars } = useWorldMeshes(model, 'Star', (mesh, index) => {
+        const plusOrMinus = index % 2 === 0 ? -1 : 1
+
+        mesh.rotation.x += plusOrMinus * 0.002
+        mesh.rotation.y += plusOrMinus * 0.002
+        mesh.rotation.z += plusOrMinus * 0.002
+        mesh.rotationQuaternion = null
+    })
 
     function onModelLoaded(loadedModel: ILoadedModel) {
         model.current = loadedModel
         world.current = loadedModel.meshes?.find((x) => x.name === 'Planet Top')
-        shards.current = getModelObjects(model, 'Shard')
+        initShards()
         initSpikes()
-        solids.current = getModelObjects(model, 'Solid')
-        stars.current = getModelObjects(model, 'Star')
-
-        initHoverObjectsCursor()
+        initSolids()
+        initStars()
+        cursorPointerOnHover(world.current!)
     }
-
-    function rotateShards() {
-        shards.current.forEach((shard, index) => {
-            const plusOrMinus = index % 2 === 0 ? -1 : 1
-
-            shard.rotation.y += plusOrMinus * 0.005
-            shard.rotationQuaternion = null
-        })
-    }
-
-    function rotateSolids() {
-        solids.current.forEach((shard) => {
-            shard.rotation.x -= 0.0015
-            shard.rotation.y -= 0.0015
-            shard.rotation.z -= 0.002
-            shard.rotationQuaternion = null
-        })
-    }
-
-    function rotateStars() {
-        stars.current.forEach((shard, index) => {
-            const plusOrMinus = index % 2 === 0 ? -1 : 1
-
-            shard.rotation.x += plusOrMinus * 0.002
-            shard.rotation.y += plusOrMinus * 0.002
-            shard.rotation.z += plusOrMinus * 0.002
-            shard.rotationQuaternion = null
-        })
-    }
-
-    useBeforeRender(() => {
-        rotateShards()
-        rotateSolids()
-        rotateStars()
-    })
 
     return (
         <GroundContext.Provider value={{ world }}>
