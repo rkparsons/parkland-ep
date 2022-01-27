@@ -12,7 +12,7 @@ type ViewProps = {
 const CameraProvider: FC<ViewProps> = ({ children }) => {
     const scene = useScene()
     const camera = useRef<ArcRotateCamera>()
-    const { ground: world } = useWorldContext()
+    const { ground } = useWorldContext()
     const minimumRadius = 10
     const maximumRadius = 25
 
@@ -32,7 +32,7 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
         const ray = new Ray(camera.current.position.add(Vector3.Down().scale(20)), Vector3.Up())
         const pickingInfo = scene?.pickWithRay(ray)
 
-        if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
+        if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === ground.current) {
             const { x, y, z } = pickingInfo.pickedPoint!
             camera.current.position = Vector3.Lerp(
                 camera.current.position,
@@ -55,7 +55,7 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
         const ray = new Ray(camera.current.position, rayDirection, rayLength)
         const pickingInfo = scene?.pickWithRay(ray)
 
-        if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === world.current) {
+        if (pickingInfo && pickingInfo.hit && pickingInfo.pickedMesh === ground.current) {
             const { x, y, z } = camera.current.position
             camera.current.position = Vector3.Lerp(
                 camera.current.position,
