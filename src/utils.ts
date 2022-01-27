@@ -70,9 +70,6 @@ export function cursorPointerOnHover(mesh: AbstractMesh) {
     )
 }
 
-export function getModelObjects(
-    model: MutableRefObject<ILoadedModel | undefined>,
-    typeName: string
-) {
-    return model.current?.meshes?.filter(({ name }) => name.includes(typeName)) || []
+export function getModelObjects(worldModel: ILoadedModel, typeName: string) {
+    return worldModel.meshes?.filter(({ name }) => name.includes(typeName)) || []
 }

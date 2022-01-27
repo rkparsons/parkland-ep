@@ -16,7 +16,7 @@ const withWaypointController = (Model: FC<ModelProps>) => {
         degreesToWaypoint,
         isInitialised
     }) => {
-        const { world } = useWorldContext()
+        const { ground: world } = useWorldContext()
 
         function rootMotion(characterSpeed: number) {
             const activeSubWaypoint = subWaypoints.current[activeSubWaypointIndex]

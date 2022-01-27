@@ -12,7 +12,7 @@ type ViewProps = {
 const CameraProvider: FC<ViewProps> = ({ children }) => {
     const scene = useScene()
     const camera = useRef<ArcRotateCamera>()
-    const { world } = useWorldContext()
+    const { ground: world } = useWorldContext()
     const minimumRadius = 10
     const maximumRadius = 25
 

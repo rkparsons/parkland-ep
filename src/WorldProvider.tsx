@@ -1,9 +1,8 @@
-import { AbstractMesh, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, Suspense, useRef } from 'react'
-import { ILoadedModel, Model } from 'react-babylonjs'
 
-import GroundContext from './WorldContext'
-import { cursorPointerOnHover } from './utils'
+import { Model } from 'react-babylonjs'
+import { Vector3 } from '@babylonjs/core'
+import WorldContext from './WorldContext'
 import useWorldMeshes from './useWorldMeshes'
 
 type ViewProps = {
@@ -11,19 +10,10 @@ type ViewProps = {
 }
 
 const WorldProvider: FC<ViewProps> = ({ children }) => {
-    const model = useRef<ILoadedModel>()
-    const world = useRef<AbstractMesh>()
-    const { initMeshes } = useWorldMeshes(model)
-
-    function onModelLoaded(loadedModel: ILoadedModel) {
-        model.current = loadedModel
-        world.current = loadedModel.meshes?.find((x) => x.name === 'Planet Top')
-        initMeshes()
-        cursorPointerOnHover(world.current!)
-    }
+    const { ground, initMeshes } = useWorldMeshes()
 
     return (
-        <GroundContext.Provider value={{ world }}>
+        <WorldContext.Provider value={{ ground }}>
             {children}
             <Suspense fallback={null}>
                 <Model
@@ -32,10 +22,10 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
                     scaling={new Vector3(10, 10, 10)}
                     rootUrl={`${process.env.PUBLIC_URL}/`}
                     sceneFilename="World.glb"
-                    onModelLoaded={onModelLoaded}
+                    onModelLoaded={initMeshes}
                 />
             </Suspense>
-        </GroundContext.Provider>
+        </WorldContext.Provider>
     )
 }
 

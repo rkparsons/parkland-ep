@@ -11,7 +11,7 @@ import useWorldContext from './useWorldContext'
 
 const withPointAndClickControls = (WaypointController: FC<WaypointControllerProps>) => {
     const modelWithPointAndClickControls: FC = () => {
-        const { world } = useWorldContext()
+        const { ground: world } = useWorldContext()
         const [isInitialised, setIsInitialised] = useState(false)
         const model = useRef<ILoadedModel>()
         const scene = useScene()

@@ -14,7 +14,7 @@ type ViewProps = {
 
 const SubWaypoint: FC<ViewProps> = ({ index, isActive, subWaypoints, path }) => {
     const scene = useScene()
-    const { world } = useWorldContext()
+    const { ground: world } = useWorldContext()
 
     useEffect(() => {
         const origin = path.start.add(
