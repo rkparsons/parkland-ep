@@ -7,12 +7,14 @@ import {
     Mesh,
     Quaternion,
     Ray,
+    Sound,
     Space,
     Vector3
 } from '@babylonjs/core'
 
 import { ILoadedModel } from 'react-babylonjs'
 import { MutableRefObject } from 'react'
+import { SpatialSound } from './types'
 
 export function getAngleBetweenMeshes(mesh1: AbstractMesh, mesh2: AbstractMesh) {
     const v0 = mesh1.getDirection(new Vector3(0, 0, 1)).normalize()
@@ -72,4 +74,16 @@ export function cursorPointerOnHover(mesh: AbstractMesh) {
 
 export function getModelObjects(worldModel: ILoadedModel, typeName: string) {
     return worldModel.meshes?.filter(({ name }) => name.includes(typeName)) || []
+}
+
+export function attachSoundToMesh(mesh: AbstractMesh, spatialSound: SpatialSound) {
+    const { url, maxDistance, volume } = spatialSound
+    const soundName = url.split('/').slice(-1)[0]
+
+    new Sound(soundName, spatialSound.url, mesh._scene, null, {
+        loop: true,
+        autoplay: true,
+        maxDistance,
+        volume
+    }).attachToMesh(mesh)
 }

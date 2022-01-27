@@ -26,3 +26,9 @@ export type Path = {
     direction: Vector3
     end: Vector3
 }
+
+export type SpatialSound = {
+    url: string
+    maxDistance: number
+    volume: number
+}
