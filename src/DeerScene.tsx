@@ -2,6 +2,7 @@ import CameraProvider from './CameraProvider'
 import { Color4 } from '@babylonjs/core'
 import DeerModel from './DeerModel'
 import { FC } from 'react'
+import PostProcessing from './PostProcessing'
 import { Scene } from 'react-babylonjs'
 import WorldProvider from './WorldProvider'
 import withPointAndClickControls from './withPointAndClickControls'
@@ -24,6 +25,7 @@ const DeerScene: FC = () => (
                 {/* <SkyAnimated /> */}
                 <DeerWithPointAndClickControls />
                 {/* <AmbientSound /> */}
+                {/* <PostProcessing /> */}
             </CameraProvider>
         </WorldProvider>
     </Scene>
