@@ -1,4 +1,18 @@
-import { AbstractMesh, Angle, Matrix, Mesh, Quaternion, Ray, Space, Vector3 } from '@babylonjs/core'
+import {
+    AbstractMesh,
+    ActionManager,
+    Angle,
+    ExecuteCodeAction,
+    Matrix,
+    Mesh,
+    Quaternion,
+    Ray,
+    Space,
+    Vector3
+} from '@babylonjs/core'
+
+import { ILoadedModel } from 'react-babylonjs'
+import { MutableRefObject } from 'react'
 
 export function getAngleBetweenMeshes(mesh1: AbstractMesh, mesh2: AbstractMesh) {
     const v0 = mesh1.getDirection(new Vector3(0, 0, 1)).normalize()
@@ -44,4 +58,21 @@ export function translateCharacterTowardsPoint(
 
     character.translate(normal, walkSpeed, Space.WORLD)
     character.moveWithCollisions(Vector3.Zero())
+}
+
+export function cursorPointerOnHover(mesh: AbstractMesh) {
+    mesh.actionManager = new ActionManager(mesh._scene)
+    mesh.actionManager.registerAction(
+        new ExecuteCodeAction(
+            ActionManager.OnPointerOverTrigger,
+            () => (mesh._scene.hoverCursor = 'pointer')
+        )
+    )
+}
+
+export function getModelObjects(
+    model: MutableRefObject<ILoadedModel | undefined>,
+    typeName: string
+) {
+    return model.current?.meshes?.filter(({ name }) => name.includes(typeName)) || []
 }

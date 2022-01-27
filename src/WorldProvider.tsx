@@ -1,8 +1,10 @@
 import { AbstractMesh, ActionManager, ExecuteCodeAction, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, Suspense, useRef } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
+import { cursorPointerOnHover, getModelObjects } from './utils'
 
 import GroundContext from './WorldContext'
+import useSpikesObjects from './useSpikesObjects'
 
 type ViewProps = {
     children: ReactNode
@@ -11,40 +13,28 @@ type ViewProps = {
 const WorldProvider: FC<ViewProps> = ({ children }) => {
     const model = useRef<ILoadedModel>()
     const shards = useRef<AbstractMesh[]>([])
-    const spikes = useRef<AbstractMesh[]>([])
+
+    const { initSpikes } = useSpikesObjects(model)
+
     const solids = useRef<AbstractMesh[]>([])
     const stars = useRef<AbstractMesh[]>([])
     const world = useRef<AbstractMesh>()
-    const scene = useScene()
 
     function initHoverObjectsCursor() {
         shards.current
-            .concat(spikes.current)
             .concat(solids.current)
             .concat(stars.current)
             .concat(world.current!)
-            .forEach((mesh) => {
-                mesh.actionManager = new ActionManager(scene!)
-                mesh.actionManager.registerAction(
-                    new ExecuteCodeAction(
-                        ActionManager.OnPointerOverTrigger,
-                        () => (scene!.hoverCursor = 'pointer')
-                    )
-                )
-            })
-    }
-
-    function getWorldObjects(typeName: string) {
-        return model.current?.meshes?.filter(({ name }) => name.includes(typeName)) || []
+            .forEach(cursorPointerOnHover)
     }
 
     function onModelLoaded(loadedModel: ILoadedModel) {
         model.current = loadedModel
         world.current = loadedModel.meshes?.find((x) => x.name === 'Planet Top')
-        shards.current = getWorldObjects('Shard')
-        spikes.current = getWorldObjects('Spikes')
-        solids.current = getWorldObjects('Solid')
-        stars.current = getWorldObjects('Star')
+        shards.current = getModelObjects(model, 'Shard')
+        initSpikes()
+        solids.current = getModelObjects(model, 'Solid')
+        stars.current = getModelObjects(model, 'Star')
 
         initHoverObjectsCursor()
     }
@@ -54,17 +44,6 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
             const plusOrMinus = index % 2 === 0 ? -1 : 1
 
             shard.rotation.y += plusOrMinus * 0.005
-            shard.rotationQuaternion = null
-        })
-    }
-
-    function rotateSpikes() {
-        spikes.current.forEach((shard, index) => {
-            const plusOrMinus = index % 2 === 0 ? -1 : 1
-
-            shard.rotation.x += 0.0015
-            shard.rotation.y += 0.001
-            shard.rotation.z += plusOrMinus * 0.0015
             shard.rotationQuaternion = null
         })
     }
@@ -91,7 +70,6 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
 
     useBeforeRender(() => {
         rotateShards()
-        rotateSpikes()
         rotateSolids()
         rotateStars()
     })
