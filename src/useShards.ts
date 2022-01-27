@@ -1,7 +1,7 @@
-import useWorldMeshesOfType from './useWorldMeshesOfType'
+import useWorldMeshes from './useWorldMeshes'
 
 const useShards = () => {
-    const { init: initShards } = useWorldMeshesOfType('Shard', (mesh, index) => {
+    const { init: initShards } = useWorldMeshes('Shard', (mesh, index) => {
         const plusOrMinus = index % 2 === 0 ? -1 : 1
 
         mesh.rotation.y += plusOrMinus * 0.005

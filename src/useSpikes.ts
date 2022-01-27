@@ -1,7 +1,7 @@
-import useWorldMeshesOfType from './useWorldMeshesOfType'
+import useWorldMeshes from './useWorldMeshes'
 
 const useSpikes = () => {
-    const { init: initSpikes } = useWorldMeshesOfType('Spikes', (mesh, index) => {
+    const { init: initSpikes } = useWorldMeshes('Spikes', (mesh, index) => {
         const plusOrMinus = index % 2 === 0 ? -1 : 1
 
         mesh.rotation.x += 0.0015

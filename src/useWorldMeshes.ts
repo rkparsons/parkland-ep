@@ -1,38 +1,22 @@
-import { MutableRefObject, useRef } from 'react'
+import { ILoadedModel, useBeforeRender } from 'react-babylonjs'
+import { cursorPointerOnHover, getModelObjects } from './utils'
 
 import { AbstractMesh } from '@babylonjs/core'
-import { ILoadedModel } from 'react-babylonjs'
-import { cursorPointerOnHover } from './utils'
-import useShards from './useShards'
-import useSolids from './useSolids'
-import useSpikes from './useSpikes'
-import useStars from './useStars'
-import useWorldMeshesOfType from './useWorldMeshesOfType'
+import { useRef } from 'react'
 
-const useWorldMeshes = () => {
-    const ground = useRef<AbstractMesh>()
+const useWorldMeshes = (typeName: string, render: (mesh: AbstractMesh, index: number) => void) => {
+    const meshes = useRef<AbstractMesh[]>([])
 
-    const { initShards } = useShards()
-    const { initSpikes } = useSpikes()
-    const { initSolids } = useSolids()
-    const { initStars } = useStars()
-
-    function initGround() {
-        cursorPointerOnHover(ground.current!)
+    function init(worldModel: ILoadedModel) {
+        meshes.current = getModelObjects(worldModel, typeName)
+        meshes.current.forEach(cursorPointerOnHover)
     }
 
-    function initMeshes(worldModel: ILoadedModel) {
-        initShards(worldModel)
-        initSpikes(worldModel)
-        initSolids(worldModel)
-        initStars(worldModel)
+    useBeforeRender(() => {
+        meshes.current.forEach(render)
+    })
 
-        ground.current = worldModel.meshes?.find((x) => x.name === 'Planet Top')
-
-        initGround()
-    }
-
-    return { ground, initMeshes }
+    return { init }
 }
 
 export default useWorldMeshes

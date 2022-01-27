@@ -1,7 +1,7 @@
-import useWorldMeshesOfType from './useWorldMeshesOfType'
+import useWorldMeshes from './useWorldMeshes'
 
 const useStars = () => {
-    const { init: initStars } = useWorldMeshesOfType('Star', (mesh, index) => {
+    const { init: initStars } = useWorldMeshes('Star', (mesh, index) => {
         const plusOrMinus = index % 2 === 0 ? -1 : 1
 
         mesh.rotation.x += plusOrMinus * 0.002

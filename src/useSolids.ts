@@ -1,7 +1,7 @@
-import useWorldMeshesOfType from './useWorldMeshesOfType'
+import useWorldMeshes from './useWorldMeshes'
 
 const useSolids = () => {
-    const { init: initSolids } = useWorldMeshesOfType('Solid', (mesh) => {
+    const { init: initSolids } = useWorldMeshes('Solid', (mesh) => {
         mesh.rotation.x -= 0.0015
         mesh.rotation.y -= 0.0015
         mesh.rotation.z -= 0.002
