@@ -1,8 +1,9 @@
+import { Color4, Sound } from '@babylonjs/core'
+import { FC, MutableRefObject } from 'react'
+
 import AudioProvider from './AudioProvider'
 import CameraProvider from './CameraProvider'
-import { Color4 } from '@babylonjs/core'
 import DeerModel from './DeerModel'
-import { FC } from 'react'
 import PostProcessing from './PostProcessing'
 import { Scene } from 'react-babylonjs'
 import WorldProvider from './WorldProvider'
@@ -16,12 +17,12 @@ import withWaypointController from './withWaypointController'
 const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointController(DeerModel))
 
 type ViewProps = {
-    isAudioInitialised: boolean
+    audioLoops: MutableRefObject<Sound[]>
 }
 // todo: move tweakable params to .env
-const DeerScene: FC<ViewProps> = ({ isAudioInitialised }) => (
+const DeerScene: FC<ViewProps> = ({ audioLoops }) => (
     <Scene clearColor={new Color4(162 / 255, 140 / 255, 147 / 255, 1)}>
-        <AudioProvider isAudioInitialised={isAudioInitialised}>
+        <AudioProvider audioLoops={audioLoops}>
             <WorldProvider>
                 <CameraProvider>
                     {/* <hemisphericLight name="hemi-light" intensity={1} direction={Vector3.Up()} />
