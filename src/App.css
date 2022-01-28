@@ -114,10 +114,18 @@
 }
 
 .SoundWarning {
+    display: flex;
+    align-items: center;
     font-size: 12pt;
     position: absolute;
     top: var(--page-padding);
     left: var(--page-padding);
+    line-height: 1em;
+}
+
+.SoundWarningText {
+    margin-top: 2px;
+    margin-left: 5px;
 }
 
 .BackLink {
