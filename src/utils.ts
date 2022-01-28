@@ -89,6 +89,7 @@ export function attachSoundToMesh(
         maxDistance,
         volume
     })
+    sound.switchPanningModelToHRTF()
     sound.attachToMesh(mesh)
 
     audioLoops.current.push(sound)

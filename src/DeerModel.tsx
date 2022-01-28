@@ -25,6 +25,9 @@ const DeerModel: FC<ModelProps> = ({
         model.current = loadedModel
 
         headBone.current = model.current.skeletons![0].bones.find((x) => x.name === 'Waypoint')
+        scene!.audioListenerPositionProvider = () => model.current!.rootMesh!.absolutePosition
+        scene!.audioPositioningRefreshRate = 100
+        scene!.headphone = true
 
         loadedModel.animationGroups?.forEach((animationGroup) => {
             animationGroup.stop()
