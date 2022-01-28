@@ -7,7 +7,7 @@ type ViewProps = {
 
 const Menu: FC<ViewProps> = ({ audioLoops }) => {
     const [isActive, setIsActive] = useState(false)
-    const [volume, setVolume] = useState(100)
+    const [volume, setVolume] = useState(50)
 
     function closeMenu() {
         setIsActive(false)
@@ -51,14 +51,14 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
             )}
             {!isActive && (
                 <>
-                    <div className="slidecontainer">
+                    <div className="SliderContainer">
                         <input
                             type="range"
                             min="0"
                             max="100"
                             value={volume}
                             onChange={(event) => setVolume(parseInt(event.currentTarget.value))}
-                            className="slider"
+                            className="Slider"
                             onClick={() => console.log('hello')}
                         />
                     </div>
