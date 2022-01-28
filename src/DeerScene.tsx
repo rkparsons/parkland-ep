@@ -1,3 +1,4 @@
+import AudioProvider from './AudioProvider'
 import CameraProvider from './CameraProvider'
 import { Color4 } from '@babylonjs/core'
 import DeerModel from './DeerModel'
@@ -14,20 +15,25 @@ import withWaypointController from './withWaypointController'
 
 const DeerWithPointAndClickControls = withPointAndClickControls(withWaypointController(DeerModel))
 
+type ViewProps = {
+    isAudioInitialised: boolean
+}
 // todo: move tweakable params to .env
-const DeerScene: FC = () => (
+const DeerScene: FC<ViewProps> = ({ isAudioInitialised }) => (
     <Scene clearColor={new Color4(162 / 255, 140 / 255, 147 / 255, 1)}>
-        <WorldProvider>
-            <CameraProvider>
-                {/* <hemisphericLight name="hemi-light" intensity={1} direction={Vector3.Up()} />
+        <AudioProvider isAudioInitialised={isAudioInitialised}>
+            <WorldProvider>
+                <CameraProvider>
+                    {/* <hemisphericLight name="hemi-light" intensity={1} direction={Vector3.Up()} />
                 <pointLight name="sun" position={new Vector3(0, 400, 0)} intensity={1000} /> */}
-                {/* <Sky /> */}
-                {/* <SkyAnimated /> */}
-                <DeerWithPointAndClickControls />
-                {/* <AmbientSound /> */}
-                {/* <PostProcessing /> */}
-            </CameraProvider>
-        </WorldProvider>
+                    {/* <Sky /> */}
+                    {/* <SkyAnimated /> */}
+                    <DeerWithPointAndClickControls />
+                    {/* <AmbientSound /> */}
+                    {/* <PostProcessing /> */}
+                </CameraProvider>
+            </WorldProvider>
+        </AudioProvider>
     </Scene>
 )
 

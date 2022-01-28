@@ -76,14 +76,20 @@ export function getModelObjects(worldModel: ILoadedModel, typeName: string) {
     return worldModel.meshes?.filter(({ name }) => name.includes(typeName)) || []
 }
 
-export function attachSoundToMesh(mesh: AbstractMesh, spatialSound: SpatialSound) {
+export function attachSoundToMesh(
+    mesh: AbstractMesh,
+    spatialSound: SpatialSound,
+    audioLoops: MutableRefObject<Sound[]>
+) {
     const { url, maxDistance, volume } = spatialSound
     const soundName = url.split('/').slice(-1)[0]
-
-    new Sound(soundName, spatialSound.url, mesh._scene, null, {
+    const sound = new Sound(soundName, spatialSound.url, mesh._scene, null, {
         loop: true,
-        autoplay: true,
+        autoplay: false,
         maxDistance,
         volume
-    }).attachToMesh(mesh)
+    })
+    sound.attachToMesh(mesh)
+
+    audioLoops.current.push(sound)
 }

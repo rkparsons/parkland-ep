@@ -1,16 +1,24 @@
 import { FC, useState } from 'react'
 
-const Menu: FC = () => {
+type ViewProps = {
+    setIsAudioInitialised(isAudioInitialised: boolean): void
+}
+
+const Menu: FC<ViewProps> = ({ setIsAudioInitialised }) => {
     const [isActive, setIsActive] = useState(true)
 
+    function closeMenu() {
+        setIsActive(false)
+        setIsAudioInitialised(true)
+    }
+
+    function openMenu(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        event.stopPropagation()
+        setIsActive(true)
+    }
+
     return (
-        <div
-            role="button"
-            tabIndex={0}
-            className="Menu"
-            onClick={() => setIsActive(false)}
-            onKeyDown={() => setIsActive(false)}
-        >
+        <div role="button" tabIndex={0} className="Menu" onClick={closeMenu} onKeyDown={closeMenu}>
             <div className={`Overlay ${isActive ? '' : 'FadeOut'}`}>
                 <div className={`Backdrop ${isActive ? '' : 'IgnoreClick'}`} />
                 {isActive && <p className="StartText">Click to start</p>}
@@ -20,10 +28,7 @@ const Menu: FC = () => {
                     role="button"
                     tabIndex={0}
                     className="Controls"
-                    onClick={(e) => {
-                        e.stopPropagation()
-                        setIsActive(true)
-                    }}
+                    onClick={openMenu}
                     onKeyDown={() => ({})}
                 >
                     <span className="BackLink">Exit</span>

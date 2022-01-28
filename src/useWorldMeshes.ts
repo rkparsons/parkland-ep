@@ -3,6 +3,7 @@ import { attachSoundToMesh, cursorPointerOnHover, getModelObjects } from './util
 
 import { AbstractMesh } from '@babylonjs/core'
 import { SpatialSound } from './types'
+import useAudioContext from './useAudioContext'
 import { useRef } from 'react'
 
 const useWorldMeshes = (
@@ -11,13 +12,14 @@ const useWorldMeshes = (
     spatialSound?: SpatialSound
 ) => {
     const meshes = useRef<AbstractMesh[]>([])
+    const { audioLoops } = useAudioContext()
 
     function init(worldModel: ILoadedModel) {
         meshes.current = getModelObjects(worldModel, typeName)
         meshes.current.forEach(cursorPointerOnHover)
 
         if (spatialSound) {
-            meshes.current.forEach((mesh) => attachSoundToMesh(mesh, spatialSound))
+            meshes.current.forEach((mesh) => attachSoundToMesh(mesh, spatialSound, audioLoops))
         }
     }
 

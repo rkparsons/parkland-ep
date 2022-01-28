@@ -1,18 +1,25 @@
 import './App.css'
 import '@babylonjs/loaders/glTF'
 
+import React, { useEffect, useState } from 'react'
+
 import DeerScene from './DeerScene'
 import { Engine } from 'react-babylonjs'
 import Menu from './Menu'
-import React from 'react'
 
 const App: React.FC = () => {
+    const [isAudioInitialised, setIsAudioInitialised] = useState(false)
+
+    useEffect(() => {
+        console.log('isAudioInitialised', isAudioInitialised)
+    }, [isAudioInitialised])
+
     return (
         <div className="App">
             <Engine antialias adaptToDeviceRatio canvasId="canvas">
-                <DeerScene />
+                <DeerScene isAudioInitialised={isAudioInitialised} />
             </Engine>
-            <Menu />
+            <Menu setIsAudioInitialised={setIsAudioInitialised} />
         </div>
     )
 }
