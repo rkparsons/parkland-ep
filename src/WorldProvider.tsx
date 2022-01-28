@@ -1,4 +1,4 @@
-import { FC, ReactNode, Suspense, useEffect, useRef } from 'react'
+import { FC, ReactNode, Suspense, memo, useEffect, useRef } from 'react'
 import { ILoadedModel, Model } from 'react-babylonjs'
 import { Sound, Vector3 } from '@babylonjs/core'
 
@@ -14,6 +14,7 @@ type ViewProps = {
 }
 
 const WorldProvider: FC<ViewProps> = ({ children }) => {
+    console.log('WorldProvider')
     const { initShards } = useShards()
     const { initSpikes } = useSpikes()
     const { initSolids } = useSolids()

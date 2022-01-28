@@ -11,6 +11,7 @@ const useWorldMeshes = (
     render: (mesh: AbstractMesh, index: number) => void,
     spatialSound?: SpatialSound
 ) => {
+    console.log('useWorldMeshes', typeName)
     const meshes = useRef<AbstractMesh[]>([])
     const { audioLoops } = useAudioContext()
 

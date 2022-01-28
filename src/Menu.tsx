@@ -1,25 +1,36 @@
 import { Engine, Sound } from '@babylonjs/core'
-import { FC, MutableRefObject, useState } from 'react'
+import { FC, MutableRefObject, useEffect, useState } from 'react'
 
 type ViewProps = {
     audioLoops: MutableRefObject<Sound[]>
 }
 
 const Menu: FC<ViewProps> = ({ audioLoops }) => {
-    const [isActive, setIsActive] = useState(false)
+    const [isInitialised, setIsInitialised] = useState(false)
+    const [isActive, setIsActive] = useState(true)
     const [volume, setVolume] = useState(50)
 
     function closeMenu() {
         setIsActive(false)
-        audioLoops.current.forEach((audioLoop) => audioLoop.play())
-        Engine.audioEngine.unlock()
+
+        if (!isInitialised) {
+            setIsInitialised(true)
+            Engine.audioEngine.unlock()
+            audioLoops.current.forEach((audioLoop) => audioLoop.play(0))
+        } else {
+            Engine.audioEngine.setGlobalVolume(volume / 100)
+        }
     }
 
     function openMenu(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         event.stopPropagation()
         setIsActive(true)
-        audioLoops.current.forEach((audioLoop) => audioLoop.pause())
+        Engine.audioEngine.setGlobalVolume(0)
     }
+
+    useEffect(() => {
+        Engine.audioEngine.setGlobalVolume(volume / 100)
+    }, [volume])
 
     return (
         <div role="button" tabIndex={0} className="Menu" onClick={closeMenu} onKeyDown={closeMenu}>
