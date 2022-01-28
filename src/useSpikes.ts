@@ -14,7 +14,7 @@ const useSpikes = () => {
         {
             url: 'audio/arp.mp3',
             maxDistance: 30,
-            volume: 0.5
+            volume: 0.1
         }
     )
 

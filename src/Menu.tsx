@@ -8,7 +8,7 @@ type ViewProps = {
 const Menu: FC<ViewProps> = ({ audioLoops }) => {
     const [isInitialised, setIsInitialised] = useState(false)
     const [isActive, setIsActive] = useState(true)
-    const [volume, setVolume] = useState(50)
+    const [volume, setVolume] = useState(75)
 
     function closeMenu() {
         setIsActive(false)
@@ -17,9 +17,9 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
             setIsInitialised(true)
             Engine.audioEngine.unlock()
             audioLoops.current.forEach((audioLoop) => audioLoop.play(0))
-        } else {
-            Engine.audioEngine.setGlobalVolume(volume / 100)
         }
+
+        Engine.audioEngine.setGlobalVolume(volume / 100)
     }
 
     function openMenu(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {

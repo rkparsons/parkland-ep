@@ -3,6 +3,7 @@ import { ILoadedModel, Model } from 'react-babylonjs'
 import { Sound, Vector3 } from '@babylonjs/core'
 
 import WorldContext from './WorldContext'
+import useAmbientSound from './useAmbientSound'
 import useGround from './useGround'
 import useShards from './useShards'
 import useSolids from './useSolids'
@@ -19,6 +20,7 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
     const { initSpikes } = useSpikes()
     const { initSolids } = useSolids()
     const { initStars } = useStars()
+    useAmbientSound('desert', 'audio/desertAmbience.mp3')
     const { ground, initGround } = useGround()
 
     function onModelLoaded(worldModel: ILoadedModel) {

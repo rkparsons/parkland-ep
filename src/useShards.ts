@@ -12,7 +12,7 @@ const useShards = () => {
         {
             url: 'audio/kickSnare.mp3',
             maxDistance: 30,
-            volume: 0.5
+            volume: 0.1
         }
     )
 
