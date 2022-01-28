@@ -3,6 +3,7 @@ import '@babylonjs/loaders/glTF'
 
 import DeerScene from './DeerScene'
 import { Engine } from 'react-babylonjs'
+import Menu from './Menu'
 import React from 'react'
 
 const App: React.FC = () => {
@@ -11,6 +12,7 @@ const App: React.FC = () => {
             <Engine antialias adaptToDeviceRatio canvasId="canvas">
                 <DeerScene />
             </Engine>
+            <Menu />
         </div>
     )
 }

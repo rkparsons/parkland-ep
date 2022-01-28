@@ -43,6 +43,7 @@ module.exports = {
         ],
         'jsx-a11y/media-has-caption': 'off',
         'jsx-a11y/no-autofocus': 'off',
+        'jsx-a11y/click-events-have-key-events': 'off',
         '@typescript-eslint/no-var-requires': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',

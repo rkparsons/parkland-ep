@@ -1,7 +1,15 @@
-.App {
-    width: 100vw;
-    height: 100vh;
-    background-color: rgb(162, 140, 147);
+:root {
+    --page-padding: 20px;
+}
+
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 @keyframes appear {
@@ -13,9 +21,110 @@
     }
 }
 
+@keyframes blinkingText {
+    0% {
+        color: white;
+    }
+    49% {
+        color: white;
+    }
+    60% {
+        color: transparent;
+    }
+    99% {
+        color: transparent;
+    }
+    100% {
+        color: white;
+    }
+}
+
+.App {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(162, 140, 147);
+}
+
 #canvas {
     width: 100%;
     height: 100%;
     animation-name: appear;
     animation-duration: 500ms;
+}
+
+.Menu {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: none;
+}
+
+.Overlay {
+    transition: opacity 1s;
+    opacity: 1;
+}
+
+.Overlay.FadeOut {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.Backdrop {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: black;
+    opacity: 0.3;
+    pointer-events: all;
+}
+
+.IgnoreClick {
+    pointer-events: none;
+}
+
+.StartText {
+    color: white;
+    font-size: 30pt;
+    animation: blinkingText 1s infinite;
+    z-index: 100;
+}
+
+.Controls {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.Footer {
+    font-size: 12pt;
+    position: absolute;
+    bottom: var(--page-padding);
+    right: var(--page-padding);
+}
+
+.SoundWarning {
+    font-size: 12pt;
+    position: absolute;
+    top: var(--page-padding);
+    left: var(--page-padding);
+}
+
+.BackLink {
+    color: black;
+    font-size: 20pt;
+    position: absolute;
+    top: var(--page-padding);
+    right: var(--page-padding);
+    pointer-events: all;
 }
