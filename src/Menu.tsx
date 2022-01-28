@@ -26,17 +26,6 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                 <div className={`Backdrop ${isActive ? '' : 'IgnoreClick'}`} />
                 {isActive && <p className="StartText">Click to start</p>}
             </div>
-            {!isActive && (
-                <div
-                    role="button"
-                    tabIndex={0}
-                    className="Controls"
-                    onClick={openMenu}
-                    onKeyDown={() => ({})}
-                >
-                    <span className="BackLink">Exit</span>
-                </div>
-            )}
             <div className="Footer">&copy; SINE LANGUAGE RECORDS</div>
             {isActive && (
                 <div className="SoundWarning">
@@ -57,6 +46,17 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                         </g>
                     </svg>
                     <span className="SoundWarningText">SOUND ON</span>
+                </div>
+            )}
+            {!isActive && (
+                <div
+                    role="button"
+                    tabIndex={0}
+                    className="Controls"
+                    onClick={openMenu}
+                    onKeyDown={() => ({})}
+                >
+                    <span className="BackLink">Exit</span>
                 </div>
             )}
         </div>
