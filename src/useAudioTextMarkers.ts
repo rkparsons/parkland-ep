@@ -10,6 +10,13 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
     const meshes = useRef<AbstractMesh[]>([])
     const { audioLoops } = useAudioContext()
     const scene = useScene()
+    const subtitleTexts = [
+        'The sun burns hot above',
+        'The way ahead is hard',
+        'These rocky slopes are treacherous',
+        'The air is heavy here',
+        'The valley is ripe with juicy bananas'
+    ]
 
     useBeforeRender(() => {
         const deerModel = scene!.getMeshByName('deer')
@@ -34,12 +41,12 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
     function initAudioTextMarkers(worldModel: ILoadedModel) {
         meshes.current = getModelObjects(worldModel, 'Subtitles')
 
-        meshes.current.forEach((mesh) => {
+        meshes.current.forEach((mesh, index) => {
             mesh.isPickable = false
             mesh.isVisible = false
             mesh.checkCollisions = true
 
-            attachTextToMesh(mesh, 'Hello from ' + mesh.name)
+            attachTextToMesh(mesh, subtitleTexts[index])
 
             attachSoundToMesh(
                 mesh,
