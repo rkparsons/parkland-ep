@@ -8,7 +8,7 @@ import { useRef } from 'react'
 
 const useWorldMeshes = (
     typeName: string,
-    render: (mesh: AbstractMesh, index: number) => void,
+    render?: (mesh: AbstractMesh, index: number) => void,
     spatialSound?: SpatialSound
 ) => {
     const meshes = useRef<AbstractMesh[]>([])
@@ -24,7 +24,9 @@ const useWorldMeshes = (
     }
 
     useBeforeRender(() => {
-        meshes.current.forEach(render)
+        if (render) {
+            meshes.current.forEach(render)
+        }
     })
 
     return { init }

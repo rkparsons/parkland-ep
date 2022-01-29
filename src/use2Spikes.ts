@@ -1,8 +1,8 @@
 import useWorldMeshes from './useWorldMeshes'
 
-const useSpikes = () => {
-    const { init: initSpikes } = useWorldMeshes(
-        'Spikes',
+const use2Spikes = () => {
+    const { init: init2Spikes } = useWorldMeshes(
+        '2Spikes',
         (mesh, index) => {
             const plusOrMinus = index % 2 === 0 ? -1 : 1
 
@@ -12,13 +12,13 @@ const useSpikes = () => {
             mesh.rotationQuaternion = null
         },
         {
-            url: 'audio/beepLow.mp3',
+            url: 'audio/beepMid.mp3',
             maxDistance: 30,
             volume: 0.1
         }
     )
 
-    return { initSpikes }
+    return { init2Spikes }
 }
 
-export default useSpikes
+export default use2Spikes

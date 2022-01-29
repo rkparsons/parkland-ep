@@ -73,7 +73,7 @@ export function cursorPointerOnHover(mesh: AbstractMesh) {
 }
 
 export function getModelObjects(worldModel: ILoadedModel, typeName: string) {
-    return worldModel.meshes?.filter(({ name }) => name.includes(typeName)) || []
+    return worldModel.meshes?.filter(({ name }) => name.startsWith(typeName)) || []
 }
 
 export function attachSoundToMesh(

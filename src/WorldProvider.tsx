@@ -3,7 +3,9 @@ import { ILoadedModel, Model } from 'react-babylonjs'
 import { Sound, Vector3 } from '@babylonjs/core'
 
 import WorldContext from './WorldContext'
+import use2Spikes from './use2Spikes'
 import useAmbientSound from './useAmbientSound'
+import useAudioTextMarkers from './useAudioTextMarkers'
 import useGround from './useGround'
 import useShards from './useShards'
 import useSolids from './useSolids'
@@ -17,17 +19,23 @@ type ViewProps = {
 const WorldProvider: FC<ViewProps> = ({ children }) => {
     const { initShards } = useShards()
     const { initSpikes } = useSpikes()
+    const { init2Spikes } = use2Spikes()
     const { initSolids } = useSolids()
     const { initStars } = useStars()
+    const { initAudioTextMarkers } = useAudioTextMarkers()
+
     useAmbientSound('desert', 'audio/desertAmbience.mp3')
     const { ground, initGround } = useGround()
 
     function onModelLoaded(worldModel: ILoadedModel) {
+        worldModel.meshes?.forEach((mesh) => console.log(mesh.name))
         initShards(worldModel)
         initSpikes(worldModel)
+        init2Spikes(worldModel)
         initSolids(worldModel)
         initStars(worldModel)
         initGround(worldModel)
+        initAudioTextMarkers(worldModel)
     }
 
     return (
