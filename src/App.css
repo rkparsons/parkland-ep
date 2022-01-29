@@ -1,13 +1,21 @@
 :root {
     --page-padding: 26px;
-    --slider-length: 270px;
-    --slider-width: 15px;
+    --slider-length: 300px;
+    --slider-width: 18px;
     --grey: rgb(51, 51, 51);
+    --font-size-large: 40pt;
+    --font-size-medium: 17pt;
+    --font-size-small: 11pt;
 }
 
 @media (max-width: 1023px) {
     :root {
+        --page-padding: 16px;
         --slider-length: 200px;
+        --slider-width: 15px;
+        --font-size-large: 24pt;
+        --font-size-medium: 13pt;
+        --font-size-small: 8pt;
     }
 }
 
@@ -102,7 +110,7 @@
 
 .StartText {
     color: white;
-    font-size: 40pt;
+    font-size: var(--font-size-large);
     text-shadow: 2px 2px var(--grey);
     animation: blinkingText 1s infinite;
     position: absolute;
@@ -118,7 +126,7 @@
 }
 
 .Footer {
-    font-size: 11pt;
+    font-size: var(--font-size-small);
     position: absolute;
     bottom: var(--page-padding);
     right: var(--page-padding);
@@ -128,7 +136,7 @@
 .SoundWarning {
     display: flex;
     align-items: center;
-    font-size: 16pt;
+    font-size: var(--font-size-medium);
     position: absolute;
     top: var(--page-padding);
     left: var(--page-padding);
@@ -139,15 +147,29 @@ svg {
     fill: var(--grey);
 }
 
+@media (max-width: 1023px) {
+    svg {
+        transform: scale(0.65);
+    }
+}
+
 .SoundWarningText {
     margin-top: 3px;
     margin-left: 8px;
     color: var(--grey);
 }
 
+@media (max-width: 1023px) {
+    .SoundWarningText {
+        margin-top: 3px;
+        margin-left: 1px;
+        color: var(--grey);
+    }
+}
+
 .BackLink {
-    color: black;
-    font-size: 20pt;
+    color: var(--grey);
+    font-size: var(--font-size-medium);
     position: absolute;
     top: var(--page-padding);
     right: var(--page-padding);
@@ -165,7 +187,7 @@ svg {
 @media (min-width: 1024px) {
     .SliderContainer {
         transform-origin: top right;
-        transform: rotate(270deg) translate(0px, calc(var(--slider-length) * -1));
+        transform: rotate(270deg) translate(-5px, calc(var(--slider-length) * -1));
     }
 }
 
@@ -189,7 +211,7 @@ svg {
         width: 0px;
         -webkit-appearance: none;
         height: var(--slider-width);
-        box-shadow: calc(var(--slider-length) * -1) 0 0 var(--slider-length) rgba(0, 0, 0, 0.5);
+        box-shadow: calc(var(--slider-length) * -1) 0 0 var(--slider-length) var(--grey);
     }
 }
 .Slider::-moz-range-progress .Slider::-ms-fill-lower {
@@ -218,5 +240,6 @@ svg {
 
 .SubtitlesText {
     color: white;
-    font-size: 25pt;
+    font-size: var(--font-size-large);
+    text-shadow: 2px 2px var(--grey);
 }
