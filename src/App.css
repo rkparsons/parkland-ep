@@ -189,3 +189,19 @@
 .Slider .Slider::-moz-range-track .Slider::-ms-fill-upper {
     background-color: rgba(0, 0, 0, 0.2);
 }
+
+.SubtitlesContainer {
+    position: absolute;
+    bottom: 100px;
+    left: 0;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.SubtitlesText {
+    color: white;
+    font-size: 25pt;
+}

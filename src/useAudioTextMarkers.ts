@@ -1,11 +1,12 @@
 import { ILoadedModel, useBeforeRender, useScene } from 'react-babylonjs'
+import { MutableRefObject, useRef } from 'react'
 import { attachSoundToMesh, attachTextToMesh, getModelObjects } from './utils'
 
 import { AbstractMesh } from '@babylonjs/core'
 import useAudioContext from './useAudioContext'
-import { useRef } from 'react'
 
-const useAudioTextMarkers = () => {
+const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
+    const activeAudioTextMarker = useRef<AbstractMesh>()
     const meshes = useRef<AbstractMesh[]>([])
     const { audioLoops } = useAudioContext()
     const scene = useScene()
@@ -17,17 +18,29 @@ const useAudioTextMarkers = () => {
             return
         }
 
-        meshes.current.forEach((mesh) => {
-            if (mesh.intersectsMesh(deerModel)) {
-                alert('hello from ' + mesh.name)
-            }
-        })
+        const newActiveAudioTextMarker = meshes.current.find((mesh) =>
+            mesh.intersectsMesh(deerModel)
+        )
+
+        if (!activeAudioTextMarker.current && newActiveAudioTextMarker) {
+            setSubtitles(newActiveAudioTextMarker.metadata.text)
+        } else if (activeAudioTextMarker.current && !newActiveAudioTextMarker) {
+            setSubtitles('')
+        }
+
+        activeAudioTextMarker.current = newActiveAudioTextMarker
     })
 
     function initAudioTextMarkers(worldModel: ILoadedModel) {
         meshes.current = getModelObjects(worldModel, 'Subtitles')
-        meshes.current.forEach((mesh) => (mesh.isPickable = false))
-        meshes.current.forEach((mesh) =>
+
+        meshes.current.forEach((mesh) => {
+            mesh.isPickable = false
+            mesh.isVisible = false
+            mesh.checkCollisions = true
+
+            attachTextToMesh(mesh, 'Hello from ' + mesh.name)
+
             attachSoundToMesh(
                 mesh,
                 {
@@ -37,14 +50,7 @@ const useAudioTextMarkers = () => {
                 },
                 audioLoops
             )
-        )
-
-        meshes.current.forEach((mesh) => {
-            mesh.checkCollisions = true
-            mesh.onCollide = () => alert('hello from ' + mesh.name)
         })
-
-        meshes.current.forEach((mesh) => attachTextToMesh(mesh, 'here is a subtitle'))
     }
 
     return { initAudioTextMarkers }

@@ -1,4 +1,4 @@
-import { FC, ReactNode, Suspense, memo, useEffect, useRef } from 'react'
+import { FC, MutableRefObject, ReactNode, Suspense, memo, useEffect, useRef } from 'react'
 import { ILoadedModel, Model } from 'react-babylonjs'
 import { Sound, Vector3 } from '@babylonjs/core'
 
@@ -14,15 +14,16 @@ import useStars from './useStars'
 
 type ViewProps = {
     children: ReactNode
+    setSubtitles(subtitles: string): void
 }
 
-const WorldProvider: FC<ViewProps> = ({ children }) => {
+const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
     const { initShards } = useShards()
     const { initSpikes } = useSpikes()
     const { init2Spikes } = use2Spikes()
     const { initSolids } = useSolids()
     const { initStars } = useStars()
-    const { initAudioTextMarkers } = useAudioTextMarkers()
+    const { initAudioTextMarkers } = useAudioTextMarkers(setSubtitles)
 
     useAmbientSound('desert', 'audio/desertAmbience.mp3')
     const { ground, initGround } = useGround()
