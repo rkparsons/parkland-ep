@@ -1,6 +1,6 @@
-import { Bone, Quaternion, Tools, Vector3 } from '@babylonjs/core'
-import { FC, Suspense, useRef } from 'react'
+import { FC, Suspense } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
+import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
 
 import { ModelProps } from './types'
 import useAnimation from './useAnimation'
