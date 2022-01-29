@@ -18,25 +18,25 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
         'The valley is ripe with juicy bananas'
     ]
 
-    useBeforeRender(() => {
-        const deerModel = scene!.getMeshByName('deer')
+    // useBeforeRender(() => {
+    //     const deerModel = scene!.getMeshByName('deer')
 
-        if (!deerModel) {
-            return
-        }
+    //     if (!deerModel) {
+    //         return
+    //     }
 
-        const newActiveAudioTextMarker = meshes.current.find((mesh) =>
-            mesh.intersectsMesh(deerModel)
-        )
+    //     const newActiveAudioTextMarker = meshes.current.find((mesh) =>
+    //         mesh.intersectsMesh(deerModel)
+    //     )
 
-        if (!activeAudioTextMarker.current && newActiveAudioTextMarker) {
-            setSubtitles(newActiveAudioTextMarker.metadata.text)
-        } else if (activeAudioTextMarker.current && !newActiveAudioTextMarker) {
-            setSubtitles('')
-        }
+    //     if (!activeAudioTextMarker.current && newActiveAudioTextMarker) {
+    //         setSubtitles(newActiveAudioTextMarker.metadata.text)
+    //     } else if (activeAudioTextMarker.current && !newActiveAudioTextMarker) {
+    //         setSubtitles('')
+    //     }
 
-        activeAudioTextMarker.current = newActiveAudioTextMarker
-    })
+    //     activeAudioTextMarker.current = newActiveAudioTextMarker
+    // })
 
     function initAudioTextMarkers(worldModel: ILoadedModel) {
         meshes.current = getModelObjects(worldModel, 'Subtitles')
