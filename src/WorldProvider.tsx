@@ -50,6 +50,7 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
                     rootUrl={`${process.env.PUBLIC_URL}/models/`}
                     sceneFilename="World.glb"
                     onModelLoaded={onModelLoaded}
+                    checkCollisions={false}
                 />
             </Suspense>
         </WorldContext.Provider>

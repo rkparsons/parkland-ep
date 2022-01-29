@@ -65,8 +65,8 @@ const DeerModel: FC<ModelProps> = ({
                 scaleToDimension={3}
                 rotation={new Vector3(0, Tools.ToRadians(180), 0)}
                 onModelLoaded={onModelLoaded}
-                checkCollisions={true}
                 rotationQuaternion={Quaternion.Identity()}
+                checkCollisions={false}
             />
         </Suspense>
     )

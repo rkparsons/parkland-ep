@@ -44,7 +44,7 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
         meshes.current.forEach((mesh, index) => {
             mesh.isPickable = false
             mesh.isVisible = false
-            mesh.checkCollisions = true
+            mesh.checkCollisions = false
 
             attachTextToMesh(mesh, subtitleTexts[index])
 
