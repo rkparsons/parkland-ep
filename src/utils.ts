@@ -94,3 +94,7 @@ export function attachSoundToMesh(
 
     audioLoops.current.push(sound)
 }
+
+export function attachTextToMesh(mesh: AbstractMesh, text: string) {
+    mesh.metadata.text = text
+}
