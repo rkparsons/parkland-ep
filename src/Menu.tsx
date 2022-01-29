@@ -79,7 +79,7 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                         onClick={openMenu}
                         onKeyDown={() => ({})}
                     >
-                        <span className="BackLink">Exit</span>
+                        <span className="BackLink">EXIT</span>
                     </div>
                 </>
             )}
