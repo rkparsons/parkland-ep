@@ -145,6 +145,13 @@
     z-index: 1000;
 }
 
+@media (min-width: 1024px) {
+    .SliderContainer {
+        transform-origin: top right;
+        transform: rotate(270deg) translate(0px, -200px);
+    }
+}
+
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
     .Slider {
         overflow: hidden;

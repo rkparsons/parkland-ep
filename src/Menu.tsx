@@ -70,7 +70,6 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                             value={volume}
                             onChange={(event) => setVolume(parseInt(event.currentTarget.value))}
                             className="Slider"
-                            onClick={() => console.log('hello')}
                         />
                     </div>
                     <div
