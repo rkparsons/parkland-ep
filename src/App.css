@@ -199,6 +199,12 @@
     align-items: center;
     justify-content: center;
     pointer-events: none;
+    transition: opacity 1s;
+    opacity: 1;
+}
+
+.SubtitlesContainer.FadeOut {
+    opacity: 0;
 }
 
 .SubtitlesText {
