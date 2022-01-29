@@ -20,26 +20,22 @@ type ViewProps = {
     audioLoops: MutableRefObject<Sound[]>
 }
 // todo: move tweakable params to .env
-const DeerScene: FC<ViewProps> = ({ audioLoops }) => {
-    console.log('DeerScene')
-
-    return (
-        <Scene clearColor={new Color4(162 / 255, 140 / 255, 147 / 255, 1)}>
-            <AudioProvider audioLoops={audioLoops}>
-                <WorldProvider>
-                    <CameraProvider>
-                        {/* <hemisphericLight name="hemi-light" intensity={1} direction={Vector3.Up()} />
-                <pointLight name="sun" position={new Vector3(0, 400, 0)} intensity={1000} /> */}
-                        {/* <Sky /> */}
-                        {/* <SkyAnimated /> */}
-                        <DeerWithPointAndClickControls />
-                        {/* <AmbientSound /> */}
-                        {/* <PostProcessing /> */}
-                    </CameraProvider>
-                </WorldProvider>
-            </AudioProvider>
-        </Scene>
-    )
-}
+const DeerScene: FC<ViewProps> = ({ audioLoops }) => (
+    <Scene clearColor={new Color4(162 / 255, 140 / 255, 147 / 255, 1)}>
+        <AudioProvider audioLoops={audioLoops}>
+            <WorldProvider>
+                <CameraProvider>
+                    {/* <hemisphericLight name="hemi-light" intensity={1} direction={Vector3.Up()} />
+    <pointLight name="sun" position={new Vector3(0, 400, 0)} intensity={1000} /> */}
+                    {/* <Sky /> */}
+                    {/* <SkyAnimated /> */}
+                    <DeerWithPointAndClickControls />
+                    {/* <AmbientSound /> */}
+                    {/* <PostProcessing /> */}
+                </CameraProvider>
+            </WorldProvider>
+        </AudioProvider>
+    </Scene>
+)
 
 export default DeerScene

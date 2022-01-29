@@ -15,7 +15,6 @@ type ViewProps = {
 }
 
 const WorldProvider: FC<ViewProps> = ({ children }) => {
-    console.log('WorldProvider')
     const { initShards } = useShards()
     const { initSpikes } = useSpikes()
     const { initSolids } = useSolids()
