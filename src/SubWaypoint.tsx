@@ -21,7 +21,7 @@ const SubWaypoint: FC<ViewProps> = ({ index, isActive, subWaypoints, path }) => 
             path.direction.scale((index + 1) / subWaypoints.current.length)
         )
 
-        snapToTerrain(new Ray(origin.addInPlace(Vector3.Down().scale(10)), Vector3.Up(), 20))
+        snapToTerrain(new Ray(origin.addInPlace(Vector3.Down().scale(100)), Vector3.Up(), 200))
     }, [path])
 
     function snapToTerrain(ray: Ray) {
