@@ -50,6 +50,7 @@
 .App {
     width: 100vw;
     height: 100vh;
+    min-height: -webkit-fill-available;
     background-color: rgb(162, 140, 147);
 }
 
@@ -61,8 +62,8 @@
 }
 
 .Menu {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
@@ -106,8 +107,8 @@
 }
 
 .Controls {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
@@ -194,7 +195,7 @@
     position: absolute;
     bottom: 100px;
     left: 0;
-    width: 100vw;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
