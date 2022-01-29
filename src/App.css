@@ -33,18 +33,23 @@
 @keyframes blinkingText {
     0% {
         color: white;
+        text-shadow: 2px 2px black;
     }
     49% {
         color: white;
+        text-shadow: 2px 2px black;
     }
     60% {
         color: transparent;
+        text-shadow: 2px 2px transparent;
     }
     99% {
         color: transparent;
+        text-shadow: 2px 2px transparent;
     }
     100% {
         color: white;
+        text-shadow: 2px 2px black;
     }
 }
 
@@ -102,7 +107,8 @@
 
 .StartText {
     color: white;
-    font-size: 30pt;
+    font-size: 38pt;
+    text-shadow: 2px 2px #000000;
     animation: blinkingText 1s infinite;
     position: absolute;
 }
