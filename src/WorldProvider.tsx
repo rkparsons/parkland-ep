@@ -23,7 +23,7 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
     const { init2Spikes } = use2Spikes()
     const { initSolids } = useSolids()
     const { initStars } = useStars()
-    // const { initAudioTextMarkers } = useAudioTextMarkers(setSubtitles)
+    const { initAudioTextMarkers } = useAudioTextMarkers(setSubtitles)
 
     useAmbientSound('desert', 'audio/desertAmbience.mp3')
     const { ground, initGround } = useGround()
@@ -36,7 +36,7 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
         initSolids(worldModel)
         initStars(worldModel)
         initGround(worldModel)
-        // initAudioTextMarkers(worldModel)
+        initAudioTextMarkers(worldModel)
     }
 
     return (
