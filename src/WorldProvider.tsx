@@ -39,7 +39,7 @@ const WorldProvider: FC<ViewProps> = ({ children }) => {
                     name="world"
                     position={Vector3.Zero()}
                     scaling={new Vector3(10, 10, 10)}
-                    rootUrl={`${process.env.PUBLIC_URL}/`}
+                    rootUrl={`${process.env.PUBLIC_URL}/models/`}
                     sceneFilename="World.glb"
                     onModelLoaded={onModelLoaded}
                 />

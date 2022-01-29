@@ -53,7 +53,7 @@ const Waypoint: FC<ViewProps> = ({ character, waypoint, headBone, distanceToWayp
             <Model
                 name="waypointMarker"
                 position={waypoint.current?.position}
-                rootUrl={`${process.env.PUBLIC_URL}/`}
+                rootUrl={`${process.env.PUBLIC_URL}/models/`}
                 onModelLoaded={onModelLoaded}
                 sceneFilename="Waypoint.glb"
                 scaleToDimension={1.25}

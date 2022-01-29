@@ -60,7 +60,7 @@ const DeerModel: FC<ModelProps> = ({
             <Model
                 name="deer"
                 position={new Vector3(89.21744186810362, 81.00960779873975, 97.87237428264427)}
-                rootUrl={`${process.env.PUBLIC_URL}/`}
+                rootUrl={`${process.env.PUBLIC_URL}/models/`}
                 sceneFilename="Deer.glb"
                 scaleToDimension={3}
                 rotation={new Vector3(0, Tools.ToRadians(180), 0)}
