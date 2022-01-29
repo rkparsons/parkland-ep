@@ -1,6 +1,6 @@
 import { FC, MutableRefObject, ReactNode, Suspense, memo, useEffect, useRef } from 'react'
-import { ILoadedModel, Model } from 'react-babylonjs'
-import { Sound, Vector3 } from '@babylonjs/core'
+import { ILoadedModel, Model, useScene } from 'react-babylonjs'
+import { SceneOptimizer, Sound, Vector3 } from '@babylonjs/core'
 
 import WorldContext from './WorldContext'
 import use2Spikes from './use2Spikes'
@@ -24,6 +24,7 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
     const { initSolids } = useSolids()
     const { initStars } = useStars()
     const { initAudioTextMarkers } = useAudioTextMarkers(setSubtitles)
+    const scene = useScene()
 
     useAmbientSound('desert', 'audio/desertAmbience.mp3')
     const { ground, initGround } = useGround()
@@ -38,6 +39,12 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
         initGround(worldModel)
         initAudioTextMarkers(worldModel)
     }
+
+    useEffect(() => {
+        if (scene) {
+            SceneOptimizer.OptimizeAsync(scene)
+        }
+    }, [scene])
 
     return (
         <WorldContext.Provider value={{ ground }}>
