@@ -59,8 +59,8 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
             const { x, y, z } = camera.current.position
             camera.current.position = Vector3.Lerp(
                 camera.current.position,
-                new Vector3(x, y + 2, z),
-                0.05
+                new Vector3(x, y + 1, z),
+                0.01
             )
         }
     }
