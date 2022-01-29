@@ -1,7 +1,8 @@
 :root {
-    --page-padding: 20px;
+    --page-padding: 26px;
     --slider-length: 270px;
     --slider-width: 15px;
+    --grey: rgb(60, 60, 59);
 }
 
 @media (max-width: 1023px) {
@@ -103,7 +104,7 @@
     color: white;
     font-size: 30pt;
     animation: blinkingText 1s infinite;
-    z-index: 100;
+    position: absolute;
 }
 
 .Controls {
@@ -116,25 +117,31 @@
 }
 
 .Footer {
-    font-size: 12pt;
+    font-size: 11pt;
     position: absolute;
     bottom: var(--page-padding);
     right: var(--page-padding);
+    color: var(--grey);
 }
 
 .SoundWarning {
     display: flex;
     align-items: center;
-    font-size: 12pt;
+    font-size: 16pt;
     position: absolute;
     top: var(--page-padding);
     left: var(--page-padding);
     line-height: 1em;
 }
 
+svg {
+    fill: var(--grey);
+}
+
 .SoundWarningText {
-    margin-top: 2px;
-    margin-left: 5px;
+    margin-top: 3px;
+    margin-left: 8px;
+    color: var(--grey);
 }
 
 .BackLink {
