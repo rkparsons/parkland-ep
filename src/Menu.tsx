@@ -38,7 +38,7 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                 <div className={`Backdrop ${isActive ? '' : 'IgnoreClick'}`} />
                 {isActive && <p className="StartText">Click to start</p>}
             </div>
-            <div className="Footer">&copy; SINE LANGUAGE RECORDS</div>
+            <div className="Footer">&copy; 2022 SINE LANGUAGE RECORDS</div>
             {isActive && (
                 <div className="SoundWarning">
                     <svg
