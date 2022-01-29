@@ -1,5 +1,13 @@
 :root {
     --page-padding: 20px;
+    --slider-length: 270px;
+    --slider-width: 15px;
+}
+
+@media (max-width: 1023px) {
+    :root {
+        --slider-length: 200px;
+    }
 }
 
 * {
@@ -148,21 +156,21 @@
 @media (min-width: 1024px) {
     .SliderContainer {
         transform-origin: top right;
-        transform: rotate(270deg) translate(0px, -200px);
+        transform: rotate(270deg) translate(0px, calc(var(--slider-length) * -1));
     }
 }
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
     .Slider {
         overflow: hidden;
-        width: 200px;
+        width: var(--slider-length);
         -webkit-appearance: none;
         background-color: rgba(0, 0, 0, 0.2);
         cursor: pointer;
     }
 
     .Slider::-webkit-slider-runnable-track {
-        height: 20px;
+        height: var(--slider-width);
         -webkit-appearance: none;
         color: black;
         margin-top: -1px;
@@ -171,8 +179,8 @@
     .Slider::-webkit-slider-thumb {
         width: 0px;
         -webkit-appearance: none;
-        height: 20px;
-        box-shadow: -200px 0 0 200px rgba(0, 0, 0, 0.5);
+        height: var(--slider-width);
+        box-shadow: calc(var(--slider-length) * -1) 0 0 var(--slider-length) rgba(0, 0, 0, 0.5);
     }
 }
 .Slider::-moz-range-progress .Slider::-ms-fill-lower {
