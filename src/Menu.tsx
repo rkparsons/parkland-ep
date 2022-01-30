@@ -5,13 +5,23 @@ type ViewProps = {
     audioLoops: MutableRefObject<Sound[]>
 }
 
+enum Mode {
+    MENU,
+    INFO,
+    GAME
+}
+
 const Menu: FC<ViewProps> = ({ audioLoops }) => {
     const [isInitialised, setIsInitialised] = useState(false)
-    const [isActive, setIsActive] = useState(true)
+    const [mode, setMode] = useState(Mode.MENU)
     const [volume, setVolume] = useState(75)
 
     function closeMenu() {
-        setIsActive(false)
+        if (mode === Mode.INFO) {
+            return
+        }
+
+        setMode(Mode.GAME)
 
         if (!isInitialised) {
             setIsInitialised(true)
@@ -24,8 +34,18 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
 
     function openMenu(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         event.stopPropagation()
-        setIsActive(true)
         Engine.audioEngine.setGlobalVolume(0)
+        setMode(Mode.MENU)
+    }
+
+    function openInfo(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        event.stopPropagation()
+        setMode(Mode.INFO)
+    }
+
+    function closeInfo(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        event.stopPropagation()
+        setMode(Mode.MENU)
     }
 
     useEffect(() => {
@@ -34,13 +54,13 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
 
     return (
         <div role="button" tabIndex={0} className="Menu" onClick={closeMenu} onKeyDown={closeMenu}>
-            <div className={`Overlay ${isActive ? '' : 'FadeOut'}`}>
-                <div className={`Backdrop ${isActive ? '' : 'IgnoreClick'}`} />
+            <div className={`Overlay ${mode !== Mode.GAME ? '' : 'FadeOut'}`}>
+                <div className={`Backdrop ${mode !== Mode.GAME ? '' : 'IgnoreClick'}`} />
             </div>
-            <div className={`Footer ${!isActive && 'DesktopOnly'}`}>
-                <b>&copy; 2022 SINE LANGUAGE RECORDS</b>
+            <div className={`Footer ${mode === Mode.GAME && 'DesktopOnly'}`}>
+                <b>&copy; 2022 SINE LANGUAGE RECORDS {mode}</b>
             </div>
-            {isActive && (
+            {mode === Mode.MENU && (
                 <div className="MenuActive">
                     <p className="StartText">Click to start</p>
                     <div className="SoundWarning">
@@ -62,9 +82,36 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                             <b>SOUND ON</b>
                         </span>
                     </div>
+                    <div
+                        role="button"
+                        tabIndex={0}
+                        className="Controls"
+                        onClick={openInfo}
+                        onKeyDown={() => ({})}
+                    >
+                        <span className="Link">
+                            <b>INFO</b>
+                        </span>
+                    </div>
                 </div>
             )}
-            {!isActive && (
+            {mode === Mode.INFO && (
+                <>
+                    <div className="Info">Music by Mailer</div>
+                    <div
+                        role="button"
+                        tabIndex={0}
+                        className="Controls"
+                        onClick={closeInfo}
+                        onKeyDown={() => ({})}
+                    >
+                        <span className="Link">
+                            <b>CLOSE</b>
+                        </span>
+                    </div>
+                </>
+            )}
+            {mode === Mode.GAME && (
                 <>
                     <div className="SliderContainer">
                         <input
@@ -83,7 +130,7 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                         onClick={openMenu}
                         onKeyDown={() => ({})}
                     >
-                        <span className="BackLink">
+                        <span className="Link">
                             <b>EXIT</b>
                         </span>
                     </div>
