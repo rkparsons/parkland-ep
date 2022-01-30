@@ -1,4 +1,4 @@
-import { DirectionalLight, Mesh, ShadowGenerator } from '@babylonjs/core'
+import { AbstractMesh, DirectionalLight, Mesh, ShadowGenerator } from '@babylonjs/core'
 
 import { ILoadedModel } from 'react-babylonjs'
 import { useRef } from 'react'
@@ -16,7 +16,7 @@ const useShadows = () => {
         shadows.current.darkness = 0.8
     }
 
-    function addShadow(mesh: Mesh) {
+    function addShadow(mesh: AbstractMesh) {
         if (!shadows.current) {
             return
         }
