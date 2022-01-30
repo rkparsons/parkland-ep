@@ -79,8 +79,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
     pointer-events: none;
+}
+
+.Pointer {
+    cursor: pointer;
 }
 
 .MenuActive {
@@ -181,6 +184,7 @@ svg {
     top: var(--page-padding);
     right: var(--page-padding);
     pointer-events: all;
+    cursor: pointer;
 }
 
 .SliderContainer {
@@ -264,6 +268,7 @@ svg {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     color: white;
     font-size: var(--font-size-large);
     text-shadow: 2px 2px var(--grey);

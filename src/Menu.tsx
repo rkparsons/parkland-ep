@@ -53,7 +53,13 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
     }, [volume])
 
     return (
-        <div role="button" tabIndex={0} className="Menu" onClick={closeMenu} onKeyDown={closeMenu}>
+        <div
+            role="button"
+            tabIndex={0}
+            className={`Menu ${mode === Mode.MENU && 'Pointer'}`}
+            onClick={closeMenu}
+            onKeyDown={closeMenu}
+        >
             <div className={`Overlay ${mode !== Mode.GAME ? '' : 'FadeOut'}`}>
                 <div className={`Backdrop ${mode !== Mode.GAME ? '' : 'IgnoreClick'}`} />
             </div>
@@ -97,7 +103,23 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
             )}
             {mode === Mode.INFO && (
                 <>
-                    <div className="Info">Music by Mailer</div>
+                    <div className="Info">
+                        Music by Mailer
+                        <br />
+                        <br />
+                        Listen to Parkland
+                        <br />
+                        Spotify
+                        <br />
+                        BandCamp
+                        <br />
+                        <br />
+                        Website by
+                        <br />
+                        Joana Sobral
+                        <br />
+                        Richard Parsons
+                    </div>
                     <div
                         role="button"
                         tabIndex={0}
