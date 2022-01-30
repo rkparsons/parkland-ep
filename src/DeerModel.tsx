@@ -44,14 +44,15 @@ const DeerModel: FC<ModelProps> = ({
         setTimeout(() => {
             const shadowGenerator = new ShadowGenerator(2048, scene!.lights[0] as DirectionalLight)
             shadowGenerator.useBlurExponentialShadowMap = true
-            shadowGenerator.blurKernel = 32
-            shadowGenerator.darkness = 0.2
+            shadowGenerator.useKernelBlur = true
+            shadowGenerator.blurKernel = 64
+            shadowGenerator.darkness = 0.5
 
             const meshes = model.current!.meshes!
             meshes[0].receiveShadows = true
             //shadows
             for (let i = 0; i < meshes.length; i++) {
-                shadowGenerator.getShadowMap()!.renderList!.push(meshes[i])
+                shadowGenerator.addShadowCaster(meshes[i])
             }
         }, 100)
     }
