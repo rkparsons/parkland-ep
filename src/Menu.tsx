@@ -41,7 +41,7 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                 <b>&copy; 2022 SINE LANGUAGE RECORDS</b>
             </div>
             {isActive && (
-                <>
+                <div className="MenuActive">
                     <p className="StartText">Click to start</p>
                     <div className="SoundWarning">
                         <svg
@@ -62,7 +62,7 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                             <b>SOUND ON</b>
                         </span>
                     </div>
-                </>
+                </div>
             )}
             {!isActive && (
                 <>
