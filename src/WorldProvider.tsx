@@ -1,12 +1,13 @@
+import { DirectionalLight, ShadowGenerator, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, Suspense } from 'react'
 import { ILoadedModel, Model } from 'react-babylonjs'
 
-import { Vector3 } from '@babylonjs/core'
 import WorldContext from './WorldContext'
 import use2Spikes from './use2Spikes'
 import useAmbientSound from './useAmbientSound'
 import useAudioTextMarkers from './useAudioTextMarkers'
 import useGround from './useGround'
+import useShadows from './useShadows'
 import useShards from './useShards'
 import useSolids from './useSolids'
 import useSpikes from './useSpikes'
@@ -27,9 +28,12 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
 
     useAmbientSound('desert', 'audio/desertAmbience.mp3')
     const { ground, initGround } = useGround()
+    const { initShadows, addShadow } = useShadows()
 
     function onModelLoaded(worldModel: ILoadedModel) {
         // worldModel.meshes?.forEach((mesh) => console.log(mesh.name))
+
+        initShadows(worldModel)
         initShards(worldModel)
         initSpikes(worldModel)
         init2Spikes(worldModel)
@@ -40,7 +44,7 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
     }
 
     return (
-        <WorldContext.Provider value={{ ground }}>
+        <WorldContext.Provider value={{ ground, addShadow }}>
             {children}
             <Suspense fallback={null}>
                 <Model

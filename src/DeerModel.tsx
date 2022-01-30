@@ -1,10 +1,11 @@
-import { DirectionalLight, Quaternion, ShadowGenerator, Tools, Vector3 } from '@babylonjs/core'
 import { FC, Suspense } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
+import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
 
 import { ModelProps } from './types'
 import useAnimation from './useAnimation'
 import useCameraContext from './useCameraContext'
+import useWorldContext from './useWorldContext'
 
 // todo: replace with getSpeed methods for left, right and straight
 const DeerModel: FC<ModelProps> = ({
@@ -20,6 +21,7 @@ const DeerModel: FC<ModelProps> = ({
     const walk = useAnimation('WalkForward')
     const left = useAnimation('TurnLeft')
     const right = useAnimation('TurnRight')
+    const { addShadow } = useWorldContext()
 
     const onModelLoaded = (loadedModel: ILoadedModel) => {
         model.current = loadedModel
@@ -42,15 +44,7 @@ const DeerModel: FC<ModelProps> = ({
         setLockedTarget(loadedModel.rootMesh!)
 
         setTimeout(() => {
-            const shadowGenerator = new ShadowGenerator(1024, scene!.lights[0] as DirectionalLight)
-            shadowGenerator.useBlurExponentialShadowMap = true
-            shadowGenerator.useKernelBlur = true
-            shadowGenerator.blurKernel = 32
-            shadowGenerator.darkness = 0.8
-
-            const meshes = model.current!.meshes!
-            meshes[0].receiveShadows = true
-            shadowGenerator.addShadowCaster(meshes[0])
+            addShadow(model.current!.meshes![0])
         }, 100)
     }
 
