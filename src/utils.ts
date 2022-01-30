@@ -2,11 +2,17 @@ import {
     AbstractMesh,
     ActionManager,
     Angle,
+    ArcRotateCamera,
+    DirectionalLight,
+    Engine,
     ExecuteCodeAction,
     Matrix,
     Mesh,
     Quaternion,
     Ray,
+    Scene,
+    SceneLoader,
+    ShadowGenerator,
     Sound,
     Space,
     Vector3
@@ -97,4 +103,63 @@ export function attachSoundToMesh(
 
 export function attachTextToMesh(mesh: AbstractMesh, text: string) {
     mesh.metadata.text = text
+}
+
+export function renderScene() {
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement // Get the canvas element
+    const engine = new Engine(canvas, true, { disableWebGL2Support: true }) // Generate the BABYLON 3D engine
+    const scene = new Scene(engine)
+    const camera = new ArcRotateCamera('Scene0a Camera', 1.8, 1.4, 10.4, Vector3.Zero(), scene)
+    camera.attachControl(canvas, true)
+
+    const light = new DirectionalLight('Dir', new Vector3(0, -0.5, -1.0), scene)
+    light.position = new Vector3(0, 200, 6)
+    light.direction = Vector3.Down()
+    light.intensity = 0.7
+
+    const shadowGenerator = new ShadowGenerator(2048, light)
+    shadowGenerator.useBlurExponentialShadowMap = true
+    shadowGenerator.blurKernel = 32
+    shadowGenerator.darkness = 0.2
+
+    SceneLoader.ImportMesh(
+        '',
+        'https://dl.dropbox.com/s/5k48146islxdkts/',
+        'DeerInPlaceMotionNewBone.glb',
+        scene,
+        function (meshes, particleSystems, skeletons, animationGroups) {
+            meshes[0].receiveShadows = true
+            meshes[0].rotation = new Vector3(0, 1, 0)
+            //shadows
+            for (let i = 0; i < meshes.length; i++) {
+                shadowGenerator.getShadowMap()!.renderList!.push(meshes[i])
+            }
+        }
+    )
+
+    SceneLoader.ImportMesh(
+        '',
+        'https://dl.dropbox.com/s/0sz41w3gfe1j93b/',
+        'Mailer_Planet4.glb',
+        scene,
+        function (newMeshes, particleSystems, skeletons, animationGroups) {
+            newMeshes[0].position = new Vector3(0, -100, 0)
+            newMeshes[0].scaling = new Vector3(10, 10, 10)
+            const ground = newMeshes.find((x) => x.name === 'Planet Top')!
+
+            ground.receiveShadows = true
+        }
+    )
+
+    console.log(scene)
+
+    // Register a render loop to repeatedly render the scene
+    engine.runRenderLoop(function () {
+        scene.render()
+    })
+
+    // Watch for browser/canvas resize events
+    window.addEventListener('resize', function () {
+        engine.resize()
+    })
 }

@@ -1,25 +1,25 @@
 import './App.css'
 import '@babylonjs/loaders/glTF'
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import DeerScene from './DeerScene'
-import { Engine } from 'react-babylonjs'
-import Menu from './Menu'
 import { Sound } from '@babylonjs/core'
-import Subtitles from './Subtitles'
+import { renderScene } from './utils'
 
 const App: React.FC = () => {
     const audioLoops = useRef<Sound[]>([])
     const [subtitles, setSubtitles] = useState('')
 
+    useEffect(() => {
+        renderScene()
+    }, [])
+
     return (
         <div className="App">
-            <Engine antialias adaptToDeviceRatio canvasId="canvas">
+            <canvas id="canvas" touch-action="none" />
+            {/* <Engine antialias adaptToDeviceRatio canvasId="canvas">
                 <DeerScene audioLoops={audioLoops} setSubtitles={setSubtitles} />
-            </Engine>
-            <Menu audioLoops={audioLoops} />
-            <Subtitles subtitles={subtitles} />
+            </Engine> */}
         </div>
     )
 }
