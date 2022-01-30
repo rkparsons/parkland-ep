@@ -41,21 +41,19 @@ const DeerModel: FC<ModelProps> = ({
         scene!.audioListenerPositionProvider = () => model.current!.rootMesh!.absolutePosition
         setLockedTarget(loadedModel.rootMesh!)
 
-        const light = new DirectionalLight('Dir', Vector3.Down(), scene!)
-        light.position = new Vector3(89.21744186810362, 85.00960779873975, 97.87237428264427)
-        light.intensity = 0.7
+        setTimeout(() => {
+            const shadowGenerator = new ShadowGenerator(2048, scene!.lights[0] as DirectionalLight)
+            shadowGenerator.useBlurExponentialShadowMap = true
+            shadowGenerator.blurKernel = 32
+            shadowGenerator.darkness = 0.2
 
-        const shadowGenerator = new ShadowGenerator(2048, light)
-        shadowGenerator.useBlurExponentialShadowMap = true
-        shadowGenerator.blurKernel = 32
-        shadowGenerator.darkness = 0.2
-
-        const meshes = model.current.meshes!
-        meshes[0].receiveShadows = true
-        //shadows
-        for (let i = 0; i < meshes.length; i++) {
-            shadowGenerator.getShadowMap()!.renderList!.push(meshes[i])
-        }
+            const meshes = model.current!.meshes!
+            meshes[0].receiveShadows = true
+            //shadows
+            for (let i = 0; i < meshes.length; i++) {
+                shadowGenerator.getShadowMap()!.renderList!.push(meshes[i])
+            }
+        }, 100)
     }
 
     useBeforeRender(() => {
