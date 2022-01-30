@@ -15,7 +15,12 @@ const App: React.FC = () => {
 
     return (
         <div className="App">
-            <Engine antialias adaptToDeviceRatio canvasId="canvas">
+            <Engine
+                antialias
+                adaptToDeviceRatio
+                canvasId="canvas"
+                engineOptions={{ disableWebGL2Support: true }}
+            >
                 <DeerScene audioLoops={audioLoops} setSubtitles={setSubtitles} />
             </Engine>
             <Menu audioLoops={audioLoops} />

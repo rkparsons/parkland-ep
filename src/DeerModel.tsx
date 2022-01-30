@@ -1,6 +1,6 @@
+import { DirectionalLight, Quaternion, ShadowGenerator, Tools, Vector3 } from '@babylonjs/core'
 import { FC, Suspense } from 'react'
 import { ILoadedModel, Model, useBeforeRender, useScene } from 'react-babylonjs'
-import { Quaternion, Tools, Vector3 } from '@babylonjs/core'
 
 import { ModelProps } from './types'
 import useAnimation from './useAnimation'
@@ -40,6 +40,22 @@ const DeerModel: FC<ModelProps> = ({
 
         scene!.audioListenerPositionProvider = () => model.current!.rootMesh!.absolutePosition
         setLockedTarget(loadedModel.rootMesh!)
+
+        const light = new DirectionalLight('Dir', Vector3.Down(), scene!)
+        light.position = new Vector3(89.21744186810362, 85.00960779873975, 97.87237428264427)
+        light.intensity = 0.7
+
+        const shadowGenerator = new ShadowGenerator(2048, light)
+        shadowGenerator.useBlurExponentialShadowMap = true
+        shadowGenerator.blurKernel = 32
+        shadowGenerator.darkness = 0.2
+
+        const meshes = model.current.meshes!
+        meshes[0].receiveShadows = true
+        //shadows
+        for (let i = 0; i < meshes.length; i++) {
+            shadowGenerator.getShadowMap()!.renderList!.push(meshes[i])
+        }
     }
 
     useBeforeRender(() => {
