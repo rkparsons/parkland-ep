@@ -42,11 +42,11 @@ const DeerModel: FC<ModelProps> = ({
         setLockedTarget(loadedModel.rootMesh!)
 
         setTimeout(() => {
-            const shadowGenerator = new ShadowGenerator(2048, scene!.lights[0] as DirectionalLight)
+            const shadowGenerator = new ShadowGenerator(1024, scene!.lights[0] as DirectionalLight)
             shadowGenerator.useBlurExponentialShadowMap = true
             shadowGenerator.useKernelBlur = true
-            shadowGenerator.blurKernel = 64
-            shadowGenerator.darkness = 0.5
+            shadowGenerator.blurKernel = 32
+            shadowGenerator.darkness = 0.8
 
             const meshes = model.current!.meshes!
             meshes[0].receiveShadows = true
