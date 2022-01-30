@@ -37,7 +37,7 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
             <div className={`Overlay ${isActive ? '' : 'FadeOut'}`}>
                 <div className={`Backdrop ${isActive ? '' : 'IgnoreClick'}`} />
             </div>
-            <div className="Footer">
+            <div className={`Footer ${!isActive && 'DesktopOnly'}`}>
                 <b>&copy; 2022 SINE LANGUAGE RECORDS</b>
             </div>
             {isActive && (

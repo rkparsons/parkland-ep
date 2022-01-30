@@ -251,3 +251,9 @@ svg {
     font-size: var(--font-size-large);
     text-shadow: 2px 2px var(--grey);
 }
+
+@media (max-width: 1023px) {
+    .DesktopOnly {
+        display: none;
+    }
+}
