@@ -201,7 +201,7 @@ svg {
 }
 
 .ExternalLink:hover {
-    color: black;
+    color: rgb(162, 140, 147);
 }
 .SliderContainer {
     position: absolute;
