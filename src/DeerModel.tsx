@@ -50,10 +50,7 @@ const DeerModel: FC<ModelProps> = ({
 
             const meshes = model.current!.meshes!
             meshes[0].receiveShadows = true
-            //shadows
-            for (let i = 0; i < meshes.length; i++) {
-                shadowGenerator.addShadowCaster(meshes[i])
-            }
+            shadowGenerator.addShadowCaster(meshes[0])
         }, 100)
     }
 
