@@ -34,11 +34,11 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
         // worldModel.meshes?.forEach((mesh) => console.log(mesh.name))
 
         initShadows(worldModel)
-        initShards(worldModel)
-        initSpikes(worldModel)
-        init2Spikes(worldModel)
-        initSolids(worldModel)
-        initStars(worldModel)
+        initShards(worldModel, addShadow)
+        initSpikes(worldModel, addShadow)
+        init2Spikes(worldModel, addShadow)
+        initSolids(worldModel, addShadow)
+        initStars(worldModel, addShadow)
         initGround(worldModel)
         initAudioTextMarkers(worldModel)
     }

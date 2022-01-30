@@ -14,9 +14,14 @@ const useWorldMeshes = (
     const meshes = useRef<AbstractMesh[]>([])
     const { audioLoops } = useAudioContext()
 
-    function init(worldModel: ILoadedModel) {
+    function init(worldModel: ILoadedModel, addShadow: (mesh: AbstractMesh) => void) {
         meshes.current = getModelObjects(worldModel, typeName)
         meshes.current.forEach(cursorPointerOnHover)
+        meshes.current.forEach((mesh) => {
+            setTimeout(() => {
+                addShadow(mesh)
+            }, 1000)
+        })
 
         if (spatialSound) {
             meshes.current.forEach((mesh) => attachSoundToMesh(mesh, spatialSound, audioLoops))

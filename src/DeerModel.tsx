@@ -73,6 +73,7 @@ const DeerModel: FC<ModelProps> = ({
                 onModelLoaded={onModelLoaded}
                 rotationQuaternion={Quaternion.Identity()}
                 checkCollisions={false}
+                receiveShadows={true}
             />
         </Suspense>
     )
