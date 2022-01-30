@@ -1,9 +1,9 @@
-import { AbstractMesh, ArcRotateCamera, Color3, Mesh, Ray, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, ArcRotateCamera, Ray, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, useRef } from 'react'
-import { useBeforeRender, useScene } from 'react-babylonjs'
 
 import CameraContext from './cameraContext'
 import { isMobile } from 'react-device-detect'
+import { useScene } from 'react-babylonjs'
 import useWorldContext from './useWorldContext'
 
 type ViewProps = {
