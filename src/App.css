@@ -187,6 +187,22 @@ svg {
     cursor: pointer;
 }
 
+.ExternalLink {
+    cursor: pointer;
+    transition: color 100ms;
+}
+
+.ExternalLink:link {
+    color: white;
+}
+
+.ExternalLink:visited {
+    color: white;
+}
+
+.ExternalLink:hover {
+    color: black;
+}
 .SliderContainer {
     position: absolute;
     pointer-events: all;
@@ -272,4 +288,5 @@ svg {
     color: white;
     font-size: var(--font-size-large);
     text-shadow: 2px 2px var(--grey);
+    z-index: 100;
 }

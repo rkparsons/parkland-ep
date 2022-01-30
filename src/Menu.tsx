@@ -107,18 +107,44 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                         Music by Mailer
                         <br />
                         <br />
-                        Listen to Parkland
+                        Listen to <i style={{ display: 'contents' }}>Parkland</i>
                         <br />
-                        Spotify
+                        <a
+                            href="https://open.spotify.com/artist/6qSGkHC8lI4xNgzthHti7T?si=0nt-EOJFRZGm2kCU4SgYQg"
+                            className="ExternalLink"
+                            style={{ display: 'contents', pointerEvents: 'all' }}
+                            target="blank"
+                        >
+                            Spotify
+                        </a>
                         <br />
-                        BandCamp
+                        <a
+                            href="https://slr.link/parkland-ep"
+                            className="ExternalLink"
+                            style={{ display: 'contents', pointerEvents: 'all' }}
+                            target="blank"
+                        >
+                            Bandcamp
+                        </a>
                         <br />
                         <br />
                         Website by
                         <br />
-                        Joana Sobral
+                        <a
+                            href="mailto:mjoanas@gmail.com"
+                            className="ExternalLink"
+                            style={{ display: 'contents', pointerEvents: 'all' }}
+                        >
+                            Joana Sobral
+                        </a>
                         <br />
-                        Richard Parsons
+                        <a
+                            href="mailto:hi@richardparsons.de"
+                            className="ExternalLink"
+                            style={{ display: 'contents', pointerEvents: 'all' }}
+                        >
+                            Richard Parsons
+                        </a>
                     </div>
                     <div
                         role="button"
