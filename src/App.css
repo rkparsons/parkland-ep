@@ -203,6 +203,7 @@ svg {
         overflow: hidden;
         width: var(--slider-length);
         -webkit-appearance: none;
+        border-radius: 0;
         background-color: rgba(0, 0, 0, 0.2);
         cursor: pointer;
     }
