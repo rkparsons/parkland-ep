@@ -3,6 +3,7 @@ import { FC, ReactNode, useRef } from 'react'
 import { useBeforeRender, useScene } from 'react-babylonjs'
 
 import CameraContext from './cameraContext'
+import { isMobile } from 'react-device-detect'
 import useWorldContext from './useWorldContext'
 
 type ViewProps = {
@@ -13,7 +14,7 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
     const scene = useScene()
     const camera = useRef<ArcRotateCamera>()
     const { ground } = useWorldContext()
-    const minimumRadius = 10
+    const minimumRadius = isMobile ? 14 : 10
     const maximumRadius = 25
 
     function setLockedTarget(mesh: AbstractMesh) {
