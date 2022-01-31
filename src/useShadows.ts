@@ -30,9 +30,9 @@ const useShadows = () => {
 
         shadows.current = new ShadowGenerator(1024, light)
         shadows.current.filteringQuality = ShadowGenerator.QUALITY_LOW
-        // shadows.current.useBlurExponentialShadowMap = true
-        // shadows.current.useKernelBlur = true
-        // shadows.current.blurKernel = 32
+        shadows.current.useBlurExponentialShadowMap = true
+        shadows.current.useKernelBlur = true
+        shadows.current.blurKernel = 32
         shadows.current.darkness = 0.8
     }
 
