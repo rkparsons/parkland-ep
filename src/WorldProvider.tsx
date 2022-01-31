@@ -4,6 +4,7 @@ import { ILoadedModel, Model } from 'react-babylonjs'
 import { Vector3 } from '@babylonjs/core'
 import WorldContext from './WorldContext'
 import use2Spikes from './use2Spikes'
+import use3Spikes from './use3Spikes'
 import useAmbientSound from './useAmbientSound'
 import useAudioTextMarkers from './useAudioTextMarkers'
 import useGround from './useGround'
@@ -23,6 +24,7 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
     const { initShards } = useShards()
     const { initSpikes } = useSpikes()
     const { init2Spikes } = use2Spikes()
+    const { init3Spikes } = use3Spikes()
     const { initSolids } = useSolids()
     const { initStars } = useStars()
     const { initAudioTextMarkers } = useAudioTextMarkers(setSubtitles)
@@ -37,6 +39,7 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
         initShards(worldModel)
         initSpikes(worldModel)
         init2Spikes(worldModel)
+        init3Spikes(worldModel)
         initSolids(worldModel)
         initStars(worldModel)
         initGround(worldModel)

@@ -61,14 +61,55 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
     }
 
     function initAudioTextMarkers(worldModel: ILoadedModel) {
-        initAudioTextMarker(worldModel, 'ST_TheseRockySlopes', 'text subtitle')
-        initAudioTextMarker(worldModel, 'ST_TheSunBurns', 'text subtitle')
-        initAudioTextMarker(worldModel, 'ST_TheWind', 'text subtitle')
-        initAudioTextMarker(worldModel, 'ST_TheWayIsHard', 'text subtitle')
-        initAudioTextMarker(worldModel, 'ST_BeepingNoise', 'text subtitle')
-        initAudioTextMarker(worldModel, 'ST_TheWayIsHard_2', 'text subtitle')
-        initAudioTextMarker(worldModel, 'ST_TheSunBurns_2', 'text subtitle')
-        initAudioTextMarker(worldModel, 'ST_TheAirFeels', 'text subtitle')
+        initAudioTextMarker(
+            worldModel,
+            'ST_TheseRockySlopes',
+            'These rocky slopes are treacherous',
+            'audio/beepHigh.mp3'
+        )
+        initAudioTextMarker(
+            worldModel,
+            'ST_TheSunBurns',
+            'The sun burns hot above',
+            'audio/beepHigh.mp3'
+        )
+        initAudioTextMarker(worldModel, 'ST_TheWind', 'The wind is howling', 'audio/beepHigh.mp3')
+        initAudioTextMarker(
+            worldModel,
+            'ST_TheWayIsHard',
+            'The way ahead is hard',
+            'audio/beepHigh.mp3'
+        )
+        initAudioTextMarker(
+            worldModel,
+            'ST_TheTerrain',
+            'These plains are vast',
+            'audio/beepHigh.mp3'
+        )
+        initAudioTextMarker(
+            worldModel,
+            'ST_TheWayIsHard_2',
+            'The way ahead is hard',
+            'audio/beepHigh.mp3'
+        )
+        initAudioTextMarker(
+            worldModel,
+            'ST_TheSunBurns_2',
+            'The sun burns hot above',
+            'audio/beepHigh.mp3'
+        )
+        initAudioTextMarker(
+            worldModel,
+            'ST_TheAirFeels',
+            'The air feels heavy here',
+            'audio/beepHigh.mp3'
+        )
+        initAudioTextMarker(
+            worldModel,
+            'ST_TheLandscape',
+            'The landscape seems familiar',
+            'audio/beepHigh.mp3'
+        )
     }
 
     return { initAudioTextMarkers }
