@@ -22,7 +22,11 @@ type ViewProps = {
 }
 // todo: move tweakable params to .env
 const DeerScene: FC<ViewProps> = ({ audioLoops, setSubtitles }) => (
-    <Scene clearColor={new Color4(162 / 255, 140 / 255, 147 / 255, 1)}>
+    <Scene
+        clearColor={new Color4(162 / 255, 140 / 255, 147 / 255, 1)}
+        autoClear={false}
+        autoClearDepthAndStencil={false}
+    >
         <AudioProvider audioLoops={audioLoops}>
             <WorldProvider setSubtitles={setSubtitles}>
                 <CameraProvider>
