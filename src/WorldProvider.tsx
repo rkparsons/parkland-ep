@@ -7,13 +7,12 @@ import use2Spikes from './use2Spikes'
 import useAmbientSound from './useAmbientSound'
 import useAudioTextMarkers from './useAudioTextMarkers'
 import useGround from './useGround'
+import useInspector from './useInspector'
 import useShadows from './useShadows'
 import useShards from './useShards'
 import useSolids from './useSolids'
 import useSpikes from './useSpikes'
 import useStars from './useStars'
-
-// import useInspector from './useInspector'
 
 type ViewProps = {
     children: ReactNode
@@ -27,7 +26,7 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
     const { initSolids } = useSolids()
     const { initStars } = useStars()
     const { initAudioTextMarkers } = useAudioTextMarkers(setSubtitles)
-    // useInspector()
+    useInspector()
 
     useAmbientSound('desert', 'audio/desertAmbience.mp3')
     const { ground, initGround } = useGround()
