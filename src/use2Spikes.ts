@@ -13,7 +13,7 @@ const use2Spikes = () => {
         },
         {
             url: 'audio/beepMid.mp3',
-            maxDistance: 30,
+            maxDistance: 50,
             volume: 0.1
         }
     )

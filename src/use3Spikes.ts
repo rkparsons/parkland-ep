@@ -13,7 +13,7 @@ const use3Spikes = () => {
         },
         {
             url: 'audio/beepLow.mp3',
-            maxDistance: 30,
+            maxDistance: 50,
             volume: 0.1
         }
     )

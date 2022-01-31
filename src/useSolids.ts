@@ -11,7 +11,7 @@ const useSolids = () => {
         },
         {
             url: 'audio/pads.mp3',
-            maxDistance: 30,
+            maxDistance: 50,
             volume: 0.1
         }
     )
