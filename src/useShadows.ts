@@ -35,7 +35,7 @@ const useShadows = () => {
             return
         }
 
-        shadows.current.addShadowCaster(mesh)
+        shadows.current.addShadowCaster(mesh, false)
     }
 
     return { initShadows, addShadow }

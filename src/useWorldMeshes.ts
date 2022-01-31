@@ -17,6 +17,7 @@ const useWorldMeshes = (
     function init(worldModel: ILoadedModel, addShadow: (mesh: AbstractMesh) => void) {
         meshes.current = getModelObjects(worldModel, typeName)
         meshes.current.forEach(cursorPointerOnHover)
+
         meshes.current.forEach((mesh) => {
             setTimeout(() => {
                 addShadow(mesh)

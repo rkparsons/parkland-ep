@@ -44,7 +44,7 @@ const DeerModel: FC<ModelProps> = ({
         setLockedTarget(loadedModel.rootMesh!)
 
         setTimeout(() => {
-            addShadow(model.current!.meshes![0])
+            addShadow(model.current!.meshes![1])
         }, 100)
     }
 
