@@ -33,7 +33,6 @@ const useShadows = () => {
             return
         }
 
-        mesh.receiveShadows = true
         shadows.current.addShadowCaster(mesh)
     }
 
