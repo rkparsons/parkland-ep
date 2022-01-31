@@ -16,7 +16,7 @@ const App: React.FC = () => {
 
     return (
         <div className="App">
-            <Engine canvasId="canvas">
+            <Engine antialias adaptToDeviceRatio canvasId="canvas">
                 <DeerScene audioLoops={audioLoops} setSubtitles={setSubtitles} />
             </Engine>
             <Menu audioLoops={audioLoops} />
