@@ -64,7 +64,7 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                 <div className={`Backdrop ${mode !== Mode.GAME ? '' : 'IgnoreClick'}`} />
             </div>
             <div className={`Footer ${mode === Mode.GAME && 'DesktopOnly'}`}>
-                <b>&copy; 2022 SINE LANGUAGE RECORDS {mode}</b>
+                <b>&copy; 2022 SINE LANGUAGE RECORDS</b>
             </div>
             {mode === Mode.MENU && (
                 <div className="MenuActive">

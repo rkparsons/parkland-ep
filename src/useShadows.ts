@@ -21,6 +21,7 @@ const useShadows = () => {
         shadows.current.lambda = 1
         shadows.current.depthClamp = true
         shadows.current.autoCalcDepthBounds = true
+        shadows.current.autoCalcDepthBoundsRefreshRate = 128
         shadows.current.stabilizeCascades = false
         shadows.current.filteringQuality = ShadowGenerator.QUALITY_MEDIUM
 
