@@ -39,7 +39,7 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
     ) {
         const mesh = worldModel.meshes!.find(({ name }) => name === subtitleName)!
         mesh.isPickable = false
-        mesh.isVisible = false
+        mesh.isVisible = true
         mesh.checkCollisions = false
         meshes.current.push(mesh)
 
@@ -69,27 +69,14 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
         )
         initAudioTextMarker(
             worldModel,
+            'ST_TheLandscape',
+            'The landscape seems familiar',
+            'audio/beepHigh.mp3'
+        )
+        initAudioTextMarker(
+            worldModel,
             'ST_TheSunBurns',
             'The sun burns hot above',
-            'audio/beepHigh.mp3'
-        )
-        initAudioTextMarker(worldModel, 'ST_TheWind', 'The wind is howling', 'audio/beepHigh.mp3')
-        initAudioTextMarker(
-            worldModel,
-            'ST_TheWayIsHard',
-            'The way ahead is hard',
-            'audio/beepHigh.mp3'
-        )
-        initAudioTextMarker(
-            worldModel,
-            'ST_TheTerrain',
-            'These plains are vast',
-            'audio/beepHigh.mp3'
-        )
-        initAudioTextMarker(
-            worldModel,
-            'ST_TheWayIsHard_2',
-            'The way ahead is hard',
             'audio/beepHigh.mp3'
         )
         initAudioTextMarker(
@@ -100,14 +87,27 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
         )
         initAudioTextMarker(
             worldModel,
+            'ST_TheWayIsHard',
+            'The way ahead is hard',
+            'audio/beepHigh.mp3'
+        )
+        initAudioTextMarker(
+            worldModel,
+            'ST_TheWayIsHard_2',
+            'The way ahead is hard',
+            'audio/beepHigh.mp3'
+        )
+        initAudioTextMarker(worldModel, 'ST_TheWind', 'The wind is howling', 'audio/beepHigh.mp3')
+        initAudioTextMarker(
+            worldModel,
             'ST_TheAirFeels',
             'The air feels heavy here',
             'audio/beepHigh.mp3'
         )
         initAudioTextMarker(
             worldModel,
-            'ST_TheLandscape',
-            'The landscape seems familiar',
+            'ST_TheAirFeels_2',
+            'The air feels heavy here',
             'audio/beepHigh.mp3'
         )
     }
