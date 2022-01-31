@@ -26,6 +26,7 @@ const DeerScene: FC<ViewProps> = ({ audioLoops, setSubtitles }) => (
         clearColor={new Color4(162 / 255, 140 / 255, 147 / 255, 1)}
         autoClear={false}
         autoClearDepthAndStencil={false}
+        blockMaterialDirtyMechanism
     >
         <AudioProvider audioLoops={audioLoops}>
             <WorldProvider setSubtitles={setSubtitles}>
