@@ -6,7 +6,7 @@ const useInspector = () => {
 
     useEffect(() => {
         if (scene) {
-            scene.debugLayer.show()
+            scene.debugLayer.show({ embedMode: true })
         }
     }, [scene])
 
