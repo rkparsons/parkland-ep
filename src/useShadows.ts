@@ -7,6 +7,7 @@ import {
 } from '@babylonjs/core'
 
 import { ILoadedModel } from 'react-babylonjs'
+import useCameraContext from './useCameraContext'
 import { useRef } from 'react'
 
 const useShadows = () => {
@@ -16,6 +17,7 @@ const useShadows = () => {
         const light = worldModel.rootMesh!._scene.lights[0] as DirectionalLight
         shadows.current = new CascadedShadowGenerator(1024, light)
         shadows.current.numCascades = 2
+        shadows.current.cascadeBlendPercentage = 0
         shadows.current.lambda = 1
         shadows.current.depthClamp = true
         shadows.current.autoCalcDepthBounds = true
