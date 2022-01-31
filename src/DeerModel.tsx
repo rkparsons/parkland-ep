@@ -21,7 +21,6 @@ const DeerModel: FC<ModelProps> = ({
     const walk = useAnimation('WalkForward')
     const left = useAnimation('TurnLeft')
     const right = useAnimation('TurnRight')
-    const { addShadow } = useWorldContext()
 
     const onModelLoaded = (loadedModel: ILoadedModel) => {
         model.current = loadedModel
@@ -42,10 +41,6 @@ const DeerModel: FC<ModelProps> = ({
 
         scene!.audioListenerPositionProvider = () => model.current!.rootMesh!.absolutePosition
         setLockedTarget(loadedModel.rootMesh!)
-
-        setTimeout(() => {
-            addShadow(model.current!.meshes![1])
-        }, 100)
     }
 
     useBeforeRender(() => {
@@ -73,7 +68,6 @@ const DeerModel: FC<ModelProps> = ({
                 onModelLoaded={onModelLoaded}
                 rotationQuaternion={Quaternion.Identity()}
                 checkCollisions={false}
-                receiveShadows={true}
             />
         </Suspense>
     )

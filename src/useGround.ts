@@ -8,7 +8,6 @@ const useGround = () => {
 
     function initGround(worldModel: ILoadedModel) {
         ground.current = worldModel.meshes?.find((x) => x.name === 'Planet Top')
-        ground.current!.receiveShadows = true
         cursorPointerOnHover(ground.current!)
     }
 

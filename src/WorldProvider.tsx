@@ -1,18 +1,18 @@
-import { DirectionalLight, ShadowGenerator, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, Suspense } from 'react'
 import { ILoadedModel, Model } from 'react-babylonjs'
 
+import { Vector3 } from '@babylonjs/core'
 import WorldContext from './WorldContext'
 import use2Spikes from './use2Spikes'
 import useAmbientSound from './useAmbientSound'
 import useAudioTextMarkers from './useAudioTextMarkers'
 import useGround from './useGround'
-import useInspector from './useInspector'
-import useShadows from './useShadows'
 import useShards from './useShards'
 import useSolids from './useSolids'
 import useSpikes from './useSpikes'
 import useStars from './useStars'
+
+// import useInspector from './useInspector'
 
 type ViewProps = {
     children: ReactNode
@@ -26,27 +26,25 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
     const { initSolids } = useSolids()
     const { initStars } = useStars()
     const { initAudioTextMarkers } = useAudioTextMarkers(setSubtitles)
-    useInspector()
+    // useInspector()
 
     useAmbientSound('desert', 'audio/desertAmbience.mp3')
     const { ground, initGround } = useGround()
-    const { initShadows, addShadow } = useShadows()
 
     function onModelLoaded(worldModel: ILoadedModel) {
         // worldModel.meshes?.forEach((mesh) => console.log(mesh.name))
 
-        initShadows(worldModel)
-        initShards(worldModel, addShadow)
-        initSpikes(worldModel, addShadow)
-        init2Spikes(worldModel, addShadow)
-        initSolids(worldModel, addShadow)
-        initStars(worldModel, addShadow)
+        initShards(worldModel)
+        initSpikes(worldModel)
+        init2Spikes(worldModel)
+        initSolids(worldModel)
+        initStars(worldModel)
         initGround(worldModel)
         initAudioTextMarkers(worldModel)
     }
 
     return (
-        <WorldContext.Provider value={{ ground, addShadow }}>
+        <WorldContext.Provider value={{ ground }}>
             {children}
             <Suspense fallback={null}>
                 <Model
