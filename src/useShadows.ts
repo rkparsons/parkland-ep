@@ -28,7 +28,7 @@ const useShadows = () => {
         // shadows.current.freezeShadowCastersBoundingInfo = true
         // shadows.current.darkness = 0.8
 
-        shadows.current = new ShadowGenerator(1024 * 2, light)
+        shadows.current = new ShadowGenerator(1024, light)
         shadows.current.filteringQuality = ShadowGenerator.QUALITY_LOW
         // shadows.current.useBlurExponentialShadowMap = true
         // shadows.current.useKernelBlur = true
