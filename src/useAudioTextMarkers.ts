@@ -10,13 +10,6 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
     const meshes = useRef<AbstractMesh[]>([])
     const { audioLoops } = useAudioContext()
     const scene = useScene()
-    const subtitleTexts = [
-        'The sun burns hot above',
-        'The way ahead is hard',
-        'These rocky slopes are treacherous',
-        'The air is heavy here',
-        'The valley is ripe with juicy bananas'
-    ]
 
     useBeforeRender(() => {
         const deerModel = scene!.getMeshByName('deer')
@@ -38,26 +31,44 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
         activeAudioTextMarker.current = newActiveAudioTextMarker
     })
 
-    function initAudioTextMarkers(worldModel: ILoadedModel) {
-        meshes.current = getModelObjects(worldModel, 'Subtitles')
+    function initAudioTextMarker(
+        worldModel: ILoadedModel,
+        subtitleName: string,
+        subtitleText?: string,
+        audioUrl?: string
+    ) {
+        const mesh = worldModel.meshes!.find(({ name }) => name === subtitleName)!
+        mesh.isPickable = false
+        mesh.isVisible = true
+        mesh.checkCollisions = true
+        meshes.current.push(mesh)
 
-        meshes.current.forEach((mesh, index) => {
-            mesh.isPickable = false
-            mesh.isVisible = false
-            mesh.checkCollisions = false
+        if (subtitleText) {
+            attachTextToMesh(mesh, subtitleText)
+        }
 
-            attachTextToMesh(mesh, subtitleTexts[index])
-
+        if (audioUrl) {
             attachSoundToMesh(
                 mesh,
                 {
-                    url: 'audio/beepHigh.mp3',
+                    url: audioUrl,
                     maxDistance: 30,
                     volume: 0.1
                 },
                 audioLoops
             )
-        })
+        }
+    }
+
+    function initAudioTextMarkers(worldModel: ILoadedModel) {
+        initAudioTextMarker(worldModel, 'ST_TheseRockySlopes', 'text subtitle')
+        initAudioTextMarker(worldModel, 'ST_TheSunBurns', 'text subtitle')
+        initAudioTextMarker(worldModel, 'ST_TheWind', 'text subtitle')
+        initAudioTextMarker(worldModel, 'ST_TheWayIsHard', 'text subtitle')
+        initAudioTextMarker(worldModel, 'ST_BeepingNoise', 'text subtitle')
+        initAudioTextMarker(worldModel, 'ST_TheWayIsHard_2', 'text subtitle')
+        initAudioTextMarker(worldModel, 'ST_TheSunBurns_2', 'text subtitle')
+        initAudioTextMarker(worldModel, 'ST_TheAirFeels', 'text subtitle')
     }
 
     return { initAudioTextMarkers }
