@@ -15,7 +15,7 @@ const useShadows = () => {
     function initShadows(worldModel: ILoadedModel) {
         const light = worldModel.rootMesh!._scene.lights[0] as DirectionalLight
         shadows.current = new CascadedShadowGenerator(1024, light)
-        shadows.current.numCascades = 4
+        shadows.current.numCascades = 2
         shadows.current.lambda = 1
         shadows.current.depthClamp = true
         shadows.current.autoCalcDepthBounds = true

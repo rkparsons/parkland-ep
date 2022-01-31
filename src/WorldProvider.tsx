@@ -7,6 +7,7 @@ import use2Spikes from './use2Spikes'
 import useAmbientSound from './useAmbientSound'
 import useAudioTextMarkers from './useAudioTextMarkers'
 import useGround from './useGround'
+import useInspector from './useInspector'
 import useShadows from './useShadows'
 import useShards from './useShards'
 import useSolids from './useSolids'
@@ -25,6 +26,7 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
     const { initSolids } = useSolids()
     const { initStars } = useStars()
     const { initAudioTextMarkers } = useAudioTextMarkers(setSubtitles)
+    useInspector()
 
     useAmbientSound('desert', 'audio/desertAmbience.mp3')
     const { ground, initGround } = useGround()

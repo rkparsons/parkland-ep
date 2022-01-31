@@ -1,5 +1,6 @@
 import './App.css'
 import '@babylonjs/loaders/glTF'
+import '@babylonjs/inspector'
 
 import React, { useRef, useState } from 'react'
 

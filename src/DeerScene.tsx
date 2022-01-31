@@ -1,11 +1,11 @@
 import { Color4, Sound } from '@babylonjs/core'
 import { FC, MutableRefObject, memo } from 'react'
+import { Scene, useScene } from 'react-babylonjs'
 
 import AudioProvider from './AudioProvider'
 import CameraProvider from './CameraProvider'
 import DeerModel from './DeerModel'
 import PostProcessing from './PostProcessing'
-import { Scene } from 'react-babylonjs'
 import WorldProvider from './WorldProvider'
 import withPointAndClickControls from './withPointAndClickControls'
 import withWaypointController from './withWaypointController'
