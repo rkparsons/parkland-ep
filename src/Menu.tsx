@@ -128,22 +128,13 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                         </a>
                         <br />
                         <br />
-                        Website by
-                        <br />
+                        Website by{' '}
                         <a
-                            href="mailto:mjoanas@gmail.com"
+                            href="mailto:hello@k46.studio"
                             className="ExternalLink"
                             style={{ display: 'contents', pointerEvents: 'all' }}
                         >
-                            Joana Sobral
-                        </a>
-                        <br />
-                        <a
-                            href="mailto:hi@richardparsons.de"
-                            className="ExternalLink"
-                            style={{ display: 'contents', pointerEvents: 'all' }}
-                        >
-                            Richard Parsons
+                            K46
                         </a>
                     </div>
                     <div
