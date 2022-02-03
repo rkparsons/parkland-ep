@@ -10,7 +10,7 @@
 
 @media (max-width: 1023px) {
     :root {
-        --page-padding: 16px;
+        --page-padding: 13px;
         --slider-length: 200px;
         --slider-width: 15px;
         --font-size-large: 22pt;
