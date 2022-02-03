@@ -255,7 +255,7 @@ svg {
 
 .SubtitlesContainer {
     position: absolute;
-    bottom: 100px;
+    bottom: 50px;
     left: 0;
     width: 100%;
     display: flex;
