@@ -7,6 +7,7 @@
     --font-size-large: 40pt;
     --font-size-medium: 15pt;
     --font-size-small: 11pt;
+    --text-shadow: 2px 2px var(--grey);
 }
 
 @media (max-width: 1023px) {
@@ -17,6 +18,7 @@
         --font-size-large: 22pt;
         --font-size-medium: 13pt;
         --font-size-small: 8pt;
+        --text-shadow: 1px 1px var(--grey);
     }
 }
 
@@ -123,7 +125,7 @@
 .StartText {
     color: white;
     font-size: var(--font-size-large);
-    text-shadow: 1px 1px var(--grey);
+    text-shadow: var(--text-shadow);
     animation: blinkingText 1s infinite;
 }
 
@@ -279,7 +281,7 @@ svg {
 .SubtitlesText {
     color: white;
     font-size: var(--font-size-large);
-    text-shadow: 1px 1px var(--grey);
+    text-shadow: var(--text-shadow);
     text-align: center;
     padding: var(--page-padding);
 }
@@ -299,6 +301,6 @@ svg {
     text-align: center;
     color: white;
     font-size: var(--font-size-large);
-    text-shadow: 1px 1px var(--grey);
+    text-shadow: var(--text-shadow);
     z-index: 100;
 }
