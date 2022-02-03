@@ -67,21 +67,10 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
             'These rocky slopes are treacherous',
             'audio/beepHigh.mp3'
         )
-        initAudioTextMarker(
-            worldModel,
-            'ST_TheLandscape',
-            'The landscape seems familiar',
-            'audio/beepHigh.mp3'
-        )
+
         initAudioTextMarker(
             worldModel,
             'ST_TheSunBurns',
-            'The sun burns hot above',
-            'audio/beepHigh.mp3'
-        )
-        initAudioTextMarker(
-            worldModel,
-            'ST_TheSunBurns_2',
             'The sun burns hot above',
             'audio/beepHigh.mp3'
         )
@@ -91,22 +80,10 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
             'The way ahead is hard',
             'audio/beepHigh.mp3'
         )
-        initAudioTextMarker(
-            worldModel,
-            'ST_TheWayIsHard_2',
-            'The way ahead is hard',
-            'audio/beepHigh.mp3'
-        )
         initAudioTextMarker(worldModel, 'ST_TheWind', 'The wind is howling', 'audio/beepHigh.mp3')
         initAudioTextMarker(
             worldModel,
             'ST_TheAirFeels',
-            'The air feels heavy here',
-            'audio/beepHigh.mp3'
-        )
-        initAudioTextMarker(
-            worldModel,
-            'ST_TheAirFeels_2',
             'The air feels heavy here',
             'audio/beepHigh.mp3'
         )
