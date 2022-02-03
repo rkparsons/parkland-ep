@@ -4,7 +4,7 @@
     --slider-width: 18px;
     --grey: rgb(51, 51, 51);
     --font-size-large: 40pt;
-    --font-size-medium: 17pt;
+    --font-size-medium: 15pt;
     --font-size-small: 11pt;
 }
 
@@ -141,6 +141,7 @@
     bottom: var(--page-padding);
     right: var(--page-padding);
     color: var(--grey);
+    opacity: 0.9;
 }
 
 .SoundWarning {
@@ -159,19 +160,20 @@ svg {
 
 @media (max-width: 1023px) {
     svg {
-        transform: scale(0.65);
+        transform: scale(0.8);
     }
 }
 
 .SoundWarningText {
-    margin-top: 3px;
+    margin-top: 2px;
     margin-left: 8px;
     color: var(--grey);
+    opacity: 0.9;
 }
 
 @media (max-width: 1023px) {
     .SoundWarningText {
-        margin-top: 3px;
+        margin-top: 2px;
         margin-left: 1px;
         color: var(--grey);
     }
@@ -185,6 +187,7 @@ svg {
     right: var(--page-padding);
     pointer-events: all;
     cursor: pointer;
+    opacity: 0.9;
 }
 
 .ExternalLink {
