@@ -122,7 +122,7 @@
 .StartText {
     color: white;
     font-size: var(--font-size-large);
-    text-shadow: 2px 2px var(--grey);
+    text-shadow: 1px 1px var(--grey);
     animation: blinkingText 1s infinite;
 }
 
@@ -272,7 +272,7 @@ svg {
 .SubtitlesText {
     color: white;
     font-size: var(--font-size-large);
-    text-shadow: 2px 2px var(--grey);
+    text-shadow: 1px 1px var(--grey);
     text-align: center;
     padding: var(--page-padding);
 }
@@ -292,6 +292,6 @@ svg {
     text-align: center;
     color: white;
     font-size: var(--font-size-large);
-    text-shadow: 2px 2px var(--grey);
+    text-shadow: 1px 1px var(--grey);
     z-index: 100;
 }
