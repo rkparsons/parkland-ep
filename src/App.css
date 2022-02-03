@@ -5,8 +5,8 @@
     --grey: rgb(51, 51, 51);
     --greyTransparent: rgba(51, 51, 51, 0.9);
     --font-size-large: 40pt;
-    --font-size-medium: 15pt;
-    --font-size-small: 11pt;
+    --font-size-medium: 14pt;
+    --font-size-small: 10pt;
     --text-shadow: 2px 2px var(--grey);
 }
 
@@ -168,8 +168,8 @@ svg {
 }
 
 .SoundWarningText {
-    margin-top: 2px;
-    margin-left: 8px;
+    margin-top: 3px;
+    margin-left: 5px;
     color: var(--grey);
     opacity: 0.9;
 }
