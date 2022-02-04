@@ -11,7 +11,7 @@ const useShards = () => {
         },
         {
             url: 'audio/drone.mp3',
-            maxDistance: 50,
+            maxDistance: 55,
             volume: 0.3
         }
     )
