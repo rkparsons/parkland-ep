@@ -111,6 +111,11 @@
 }
 
 .FadeOut {
+    transition: opacity 1s;
+    -webkit-transition: opacity 1s;
+    -moz-transition: opacity 1s;
+    -o-transition: opacity 1s;
+
     opacity: 0;
     pointer-events: none;
 }
