@@ -119,7 +119,7 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                         </a>
                         <br />
                         <a
-                            href="https://slr.link/parkland-ep"
+                            href="https://slr.link/parkland"
                             className="ExternalLink"
                             style={{ display: 'contents', pointerEvents: 'all' }}
                             target="blank"
