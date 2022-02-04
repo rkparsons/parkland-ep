@@ -12,7 +12,7 @@ const useStars = () => {
             mesh.rotationQuaternion = null
         },
         {
-            url: 'audio/pads.mp3',
+            url: 'audio/arp.mp3',
             maxDistance: 50,
             volume: 0.1
         }

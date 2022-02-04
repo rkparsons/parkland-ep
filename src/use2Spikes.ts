@@ -12,7 +12,7 @@ const use2Spikes = () => {
             mesh.rotationQuaternion = null
         },
         {
-            url: 'audio/arp.mp3',
+            url: 'audio/beepMid.mp3',
             maxDistance: 50,
             volume: 0.1
         }
