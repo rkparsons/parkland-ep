@@ -1,7 +1,3 @@
-* {
-    overflow: hidden;
-}
-
 :root {
     --page-padding: 20px;
     --slider-length: 300px;
@@ -103,19 +99,11 @@
 
 .Overlay {
     transition: opacity 1s;
-    -webkit-transition: opacity 1s;
-    -moz-transition: opacity 1s;
-    -o-transition: opacity 1s;
-
     opacity: 1;
 }
 
+.Overlay,
 .FadeOut {
-    transition: opacity 1s;
-    -webkit-transition: opacity 1s;
-    -moz-transition: opacity 1s;
-    -o-transition: opacity 1s;
-
     opacity: 0;
     pointer-events: none;
 }
@@ -203,9 +191,6 @@ svg {
 .ExternalLink {
     cursor: pointer;
     transition: color 100ms;
-    -webkit-transition: color 100ms;
-    -moz-transition: color 100ms;
-    -o-transition: color 100ms;
 }
 
 .ExternalLink:link {
@@ -275,9 +260,6 @@ svg {
     justify-content: center;
     pointer-events: none;
     transition: opacity 1s;
-    -webkit-transition: opacity 1s;
-    -moz-transition: opacity 1s;
-    -o-transition: opacity 1s;
     opacity: 1;
 }
 
@@ -285,6 +267,11 @@ svg {
     .SubtitlesContainer {
         bottom: 50px;
     }
+}
+
+.SubtitlesContainer,
+.FadeOut {
+    opacity: 0;
 }
 
 .SubtitlesText {
