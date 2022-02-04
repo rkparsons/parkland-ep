@@ -10,7 +10,7 @@ const useSolids = () => {
             mesh.rotationQuaternion = null
         },
         {
-            url: 'audio/kickSnare.mp3',
+            url: 'audio/birdFx1.mp3',
             maxDistance: 50,
             volume: 0.1
         }
