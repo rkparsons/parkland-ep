@@ -60,7 +60,7 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
             onClick={closeMenu}
             onKeyDown={closeMenu}
         >
-            <div className={`Overlay ${mode !== Mode.GAME ? '' : 'FadeOut'}`}>
+            <div className={`Overlay${mode !== Mode.GAME ? '' : ' FadeOut'}`}>
                 <div className={`Backdrop ${mode !== Mode.GAME ? '' : 'IgnoreClick'}`} />
             </div>
             <div className={`Footer ${mode === Mode.GAME && 'DesktopOnly'}`}>

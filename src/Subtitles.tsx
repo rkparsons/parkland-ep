@@ -15,7 +15,7 @@ const Subtitles: FC<ViewProps> = ({ subtitles }) => {
     }, [subtitles])
 
     return (
-        <div className={`SubtitlesContainer ${!isVisible && 'FadeOut'}`}>
+        <div className={`SubtitlesContainer${!isVisible && ' FadeOut'}`}>
             <span className="SubtitlesText">{text}</span>
         </div>
     )
