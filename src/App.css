@@ -108,7 +108,6 @@ body,
     opacity: 1;
 }
 
-.Overlay,
 .FadeOut {
     opacity: 0;
     pointer-events: none;

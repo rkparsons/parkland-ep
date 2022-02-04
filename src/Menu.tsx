@@ -60,8 +60,8 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
             onClick={closeMenu}
             onKeyDown={closeMenu}
         >
-            <div className={`Overlay ${mode !== Mode.GAME ? '' : 'FadeOut'}`}>
-                <div className={`Backdrop ${mode !== Mode.GAME ? '' : 'IgnoreClick'}`} />
+            <div className={`Overlay ${mode === Mode.GAME && 'FadeOut'}`}>
+                <div className={`Backdrop ${mode === Mode.GAME && 'IgnoreClick'}`} />
             </div>
             <div className={`Footer ${mode === Mode.GAME && 'DesktopOnly'}`}>
                 <b>&copy; 2022 SINE LANGUAGE RECORDS</b>
