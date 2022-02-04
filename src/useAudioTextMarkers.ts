@@ -39,7 +39,7 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
     ) {
         const mesh = worldModel.meshes!.find(({ name }) => name === subtitleName)!
         mesh.isPickable = false
-        mesh.isVisible = false
+        mesh.isVisible = true
         mesh.checkCollisions = false
         meshes.current.push(mesh)
 
@@ -61,32 +61,12 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
     }
 
     function initAudioTextMarkers(worldModel: ILoadedModel) {
-        initAudioTextMarker(
-            worldModel,
-            'ST_TheseRockySlopes',
-            'These rocky slopes are treacherous',
-            'audio/beepHigh.mp3'
-        )
+        initAudioTextMarker(worldModel, 'ST_TheseRockySlopes', 'These rocky slopes are treacherous')
 
-        initAudioTextMarker(
-            worldModel,
-            'ST_TheSunBurns',
-            'The sun burns hot above',
-            'audio/beepHigh.mp3'
-        )
-        initAudioTextMarker(
-            worldModel,
-            'ST_TheWayIsHard',
-            'The way ahead is hard',
-            'audio/beepHigh.mp3'
-        )
-        initAudioTextMarker(worldModel, 'ST_TheWind', 'The wind is howling', 'audio/beepHigh.mp3')
-        initAudioTextMarker(
-            worldModel,
-            'ST_TheAirFeels',
-            'The air feels heavy here',
-            'audio/beepHigh.mp3'
-        )
+        initAudioTextMarker(worldModel, 'ST_TheSunBurns', 'The sun burns hot above')
+        initAudioTextMarker(worldModel, 'ST_TheWayIsHard', 'The way ahead is hard')
+        initAudioTextMarker(worldModel, 'ST_TheWind', 'The wind is howling', 'audio/wind.mp3')
+        initAudioTextMarker(worldModel, 'ST_TheAirFeels', 'The air feels heavy here')
     }
 
     return { initAudioTextMarkers }
