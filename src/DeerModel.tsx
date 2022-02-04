@@ -60,10 +60,11 @@ const DeerModel: FC<ModelProps> = ({
         <Suspense fallback={null}>
             <Model
                 name="deer"
-                position={new Vector3(-91.53252278839588, 80.94222222529004, -93.51850014974403)}
+                position={new Vector3(89.21744186810362, 81.00960779873975, 97.87237428264427)}
                 rootUrl={`${process.env.PUBLIC_URL}/models/`}
                 sceneFilename="Deer.glb"
                 scaleToDimension={3}
+                rotation={new Vector3(0, Tools.ToRadians(180), 0)}
                 onModelLoaded={onModelLoaded}
                 rotationQuaternion={Quaternion.Identity()}
                 checkCollisions={false}
