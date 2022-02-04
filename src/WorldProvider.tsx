@@ -53,6 +53,7 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
                 <Model
                     name="world"
                     position={Vector3.Zero()}
+                    rotation={new Vector3(0, 1 * Math.PI, 0)}
                     scaling={new Vector3(10, 10, 10)}
                     rootUrl={`${process.env.PUBLIC_URL}/models/`}
                     sceneFilename="World.glb"

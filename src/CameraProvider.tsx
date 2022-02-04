@@ -90,7 +90,7 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
             <arcRotateCamera
                 name="camera1"
                 ref={camera}
-                alpha={2.6 * Math.PI}
+                alpha={3.6 * Math.PI}
                 beta={0.42 * Math.PI}
                 radius={18}
                 target={new Vector3(89.21744186810362, 81.00960779873975, 97.87237428264427)}
