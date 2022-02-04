@@ -39,7 +39,7 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
     ) {
         const mesh = worldModel.meshes!.find(({ name }) => name === subtitleName)!
         mesh.isPickable = false
-        mesh.isVisible = true
+        mesh.isVisible = false
         mesh.checkCollisions = false
         meshes.current.push(mesh)
 
