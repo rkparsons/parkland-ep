@@ -1,3 +1,13 @@
+body,
+#root {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+}
+
+html {
+    height: -webkit-fill-available;
+}
+
 :root {
     --page-padding: 20px;
     --slider-length: 300px;
