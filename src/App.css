@@ -7,6 +7,10 @@ body,
     min-height: 100%;
 }
 
+* {
+    overflow: hidden;
+}
+
 :root {
     --page-padding: 20px;
     --slider-length: 300px;
