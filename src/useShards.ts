@@ -10,9 +10,9 @@ const useShards = () => {
             mesh.rotationQuaternion = null
         },
         {
-            url: 'audio/kickSnare.mp3',
+            url: 'audio/drone.mp3',
             maxDistance: 50,
-            volume: 0.1
+            volume: 0.3
         }
     )
 
