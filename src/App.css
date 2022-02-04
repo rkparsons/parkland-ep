@@ -110,7 +110,7 @@ body,
 }
 
 .FadeOut {
-    opacity: 0;
+    opacity: 0 !important;
     pointer-events: none;
 }
 
@@ -273,11 +273,6 @@ svg {
     .SubtitlesContainer {
         bottom: 50px;
     }
-}
-
-.SubtitlesContainer,
-.FadeOut {
-    opacity: 0;
 }
 
 .SubtitlesText {
