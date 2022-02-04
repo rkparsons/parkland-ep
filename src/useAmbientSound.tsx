@@ -16,7 +16,7 @@ const useAmbientSound = (name: string, url: string) => {
         const desertAmbience = new Sound(name, url, scene, null, {
             loop: true,
             autoplay: false,
-            volume: 0.15
+            volume: 0.3
         })
 
         audioLoops.current.push(desertAmbience)
