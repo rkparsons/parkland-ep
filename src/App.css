@@ -68,14 +68,14 @@
 
 #canvas {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     animation-name: appear;
     animation-duration: 500ms;
 }
 
 .Menu {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     position: absolute;
     top: 0;
     left: 0;
@@ -91,7 +91,7 @@
 
 .MenuActive {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -109,7 +109,7 @@
 
 .Backdrop {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     position: absolute;
     top: 0;
     left: 0;
@@ -131,7 +131,7 @@
 
 .Controls {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     position: absolute;
     top: 0;
     left: 0;
@@ -288,7 +288,7 @@ svg {
 
 .Info {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
