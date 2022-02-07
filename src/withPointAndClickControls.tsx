@@ -65,6 +65,8 @@ const withPointAndClickControls = (WaypointController: FC<WaypointControllerProp
 
             if (isGroundIntersection) {
                 waypoint.current!.position = intersection.pickedPoint!.clone()
+                const { _x, _y, _z } = waypoint.current!.position
+                console.log(_x, _y, _z)
             } else {
                 const clickOrigin = intersection.pickedMesh!.position
                 const ray = new Ray(clickOrigin, Vector3.Down())

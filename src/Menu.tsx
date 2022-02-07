@@ -110,7 +110,7 @@ const Menu: FC<ViewProps> = ({ audioLoops }) => {
                         Listen to <i style={{ display: 'contents' }}>Parkland</i>
                         <br />
                         <a
-                            href="https://open.spotify.com/artist/6qSGkHC8lI4xNgzthHti7T?si=0nt-EOJFRZGm2kCU4SgYQg"
+                            href="https://open.spotify.com/album/59Bt4SD4XsqU03WBUodpDb?si=mA7HzhKNS-ergFY5Os0gaw"
                             className="ExternalLink"
                             style={{ display: 'contents', pointerEvents: 'all' }}
                             target="blank"

@@ -52,8 +52,8 @@ const useAudioTextMarkers = (setSubtitles: (subtitles: string) => void) => {
                 mesh,
                 {
                     url: audioUrl,
-                    maxDistance: 30,
-                    volume: 0.1
+                    maxDistance: 50,
+                    volume: 0.3
                 },
                 audioLoops
             )

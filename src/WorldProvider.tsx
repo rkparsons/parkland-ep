@@ -1,7 +1,7 @@
 import { FC, ReactNode, Suspense } from 'react'
 import { ILoadedModel, Model } from 'react-babylonjs'
+import { Tools, Vector3 } from '@babylonjs/core'
 
-import { Vector3 } from '@babylonjs/core'
 import WorldContext from './WorldContext'
 import use2Spikes from './use2Spikes'
 import use3Spikes from './use3Spikes'
@@ -53,6 +53,7 @@ const WorldProvider: FC<ViewProps> = ({ children, setSubtitles }) => {
                 <Model
                     name="world"
                     position={Vector3.Zero()}
+                    rotation={new Vector3(0, Tools.ToRadians(180), 0)}
                     scaling={new Vector3(10, 10, 10)}
                     rootUrl={`${process.env.PUBLIC_URL}/models/`}
                     sceneFilename="World.glb"

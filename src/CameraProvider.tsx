@@ -1,4 +1,4 @@
-import { AbstractMesh, ArcRotateCamera, Ray, Vector3 } from '@babylonjs/core'
+import { AbstractMesh, ArcRotateCamera, Ray, Tools, Vector3 } from '@babylonjs/core'
 import { FC, ReactNode, useRef } from 'react'
 
 import CameraContext from './cameraContext'
@@ -90,7 +90,7 @@ const CameraProvider: FC<ViewProps> = ({ children }) => {
             <arcRotateCamera
                 name="camera1"
                 ref={camera}
-                alpha={2.6 * Math.PI}
+                alpha={Tools.ToRadians(-60)}
                 beta={0.42 * Math.PI}
                 radius={18}
                 target={new Vector3(89.21744186810362, 81.00960779873975, 97.87237428264427)}
